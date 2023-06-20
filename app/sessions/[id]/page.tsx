@@ -1,20 +1,8 @@
 import AddButton from "@/components/AddButtonn";
 import RemoveButton from "@/components/RemoveButton";
-import { exercise, exercise_session, session } from "@/lib/schema";
+import { exercise, exercise_session } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { notEqual } from "assert";
-import {
-  and,
-  eq,
-  inArray,
-  isNull,
-  ne,
-  not,
-  notExists,
-  notInArray,
-  or,
-  sql,
-} from "drizzle-orm";
+import { eq, notInArray } from "drizzle-orm";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const sessionId = parseInt(params.id, 10);
@@ -32,9 +20,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     .where(eq(exercise_session.session_id, sessionId))
     .all()
     .then((data) =>
-      data.length !== 0
-        ? data.map((e) => (e.exercise_id === null ? -1 : e.exercise_id))
-        : [-1]
+      data.length !== 0 ? data.map((e) => e.exercise_id) : [-1]
     );
 
   const other = await db

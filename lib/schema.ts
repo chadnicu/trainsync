@@ -15,6 +15,6 @@ export const session = sqliteTable("session", {
 
 export const exercise_session = sqliteTable("exercise_session", {
   id: integer("id").primaryKey(),
-  exercise_id: integer("exercise_id").references(() => exercise.id),
-  session_id: integer("session_id").references(() => session.id),
+  exercise_id: integer("exercise_id").notNull().references(() => exercise.id),
+  session_id: integer("session_id").notNull().references(() => session.id),
 });
