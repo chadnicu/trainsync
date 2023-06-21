@@ -1,11 +1,21 @@
 import AddButton from "@/components/AddButtonn";
+import ComboBox from "@/components/ComboBox";
+import ComboboxDemo from "@/components/ComboBox";
+import CoolView from "@/components/CoolView";
 import RemoveButton from "@/components/RemoveButton";
-import { exercise, exercise_session } from "@/lib/schema";
+import { exercise, exercise_session, session } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { eq, notInArray } from "drizzle-orm";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const sessionId = parseInt(params.id, 10);
+
+  const currentSession = await db
+    .select()
+    .from(session)
+    .where(eq(session.id, sessionId))
+    .limit(1)
+    .get();
 
   const existing = await db
     .select()
@@ -30,43 +40,41 @@ export default async function Page({ params }: { params: { id: string } }) {
     .all();
 
   return (
-    <div className="p-20 text-center">
-      <h1 className="text-5xl font-bold">{sessionId}</h1>
-      <div className="grid grid-cols-6">
-        {existing.map((e) => {
-          const { id, title, instructions, url } = e.exercise;
-          return (
-            <div
-              key={id}
-              className="grid w-fit place-items-center gap-2 border p-5"
-            >
-              <h2 className="text-xl font-bold">{title}</h2>
-              <p className="text-sm">{instructions}</p>
-              <div className="flex gap-2">
-                <RemoveButton ex={id} sesh={sessionId} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+    <div className="p-10 text-center">
+      <h1 className="text-5xl font-bold">{currentSession.title}</h1>
 
-      <div className="grid grid-cols-6">
-        {other.map((e) => {
-          const { id, title, instructions, url } = e;
-          return (
-            <div
-              key={id}
-              className="grid w-fit place-items-center gap-2 border p-5"
-            >
-              <h2 className="text-xl font-bold">{title}</h2>
-              <p className="text-sm">{instructions}</p>
-              <div className="flex gap-2">
-                <AddButton ex={id} sesh={sessionId} />
-              </div>
+      <div className="mt-10 flex justify-around">
+        <div className="grid gap-2">
+          {existing.map((e) => (
+            <div key={e.exercise.id}>
+              <CoolView
+                data={e.exercise}
+                button={<RemoveButton ex={e.exercise.id} sesh={sessionId} />}
+              />
             </div>
-          );
-        })}
+          ))}
+        </div>
+        {/* <div className="grid gap-2">
+          {other.map((e) => (
+            <div key={e.id}>
+              <ExerciseView
+                data={e}
+                button={<AddButton ex={e.id} sesh={sessionId} />}
+              />
+            </div>
+          ))}
+
+        </div> */}
+        <ComboBox
+          exercises={other.map((e) => ({
+            value: e.title.toLowerCase(),
+            label: e.title,
+            exerciseId: e.id,
+            sessionId: sessionId,
+          }))}
+        />
       </div>
     </div>
   );
 }
+

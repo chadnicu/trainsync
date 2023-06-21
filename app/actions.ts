@@ -37,29 +37,48 @@ export async function editExercise(old: ExerciseType, data?: FormData) {
     .returning()
     .get();
 
-  // revalidatePath("/");
+  await db
+    .select()
+    .from(exercise_session)
+    .where(eq(exercise_session.exercise_id, old.id))
+    .all()
+    .then((data) =>
+      data.forEach(({ id }) => revalidatePath(`/sessions/${id}`))
+    );
 
   console.log(res);
 }
 
 export async function deleteExercise(id: number) {
-  const deleted = await db
+  const foreign = await db
+    .delete(exercise_session)
+    .where(eq(exercise_session.exercise_id, id))
+    .returning()
+    .get();
+
+  const deletedExercise = await db
     .delete(exercise)
     .where(eq(exercise.id, id))
     .returning()
     .get();
 
-  console.log(deleted);
+  console.log(foreign, deletedExercise);
 }
 
 export async function deleteSession(id: number) {
-  const deleted = await db
+  const foreign = await db
+    .delete(exercise_session)
+    .where(eq(exercise_session.session_id, id))
+    .returning()
+    .get();
+
+  const deletedSession = await db
     .delete(session)
     .where(eq(session.id, id))
     .returning()
     .get();
 
-  console.log(deleted);
+  console.log(foreign, deletedSession);
 }
 
 export async function removeExerciseFromSession(
