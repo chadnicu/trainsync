@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="grid gap-2">
           {existing.map((e) => (
             <div key={e.exercise.id}>
-              <div className="flex w-80 items-center justify-between border p-5">
+              <div className="flex w-80 items-center justify-between border py-5 px-7">
                 <div className="text-left">
                   <HoverExercise data={e.exercise} />
                 </div>
@@ -92,7 +92,7 @@ function HoverExercise({
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Button variant={"link"} className="text-left text-xl font-bold">
+        <Button variant={"link"} className="p-0 text-left text-xl font-bold">
           {data.title}
         </Button>
       </HoverCardTrigger>
