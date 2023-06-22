@@ -2,7 +2,14 @@ import AddButton from "@/components/AddButtonn";
 import ComboBox from "@/components/ComboBox";
 import ComboboxDemo from "@/components/ComboBox";
 import CoolView from "@/components/CoolView";
+import { DeleteButton } from "@/components/DeleteButton";
 import RemoveButton from "@/components/RemoveButton";
+import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { exercise, exercise_session, session } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { eq, notInArray } from "drizzle-orm";
@@ -47,24 +54,18 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="grid gap-2">
           {existing.map((e) => (
             <div key={e.exercise.id}>
-              <CoolView
-                data={e.exercise}
-                button={<RemoveButton ex={e.exercise.id} sesh={sessionId} />}
-              />
+              <div className="flex w-80 items-center justify-between border p-5">
+                <div className="text-left">
+                  <HoverExercise data={e.exercise} />
+                </div>
+                <div className="">
+                  <DeleteButton id={e.exercise.id} table={"exercises"} />
+                </div>
+              </div>
             </div>
           ))}
         </div>
-        {/* <div className="grid gap-2">
-          {other.map((e) => (
-            <div key={e.id}>
-              <ExerciseView
-                data={e}
-                button={<AddButton ex={e.id} sesh={sessionId} />}
-              />
-            </div>
-          ))}
 
-        </div> */}
         <ComboBox
           exercises={other.map((e) => ({
             value: e.title.toLowerCase(),
@@ -78,3 +79,28 @@ export default async function Page({ params }: { params: { id: string } }) {
   );
 }
 
+function HoverExercise({
+  data,
+}: {
+  data: {
+    id: number;
+    title: string;
+    instructions: string | null;
+    url: string | null;
+  };
+}) {
+  return (
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <Button variant={"link"} className="text-left text-xl font-bold">
+          {data.title}
+        </Button>
+      </HoverCardTrigger>
+      <HoverCardContent className="w-fit max-w-xs">
+        <div className="flex justify-between space-x-4 space-y-1">
+          <p className="text-sm">{data.instructions || "No instructions"}</p>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
+  );
+}

@@ -1,3 +1,5 @@
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+
 export default function CoolView({
   data,
   button,
@@ -20,3 +22,4 @@ export default function CoolView({
     </div>
   );
 }
+

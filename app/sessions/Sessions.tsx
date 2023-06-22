@@ -5,7 +5,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { DeleteButton } from "@/components/DeleteButton";
 import Link from "next/link";
-import CoolView from "@/components/CoolView";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { cn } from "@/lib/utils";
 
 type Session = {
   title: string;
@@ -30,21 +36,42 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
       <SessionForm />
       <div className="grid grid-cols-2 gap-2">
         {data.map((s) => (
-          <div key={s.id}>
-            <div className="flex w-80 items-center justify-between border p-5">
-              <Link href={`/sessions/${s.id}`}>
-                <div className="text-left">
-                  <h2 className="text-xl font-bold">{s.title}</h2>
-                  <p className="text-sm">{s.description}</p>
-                </div>
-              </Link>
-              <div>
-                <DeleteButton id={s.id} table={"sessions"}></DeleteButton>
-              </div>
+          <div
+            key={s.id}
+            className="flex h-fit w-80 items-center justify-between border px-7 py-5"
+          >
+            <div>
+              <HoverSession s={s} />
+            </div>
+            <div>
+              <DeleteButton id={s.id} table={"sessions"}></DeleteButton>
             </div>
           </div>
         ))}
       </div>
     </div>
+  );
+}
+
+function HoverSession({ s }: { s: Session }) {
+  return (
+    <HoverCard>
+      <HoverCardTrigger asChild>
+        <Link
+          href={`/sessions/${s.id}`}
+          className={cn(
+            buttonVariants({ variant: "link" }),
+            "p-0 text-left text-xl font-bold"
+          )}
+        >
+          {s.title}
+        </Link>
+      </HoverCardTrigger>
+      <HoverCardContent className="w-fit max-w-xs">
+        <div className="flex justify-between space-x-4 space-y-1">
+          <p className="text-sm">{s.description}</p>
+        </div>
+      </HoverCardContent>
+    </HoverCard>
   );
 }

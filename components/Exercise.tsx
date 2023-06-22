@@ -17,11 +17,11 @@ export default function Exercise({ exercise }: { exercise: ExerciseType }) {
     ? url?.split("shorts/")[1]
     : "";
 
+  console.log(playbackId);
+
   const embedUrl = playbackId
     ? "https://www.youtube.com/embed/" + playbackId
     : "";
-
-  console.log(embedUrl);
 
   return (
     <div key={id} className="grid gap-2">
