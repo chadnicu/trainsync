@@ -13,12 +13,34 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useQuery } from "@tanstack/react-query";
+import { Session, getSessions } from "@/app/sessions/Sessions";
 
-export function Navbar({
+export default function Navbar({
   sessions,
 }: {
-  sessions: { title: string; href: string; description: string }[];
+  sessions: { title: string; href: number; description: string }[];
 }) {
+  const query: {
+    data: { title: string; href: number; description: string }[];
+  } = useQuery({
+    queryKey: ["sessions"],
+    queryFn: async () => {
+      const res = await getSessions().then((d) =>
+        d.map((s: Session) => ({
+          title: s.title,
+          href: s.id,
+          description: s.description || "",
+        }))
+      );
+      setData(res);
+      return res;
+    },
+    initialData: sessions,
+  });
+
+  const [data, setData] = React.useState(query.data);
+
   return (
     <NavigationMenu className="flex justify-start p-3">
       <NavigationMenuList>
@@ -36,20 +58,21 @@ export function Navbar({
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/sessions" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Sessions
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+       
         <NavigationMenuItem>
           <NavigationMenuTrigger>Pick session</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {sessions.map((sesh) => (
+              <ListItem
+                key={"sessions"}
+                title={"All sessions"}
+                href={`/sessions`}
+              >
+                {"View all of your sessions"}
+              </ListItem>
+              {data.map((sesh) => (
                 <ListItem
-                  key={sesh.title}
+                  key={sesh.href}
                   title={sesh.title}
                   href={`/sessions/${sesh.href}`}
                 >

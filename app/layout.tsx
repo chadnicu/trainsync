@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "../lib/providers";
-import { Navbar } from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import { db } from "@/lib/turso";
 import { session } from "@/lib/schema";
 
@@ -18,7 +18,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const sessions: { title: string; href: string; description: string }[] =
+  const sessions: { title: string; href: number; description: string }[] =
     await db
       .select()
       .from(session)
@@ -26,14 +26,14 @@ export default async function RootLayout({
       .then((data) =>
         data.map((s) => ({
           title: s.title,
-          href: s.id.toString(),
+          href: s.id,
           description: s.description || "",
         }))
       );
 
   return (
     <html lang="en">
-      <body className={cn(inter.className, "dark")}>
+      <body className={cn(inter.className, "tracking-tight dark")}>
         {/* change bg color later  */}
         {/* <nav className="sticky top-0 flex justify-around border-b py-5 backdrop-blur-sm backdrop-brightness-50"> */}
         {/* <Link href="/" className="text-xl font-bold">
@@ -46,8 +46,10 @@ export default async function RootLayout({
             sessions
           </Link> */}
         {/* </nav> */}
-        <Navbar sessions={sessions} />
-        <Providers>{children}</Providers>
+        <Providers>
+          <Navbar sessions={sessions} />
+          {children}
+        </Providers>
       </body>
     </html>
   );

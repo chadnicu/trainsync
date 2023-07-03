@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
   const newRecord = await db.insert(session).values(data).returning().get();
 
   revalidatePath(`/sessions/${data.id}`);
+  revalidatePath("/sessions");
 
   return NextResponse.json(newRecord);
 }

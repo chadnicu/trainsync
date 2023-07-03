@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
 
-type Session = {
+export type Session = {
   title: string;
   id: number;
   description: string | null;
 };
 
-async function getSessions() {
+export async function getSessions() {
   const { data } = await axios.get("/api/sessions");
   return data;
 }
@@ -30,7 +30,7 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
     queryFn: getSessions,
     initialData: sessions,
   });
-
+  
   return (
     <div className="flex gap-10 p-20">
       <SessionForm />
