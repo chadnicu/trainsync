@@ -54,12 +54,16 @@ export default async function Page({ params }: { params: { id: string } }) {
         <div className="grid gap-2">
           {existing.map((e) => (
             <div key={e.exercise.id}>
-              <div className="flex w-80 items-center justify-between border py-5 px-7">
+              <div className="flex w-80 items-center justify-between border px-7 py-5">
                 <div className="text-left">
                   <HoverExercise data={e.exercise} />
                 </div>
                 <div className="">
-                  <DeleteButton id={e.exercise.id} table={"exercises"} />
+                  <DeleteButton
+                    id={e.exercise.id}
+                    sessionId={sessionId}
+                    table={"exercise_session"}
+                  />
                 </div>
               </div>
             </div>

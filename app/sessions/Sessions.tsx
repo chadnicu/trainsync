@@ -14,8 +14,8 @@ import {
 import { cn } from "@/lib/utils";
 
 export type Session = {
-  title: string;
   id: number;
+  title: string;
   description: string | null;
 };
 
@@ -30,7 +30,7 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
     queryFn: getSessions,
     initialData: sessions,
   });
-  
+
   return (
     <div className="flex gap-10 p-20">
       <SessionForm />
@@ -54,6 +54,7 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
 }
 
 function HoverSession({ s }: { s: Session }) {
+  console.log(s.id);
   return (
     <HoverCard>
       <HoverCardTrigger asChild>

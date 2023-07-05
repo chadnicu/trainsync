@@ -39,9 +39,10 @@ export default function SessionForm() {
   });
 
   async function onSubmit(values: z.infer<typeof sessionSchema>) {
-    await axios
-      .post("/api/sessions", values)
-      .then(() => queryClient.invalidateQueries(["sessions"]));
+    await axios.post("/api/sessions", values).then(() => {
+      queryClient.invalidateQueries(["sessions"]);
+      queryClient.invalidateQueries(["sessions-navbar"]);
+    });
   }
 
   return (

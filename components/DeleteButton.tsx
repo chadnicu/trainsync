@@ -1,6 +1,10 @@
 "use client";
 
-import { deleteExercise, deleteSession } from "@/app/actions";
+import {
+  deleteExercise,
+  deleteSession,
+  removeExerciseFromSession,
+} from "@/app/actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,15 +22,25 @@ import { useQueryClient } from "@tanstack/react-query";
 export function DeleteButton({
   id,
   table,
+  sessionId,
 }: {
   id: number;
-  table: "exercises" | "sessions";
+  table: "exercises" | "sessions" | "exercise_session";
+  sessionId?: number;
 }) {
   const queryClient = useQueryClient();
 
   const action = async () => {
-    table === "exercises" ? await deleteExercise(id) : await deleteSession(id);
-    queryClient.invalidateQueries([table]);
+    if (table === "exercises") {
+      await deleteExercise(id);
+      queryClient.invalidateQueries(["exercises"]);
+    } else if (table === "sessions") {
+      await deleteSession(id);
+      queryClient.invalidateQueries(["sessions"]);
+      queryClient.invalidateQueries(["sessions-navbar"]);
+    } else if (sessionId) {
+      await removeExerciseFromSession(id, sessionId);
+    }
   };
 
   return (

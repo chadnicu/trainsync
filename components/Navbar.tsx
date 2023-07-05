@@ -24,7 +24,7 @@ export default function Navbar({
   const query: {
     data: { title: string; href: number; description: string }[];
   } = useQuery({
-    queryKey: ["sessions"],
+    queryKey: ["sessions-navbar"],
     queryFn: async () => {
       const res = await getSessions().then((d) =>
         d.map((s: Session) => ({
@@ -60,7 +60,7 @@ export default function Navbar({
         </NavigationMenuItem>
        
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Pick session</NavigationMenuTrigger>
+          <NavigationMenuTrigger>Sessions</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
               <ListItem
