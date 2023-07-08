@@ -4,8 +4,6 @@ import { auth } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-const { userId } = auth();
-
 export async function PUT(
   request: NextRequest,
   {
@@ -14,6 +12,7 @@ export async function PUT(
     params: { slug: string };
   }
 ) {
+  const { userId } = auth();
   if (!userId) throw new Error("Unauthorized");
 
   const data = await request.json();
