@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useQuery } from "@tanstack/react-query";
 import { Session, getSessions } from "@/app/sessions/Sessions";
+import { UserButton, useAuth } from "@clerk/nextjs";
 
 export default function Navbar({
   sessions,
@@ -41,6 +42,8 @@ export default function Navbar({
 
   const [data, setData] = React.useState(query.data);
 
+  const { userId } = useAuth();
+
   return (
     <NavigationMenu className="flex justify-start p-3">
       <NavigationMenuList>
@@ -58,7 +61,7 @@ export default function Navbar({
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-       
+
         <NavigationMenuItem>
           <NavigationMenuTrigger>Sessions</NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -81,6 +84,19 @@ export default function Navbar({
               ))}
             </ul>
           </NavigationMenuContent>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          {userId ? (
+            <div className="rounded-full border-2 border-slate-600 shadow-white">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          ) : (
+            <Link href="/sign-in" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Sign in
+              </NavigationMenuLink>
+            </Link>
+          )}
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

@@ -10,7 +10,7 @@ export default function Page() {
       <div className="relative">
         {button ? (
           <Button
-            className="absolute left-10 top-10 active:bg-red-200"
+            className="absolute left-10 top-10"
             onMouseEnter={() => setButton(0)}
             onFocus={() => setButton(0)}
             onClick={() => setButton(0)}

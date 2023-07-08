@@ -5,6 +5,7 @@ import { db } from "@/lib/turso";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { ExerciseType } from "./exercises/Exercises";
+import { auth } from "@clerk/nextjs";
 
 // export async function addExercise(data: FormData) {
 //   const title = data.get("title")?.toString(),
@@ -26,6 +27,7 @@ import { ExerciseType } from "./exercises/Exercises";
 
 // temporar
 export async function editExercise(old: ExerciseType, data?: FormData) {
+
   const title = data?.get("title")?.toString() || old.title,
     instructions = data?.get("instructions")?.toString() || old.instructions,
     url = data?.get("url")?.toString() || old.url;
@@ -40,7 +42,7 @@ export async function editExercise(old: ExerciseType, data?: FormData) {
   await db
     .select()
     .from(exercise_session)
-    .where(eq(exercise_session.exercise_id, old.id))
+    .where(eq(exercise_session.exerciseId, old.id))
     .all()
     .then((data) =>
       data.forEach(({ id }) => revalidatePath(`/sessions/${id}`))
@@ -52,7 +54,7 @@ export async function editExercise(old: ExerciseType, data?: FormData) {
 export async function deleteExercise(id: number) {
   const foreign = await db
     .delete(exercise_session)
-    .where(eq(exercise_session.exercise_id, id))
+    .where(eq(exercise_session.exerciseId, id))
     .returning()
     .get();
 
@@ -68,7 +70,7 @@ export async function deleteExercise(id: number) {
 export async function deleteSession(id: number) {
   const foreign = await db
     .delete(exercise_session)
-    .where(eq(exercise_session.session_id, id))
+    .where(eq(exercise_session.sessionId, id))
     .returning()
     .get();
 
@@ -82,36 +84,36 @@ export async function deleteSession(id: number) {
 }
 
 export async function removeExerciseFromSession(
-  exercise_id: number,
-  session_id: number
+  exerciseId: number,
+  sessionId: number
 ) {
   const deleted = await db
     .delete(exercise_session)
     .where(
       and(
-        eq(exercise_session.exercise_id, exercise_id),
-        eq(exercise_session.session_id, session_id)
+        eq(exercise_session.exerciseId, exerciseId),
+        eq(exercise_session.sessionId, sessionId)
       )
     )
     .returning()
     .get();
 
-  revalidatePath(`/sessions/${session_id}`);
+  revalidatePath(`/sessions/${sessionId}`);
 
   console.log(deleted);
 }
 
 export async function addExerciseToSession(
-  exercise_id: number,
-  session_id: number
+  exerciseId: number,
+  sessionId: number
 ) {
   const newEntry = await db
     .insert(exercise_session)
-    .values({ exercise_id, session_id })
+    .values({ exerciseId, sessionId })
     .returning()
     .get();
 
-  revalidatePath(`/sessions/${session_id}`);
+  revalidatePath(`/sessions/${sessionId}`);
 
   console.log(newEntry);
 }

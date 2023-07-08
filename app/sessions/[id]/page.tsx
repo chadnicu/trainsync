@@ -24,22 +24,23 @@ export default async function Page({ params }: { params: { id: string } }) {
     .limit(1)
     .get();
 
-  const existing = await db
+  const exercises = await db
     .select()
     .from(exercise_session)
-    .rightJoin(exercise, eq(exercise_session.exercise_id, exercise.id))
-    .where(eq(exercise_session.session_id, sessionId))
-    .all();
-
-  const exerciseIds = await db
-    .select()
-    .from(exercise_session)
-    .where(eq(exercise_session.session_id, sessionId))
+    .innerJoin(exercise, eq(exercise_session.exerciseId, exercise.id))
+    .where(eq(exercise_session.sessionId, sessionId))
     .all()
-    .then((data) =>
-      data.length !== 0 ? data.map((e) => e.exercise_id) : [-1]
-    );
+    .then((data) => data.map(({ exercise }) => exercise));
 
+  // const exerciseIds = await db
+  //   .select()
+  //   .from(exercise_session)
+  //   .where(eq(exercise_session.sessionId, sessionId))
+  //   .all()
+  //   .then((data) => (data.length !== 0 ? data.map((e) => e.exerciseId) : [-1]));
+
+  const exerciseIds = exercises.map((e) => e.id);
+  
   const other = await db
     .select()
     .from(exercise)
@@ -52,15 +53,15 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       <div className="mt-10 flex justify-around">
         <div className="grid gap-2">
-          {existing.map((e) => (
-            <div key={e.exercise.id}>
+          {exercises.map((e) => (
+            <div key={e.id}>
               <div className="flex w-80 items-center justify-between border px-7 py-5">
                 <div className="text-left">
-                  <HoverExercise data={e.exercise} />
+                  <HoverExercise data={e} />
                 </div>
                 <div className="">
                   <DeleteButton
-                    id={e.exercise.id}
+                    id={e.id}
                     sessionId={sessionId}
                     table={"exercise_session"}
                   />

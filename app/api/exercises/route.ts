@@ -1,10 +1,19 @@
 import { exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
+import { auth } from "@clerk/nextjs";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
-  const data = await db.select().from(exercise).all();
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const data = await db
+    .select()
+    .from(exercise)
+    .where(eq(exercise.userId, userId))
+    .all();
 
   revalidatePath("/exercises"); // optional
 
@@ -12,8 +21,15 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const { userId } = auth();
+  if (!userId) throw new Error("Unauthorized");
+
   const data = await request.json();
-  const newRecord = await db.insert(exercise).values(data).returning().get();
+  const newRecord = await db
+    .insert(exercise)
+    .values({ ...data, userId })
+    .returning()
+    .all();
 
   revalidatePath("/exercises"); // optional
 

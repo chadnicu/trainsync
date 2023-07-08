@@ -5,16 +5,23 @@ export const exercise = sqliteTable("exercise", {
   title: text("title").notNull(),
   instructions: text("instructions"),
   url: text("url"),
+  userId: text("user_id").notNull(),
 });
 
 export const session = sqliteTable("session", {
   id: integer("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description"),
+  userId: text("user_id").notNull(),
 });
 
 export const exercise_session = sqliteTable("exercise_session", {
   id: integer("id").primaryKey(),
-  exercise_id: integer("exercise_id").notNull().references(() => exercise.id),
-  session_id: integer("session_id").notNull().references(() => session.id),
+  exerciseId: integer("exercise_id")
+    .notNull()
+    .references(() => exercise.id),
+  sessionId: integer("session_id")
+    .notNull()
+    .references(() => session.id),
+  // userId: integer("user_id").notNull(),
 });

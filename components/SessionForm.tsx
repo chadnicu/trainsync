@@ -18,11 +18,12 @@ import axios from "axios";
 // import { addExercise } from "@/app/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
+import { useAuth } from "@clerk/nextjs";
 
 const sessionSchema = z.object({
   title: z.string().nonempty(),
   description: z.string().optional(),
-  //   exercise_id: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+  //   exerciseId: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
   //     message: "Expected number, received a string",
   //   }),
 });

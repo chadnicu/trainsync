@@ -6,10 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 export type ExerciseType = {
-  title: string;
   id: number;
-  url: string | null;
+  title: string;
   instructions: string | null;
+  url: string | null;
+  userId: string;
 };
 
 async function getExercises() {
@@ -27,6 +28,8 @@ export default function Exercises({
     queryFn: getExercises,
     initialData: exercises,
   });
+
+  console.log(data);
 
   return (
     <div className="container flex min-h-screen gap-10 p-10">
