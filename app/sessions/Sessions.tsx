@@ -70,7 +70,7 @@ function HoverSession({ s }: { s: Session }) {
       </HoverCardTrigger>
       <HoverCardContent className="w-fit max-w-xs">
         <div className="flex justify-between space-x-4 space-y-1">
-          <p className="text-sm">{s.description}</p>
+          <p className="text-sm">{s.description || "No description"}</p>
         </div>
       </HoverCardContent>
     </HoverCard>

@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import { db } from "@/lib/turso";
 import { session } from "@/lib/schema";
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark, neobrutalism, shadesOfPurple } from "@clerk/themes";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,25 +35,15 @@ export default async function RootLayout({
       );
 
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en">
-        <body className={cn(inter.className, "dark tracking-tight")}>
-          {/* change bg color later  */}
-          {/* <nav className="sticky top-0 flex justify-around border-b py-5 backdrop-blur-sm backdrop-brightness-50"> */}
-          {/* <Link href="/" className="text-xl font-bold">
-              home
-            </Link>
-            <Link href="/exercises" className="text-xl font-bold">
-              exercises
-            </Link>
-            <Link href="/sessions" className="text-xl font-bold">
-              sessions
-            </Link> */}
-          {/* </nav> */}
-          <Providers>
-            <Navbar sessions={sessions} />
-            {children}
-          </Providers>
+        <body className={cn(inter.className, "tracking-tight")}>
+          <ThemeProvider enableSystem attribute="class" defaultTheme="system">
+            <Providers>
+              <Navbar sessions={sessions} />
+              {children}
+            </Providers>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

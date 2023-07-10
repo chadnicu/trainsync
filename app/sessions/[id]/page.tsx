@@ -39,8 +39,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   //   .all()
   //   .then((data) => (data.length !== 0 ? data.map((e) => e.exerciseId) : [-1]));
 
-  const exerciseIds = exercises.map((e) => e.id);
-  
+  const exerciseIds = exercises.length ? exercises.map((e) => e.id) : [-1];
+
   const other = await db
     .select()
     .from(exercise)

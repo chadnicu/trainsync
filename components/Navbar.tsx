@@ -16,6 +16,9 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Session, getSessions } from "@/app/sessions/Sessions";
 import { UserButton, useAuth } from "@clerk/nextjs";
+import { ThemeChanger } from "./ThemeChanger";
+import { dark, shadesOfPurple } from "@clerk/themes";
+import { useTheme } from "next-themes";
 
 export default function Navbar({
   sessions,
@@ -40,12 +43,14 @@ export default function Navbar({
     initialData: sessions,
   });
 
+  const { theme } = useTheme();
+
   const [data, setData] = React.useState(query.data);
 
   const { userId } = useAuth();
 
   return (
-    <NavigationMenu className="flex justify-start p-3">
+    <NavigationMenu className="flex justify-between p-3">
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
@@ -85,11 +90,16 @@ export default function Navbar({
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
+      </NavigationMenuList>
+      <NavigationMenuList>
         <NavigationMenuItem>
           {userId ? (
-            <div className="rounded-full border-2 border-slate-600 shadow-white">
-              <UserButton afterSignOutUrl="/" />
-            </div>
+            <UserButton
+              afterSignOutUrl="/"
+              appearance={{
+                baseTheme: theme === "dark" ? dark : undefined,
+              }}
+            />
           ) : (
             <Link href="/sign-in" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
@@ -97,6 +107,9 @@ export default function Navbar({
               </NavigationMenuLink>
             </Link>
           )}
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <ThemeChanger />
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
