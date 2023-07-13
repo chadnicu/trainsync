@@ -35,7 +35,7 @@ export default async function RootLayout({
       );
 
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
+    <ClerkProvider>
       <html lang="en">
         <body className={cn(inter.className, "tracking-tight")}>
           <ThemeProvider enableSystem attribute="class" defaultTheme="system">

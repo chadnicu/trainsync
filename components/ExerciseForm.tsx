@@ -16,8 +16,10 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import axios from "axios";
 // import { addExercise } from "@/app/actions";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
+import { ExerciseType } from "@/app/exercises/Exercises";
+import { useAuth } from "@clerk/nextjs";
 
 export const exerciseSchema = z.object({
   title: z.string().nonempty(),
@@ -43,11 +45,36 @@ export default function ExerciseForm() {
       .then(() => queryClient.invalidateQueries(["exercises"]));
   }
 
+  const { userId } = useAuth();
+
+  const { mutate } = useMutation({
+    mutationFn: onSubmit,
+    onMutate: async (newExercise: z.infer<typeof exerciseSchema>) => {
+      await queryClient.cancelQueries({ queryKey: ["exercises"] });
+      const previous = queryClient.getQueryData(["exercises"]);
+      queryClient.setQueryData(["exercises"], (old: any) => [
+        ...old,
+        { id: old?.length + 1, userId, ...newExercise },
+      ]);
+      return { previous };
+    },
+    onError: (err, newExercise, context) => {
+      queryClient.setQueryData(["exercises"], context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+    },
+  });
+
   return (
     <Form {...form}>
       <form
         // action={addFramework} // server action
-        onSubmit={form.handleSubmit(onSubmit)} // api route
+        // onSubmit={form.handleSubmit(onSubmit)} // api route
+        onSubmit={form.handleSubmit(
+          async (data: z.infer<typeof exerciseSchema>) => mutate(data)
+          // im a jenius
+        )}
         className="space-y-6"
       >
         <FormField

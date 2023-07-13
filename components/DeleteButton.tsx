@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  deleteExercise,
-  deleteSession,
-  removeExerciseFromSession,
-} from "@/app/actions";
+import { removeExerciseFromSession } from "@/app/actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,28 +16,24 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 
 export function DeleteButton({
-  id,
-  table,
-  sessionId,
+  mutate,
+  fromServer,
 }: {
-  id: number;
-  table: "exercises" | "sessions" | "exercise_session";
-  sessionId?: number;
+  mutate?: () => void;
+  fromServer?: { exerciseId: number; sessionId: number };
 }) {
-  const queryClient = useQueryClient();
-
-  const action = async () => {
-    if (table === "exercises") {
-      await deleteExercise(id);
-      queryClient.invalidateQueries(["exercises"]);
-    } else if (table === "sessions") {
-      await deleteSession(id);
-      queryClient.invalidateQueries(["sessions"]);
-      queryClient.invalidateQueries(["sessions-navbar"]);
-    } else if (sessionId) {
-      await removeExerciseFromSession(id, sessionId);
-    }
-  };
+  // const action = async () => {
+  //   if (table === "exercises") {
+  //     await deleteExercise(id);
+  //     queryClient.invalidateQueries(["exercises"]);
+  //   } else if (table === "sessions") {
+  //     await deleteSession(id);
+  //     queryClient.invalidateQueries(["sessions"]);
+  //     queryClient.invalidateQueries(["sessions-navbar"]);
+  //   } else if (sessionId) {
+  //     await removeExerciseFromSession(id, sessionId);
+  //   }
+  // };
 
   return (
     <AlertDialog>
@@ -58,7 +50,19 @@ export function DeleteButton({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={action}>Continue</AlertDialogAction>
+          <AlertDialogAction
+            onClick={
+              !mutate && fromServer
+                ? async () =>
+                    await removeExerciseFromSession(
+                      fromServer.exerciseId,
+                      fromServer.sessionId
+                    )
+                : mutate
+            }
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

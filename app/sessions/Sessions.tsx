@@ -1,7 +1,7 @@
 "use client";
 
 import SessionForm from "@/components/SessionForm";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { DeleteButton } from "@/components/DeleteButton";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
+import { deleteSession } from "../actions";
 
 export type Session = {
   id: number;
@@ -25,10 +26,34 @@ export async function getSessions() {
 }
 
 export default function Sessions({ sessions }: { sessions: Session[] }) {
+  const queryClient = useQueryClient();
+
   const { data }: { data: Session[] } = useQuery({
     queryKey: ["sessions"],
     queryFn: getSessions,
     initialData: sessions,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: async (id) => {
+      await deleteSession(id);
+      queryClient.invalidateQueries(["sessions"]);
+      queryClient.invalidateQueries(["sessions-navbar"]);
+    },
+    onMutate: async (id: number) => {
+      await queryClient.cancelQueries({ queryKey: ["sessions"] });
+      const previous = queryClient.getQueryData(["sessions"]);
+      queryClient.setQueryData(["sessions"], (old: any) =>
+        old.filter((s: any) => s.id !== id)
+      );
+      return { previous };
+    },
+    onError: (err, newExercise, context) => {
+      queryClient.setQueryData(["sessions"], context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["sessions"] });
+    },
   });
 
   return (
@@ -44,7 +69,7 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
               <HoverSession s={s} />
             </div>
             <div>
-              <DeleteButton id={s.id} table={"sessions"}></DeleteButton>
+              <DeleteButton mutate={() => mutate(s.id)} />
             </div>
           </div>
         ))}
@@ -54,7 +79,6 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
 }
 
 function HoverSession({ s }: { s: Session }) {
-  console.log(s.id);
   return (
     <HoverCard>
       <HoverCardTrigger asChild>

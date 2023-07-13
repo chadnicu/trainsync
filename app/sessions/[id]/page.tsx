@@ -1,3 +1,4 @@
+import { removeExerciseFromSession } from "@/app/actions";
 import AddButton from "@/components/AddButtonn";
 import ComboBox from "@/components/ComboBox";
 import ComboboxDemo from "@/components/ComboBox";
@@ -61,9 +62,10 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </div>
                 <div className="">
                   <DeleteButton
-                    id={e.id}
-                    sessionId={sessionId}
-                    table={"exercise_session"}
+                    // mutate={async () =>
+                    //   await removeExerciseFromSession(e.id, sessionId)
+                    // }
+                    fromServer={{ exerciseId: e.id, sessionId }}
                   />
                 </div>
               </div>

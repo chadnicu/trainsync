@@ -16,9 +16,10 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import axios from "axios";
 // import { addExercise } from "@/app/actions";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
+import { deleteSession } from "@/app/actions";
 
 const sessionSchema = z.object({
   title: z.string().nonempty(),
@@ -45,12 +46,41 @@ export default function SessionForm() {
       queryClient.invalidateQueries(["sessions-navbar"]);
     });
   }
+  
+  const { userId } = useAuth();
+
+  const { mutate } = useMutation({
+    mutationFn: onSubmit,
+    onMutate: async (newSession: z.infer<typeof sessionSchema>) => {
+      await queryClient.cancelQueries({ queryKey: ["sessions"] });
+      const previous = queryClient.getQueryData(["sessions"]);
+      queryClient.setQueryData(["sessions"], (old: any) => [
+        ...old,
+        { id: old?.length + 1, userId, ...newSession },
+      ]);
+      queryClient.setQueryData(["sessions-navbar"], (old: any) => [
+        ...old,
+        newSession,
+      ]);
+      return { previous };
+    },
+    onError: (err, newExercise, context) => {
+      queryClient.setQueryData(["sessions"], context?.previous);
+      queryClient.setQueryData(["sessions-navbar"], context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["sessions"] });
+      queryClient.invalidateQueries({ queryKey: ["sessions-navbar"] });
+    },
+  });
 
   return (
     <Form {...form}>
       <form
         // action={addFramework} // server action
-        onSubmit={form.handleSubmit(onSubmit)} // api route
+        onSubmit={form.handleSubmit(
+          async (data: z.infer<typeof sessionSchema>) => mutate(data)
+        )} // api route
         className="space-y-6"
       >
         <FormField
