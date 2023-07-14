@@ -1,6 +1,8 @@
 import { db } from "@/lib/turso";
 import Sessions from "./Sessions";
 import { session } from "@/lib/schema";
+import { eq } from "drizzle-orm";
+import { auth } from "@clerk/nextjs";
 
 export type SessionType = {
   title: string;
@@ -10,7 +12,12 @@ export type SessionType = {
 }[];
 
 export default async function Page() {
-  const sessions = await db.select().from(session).all();
+  const { userId } = auth();
+  const sessions = await db
+    .select()
+    .from(session)
+    .where(eq(session.userId, userId ?? "niger"))
+    .all();
 
   return <Sessions sessions={sessions} />;
 }

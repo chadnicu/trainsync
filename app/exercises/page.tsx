@@ -9,8 +9,9 @@ export default async function Home() {
   const initialData = await db
     .select()
     .from(exercise)
-    .where(eq(exercise.userId, userId ?? ""))
+    .where(eq(exercise.userId, userId ?? "niger"))
     .all();
+
 
   return <Exercises exercises={initialData} />;
 }

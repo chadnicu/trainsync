@@ -50,7 +50,7 @@ export default function Navbar({
   const { userId } = useAuth();
 
   return (
-    <NavigationMenu className="flex justify-between p-3">
+    <NavigationMenu className="flex justify-between">
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
@@ -91,7 +91,10 @@ export default function Navbar({
           </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
-      <NavigationMenuList>
+      <NavigationMenuList className="flex gap-2">
+        <NavigationMenuItem className="flex">
+          <ThemeChanger />
+        </NavigationMenuItem>
         <NavigationMenuItem>
           {userId ? (
             <UserButton
@@ -107,9 +110,6 @@ export default function Navbar({
               </NavigationMenuLink>
             </Link>
           )}
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <ThemeChanger />
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

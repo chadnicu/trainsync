@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/hover-card";
 import { exercise, exercise_session, session } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { eq, notInArray } from "drizzle-orm";
+import { auth, useAuth } from "@clerk/nextjs";
+import { and, eq, notInArray } from "drizzle-orm";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const sessionId = parseInt(params.id, 10);
@@ -42,10 +43,17 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const exerciseIds = exercises.length ? exercises.map((e) => e.id) : [-1];
 
+  const { userId } = auth();
+
   const other = await db
     .select()
     .from(exercise)
-    .where(notInArray(exercise.id, exerciseIds))
+    .where(
+      and(
+        eq(exercise.userId, userId ?? "niger"),
+        notInArray(exercise.id, exerciseIds)
+      )
+    )
     .all();
 
   return (

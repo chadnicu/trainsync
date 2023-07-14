@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import { db } from "@/lib/turso";
 import { session } from "@/lib/schema";
 import { ClerkProvider } from "@clerk/nextjs";
-import { dark, neobrutalism, shadesOfPurple } from "@clerk/themes";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -40,8 +39,10 @@ export default async function RootLayout({
         <body className={cn(inter.className, "tracking-tight")}>
           <ThemeProvider enableSystem attribute="class" defaultTheme="system">
             <Providers>
-              <Navbar sessions={sessions} />
-              {children}
+              <div className="min-h-screen p-3">
+                <Navbar sessions={sessions} />
+                {children}
+              </div>
             </Providers>
           </ThemeProvider>
         </body>

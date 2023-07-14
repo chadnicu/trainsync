@@ -27,13 +27,13 @@ export default function Exercises({
     queryKey: ["exercises"],
     queryFn: getExercises,
     initialData: exercises,
-  }); 
+  });
 
   console.log(data);
 
   return (
-    <div className="container flex min-h-screen gap-10 p-10">
-      <ExerciseForm/>
+    <div className="flex h-fit gap-10 p-10">
+      <ExerciseForm />
       <div className="grid grid-cols-2 place-items-start gap-10">
         {!data.length && <p>you have no exercises</p>}
         {data.map((e) => (

@@ -5,8 +5,6 @@ import { db } from "@/lib/turso";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { ExerciseType } from "./exercises/Exercises";
-import { auth } from "@clerk/nextjs";
-import { useQueryClient } from "@tanstack/react-query";
 
 // export async function addExercise(data: FormData) {
 //   const title = data.get("title")?.toString(),
