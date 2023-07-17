@@ -2,9 +2,10 @@
 
 import { exercise, exercise_session, session } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { and, eq } from "drizzle-orm";
+import { and, eq, notInArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { ExerciseType } from "./exercises/Exercises";
+import { auth } from "@clerk/nextjs";
 
 // export async function addExercise(data: FormData) {
 //   const title = data.get("title")?.toString(),
@@ -26,7 +27,6 @@ import { ExerciseType } from "./exercises/Exercises";
 
 // temporar
 export async function editExercise(old: ExerciseType, data?: FormData) {
-
   const title = data?.get("title")?.toString() || old.title,
     instructions = data?.get("instructions")?.toString() || old.instructions,
     url = data?.get("url")?.toString() || old.url;
@@ -115,4 +115,31 @@ export async function addExerciseToSession(
   revalidatePath(`/sessions/${sessionId}`);
 
   console.log(newEntry);
+}
+
+export async function getExercisesBySeshId(sessionId: number) {
+  const exercises = await db
+    .select()
+    .from(exercise_session)
+    .innerJoin(exercise, eq(exercise_session.exerciseId, exercise.id))
+    .where(eq(exercise_session.sessionId, sessionId))
+    .all()
+    .then((data) => data.map(({ exercise }) => exercise));
+
+  const exerciseIds = exercises.length ? exercises.map((e) => e.id) : [-1];
+
+  const { userId } = auth();
+
+  const other = await db
+    .select()
+    .from(exercise)
+    .where(
+      and(
+        eq(exercise.userId, userId ?? "niger"),
+        notInArray(exercise.id, exerciseIds)
+      )
+    )
+    .all();
+
+  return { exercises, other };
 }

@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/hover-card";
 import { exercise, exercise_session, session } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { auth, useAuth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 import { and, eq, notInArray } from "drizzle-orm";
+import Session from "./Session";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const sessionId = parseInt(params.id, 10);
@@ -57,40 +58,46 @@ export default async function Page({ params }: { params: { id: string } }) {
     .all();
 
   return (
-    <div className="p-10 text-center">
-      <h1 className="text-5xl font-bold">{currentSession.title}</h1>
+    // <div className="p-10 text-center">
+    //   <h1 className="text-5xl font-bold">{currentSession.title}</h1>
 
-      <div className="mt-10 flex justify-around gap-5">
-        <div className="grid gap-2">
-          {exercises.map((e) => (
-            <div key={e.id}>
-              <div className="flex gap-10 items-center justify-between border px-7 py-5">
-                <div className="text-left">
-                  <HoverExercise data={e} />
-                </div>
-                <div className="">
-                  <DeleteButton
-                    // mutate={async () =>
-                    //   await removeExerciseFromSession(e.id, sessionId)
-                    // }
-                    fromServer={{ exerciseId: e.id, sessionId }}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+    //   <div className="mt-10 flex justify-around gap-5">
+    //     <div className="grid gap-2">
+    //       {exercises.map((e) => (
+    //         <div key={e.id}>
+    //           <div className="flex items-center justify-between gap-10 border px-7 py-5">
+    //             <div className="text-left">
+    //               <HoverExercise data={e} />
+    //             </div>
+    //             <div className="">
+    //               <DeleteButton
+    //                 // mutate={async () =>
+    //                 //   await removeExerciseFromSession(e.id, sessionId)
+    //                 // }
+    //                 fromServer={{ exerciseId: e.id, sessionId }}
+    //               />
+    //             </div>
+    //           </div>
+    //         </div>
+    //       ))}
+    //     </div>
 
-        <ComboBox
-          exercises={other.map((e) => ({
-            value: e.title.toLowerCase(),
-            label: e.title,
-            exerciseId: e.id,
-            sessionId: sessionId,
-          }))}
-        />
-      </div>
-    </div>
+    //     <ComboBox
+    //       exercises={other.map((e, i) => ({
+    //         value: e.title,
+    //         label: e.title,
+    //         // label: `${i + 1}. ${e.title}`,
+    //         exerciseId: e.id,
+    //         sessionId: sessionId,
+    //       }))}
+    //     />
+    //   </div>
+    // </div>
+    <Session
+      currentSession={currentSession}
+      exercises={exercises}
+      other={other}
+    />
   );
 }
 

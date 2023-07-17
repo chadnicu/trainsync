@@ -1,6 +1,5 @@
 "use client";
 
-import SessionForm from "@/components/SessionForm";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { DeleteButton } from "@/components/DeleteButton";
@@ -57,13 +56,13 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
   });
 
   return (
-    <div className="flex gap-10 p-20">
+    <div>
       {!data.length && <p>you have no sessions</p>}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {data.map((s) => (
           <div
             key={s.id}
-            className="flex h-fit gap-10 items-center justify-between border px-7 py-5"
+            className="flex h-fit items-center justify-between gap-10 border px-7 py-5"
           >
             <div>
               <HoverSession s={s} />

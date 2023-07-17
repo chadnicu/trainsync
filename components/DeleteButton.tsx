@@ -15,13 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 
-export function DeleteButton({
-  mutate,
-  fromServer,
-}: {
-  mutate?: () => void;
-  fromServer?: { exerciseId: number; sessionId: number };
-}) {
+export function DeleteButton({ mutate }: { mutate: () => void }) {
   // const action = async () => {
   //   if (table === "exercises") {
   //     await deleteExercise(id);
@@ -50,19 +44,7 @@ export function DeleteButton({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={
-              !mutate && fromServer
-                ? async () =>
-                    await removeExerciseFromSession(
-                      fromServer.exerciseId,
-                      fromServer.sessionId
-                    )
-                : mutate
-            }
-          >
-            Continue
-          </AlertDialogAction>
+          <AlertDialogAction onClick={mutate}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -21,7 +21,7 @@ export default async function Page() {
     .all();
 
   return (
-    <div className="grid justify-between p-10 md:flex md:flex-row-reverse md:justify-between">
+    <div className="grid p-10 gap-2 md:flex md:flex-row-reverse md:justify-between">
       <SessionForm />
       <Sessions sessions={sessions} />
     </div>

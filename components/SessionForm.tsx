@@ -44,6 +44,8 @@ export default function SessionForm() {
   });
 
   async function onSubmit(values: z.infer<typeof sessionSchema>) {
+    setOpen(false);
+    form.reset();
     await axios.post("/api/sessions", values).then(() => {
       queryClient.invalidateQueries(["sessions"]);
       queryClient.invalidateQueries(["sessions-navbar"]);

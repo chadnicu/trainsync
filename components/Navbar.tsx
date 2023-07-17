@@ -50,7 +50,7 @@ export default function Navbar({
   const { userId } = useAuth();
 
   return (
-    <NavigationMenu className="sticky top-0 flex flex-none justify-between border bg-background p-3">
+    <NavigationMenu className="sticky top-0 flex flex-none justify-between border-b bg-background p-3">
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>

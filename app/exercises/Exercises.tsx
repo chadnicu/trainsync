@@ -32,7 +32,7 @@ export default function Exercises({
   console.log(data);
 
   return (
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 items-end gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 items-end gap-10">
         {!data.length && <p>you have no exercises</p>}
         {data.map((e) => (
           <div key={e.id}>

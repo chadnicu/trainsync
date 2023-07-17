@@ -18,19 +18,54 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { addExerciseToSession } from "@/app/actions";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ExerciseType } from "@/app/exercises/Exercises";
 
 export default function ComboBox({
   exercises,
+  sessionId,
 }: {
   exercises: {
     value: string;
     label: string;
     exerciseId: number;
-    sessionId: number;
   }[];
+  sessionId: number;
 }) {
+  const queryClient = useQueryClient();
+
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  const { mutate } = useMutation({
+    mutationFn: async (id: number) => {
+      setOpen(false);
+      await addExerciseToSession(id, sessionId).then(() => setValue(""));
+      queryClient.invalidateQueries([`exercises-${sessionId}`]);
+      //   setValue(currentValue === value ? "" : currentValue);
+    },
+    onMutate: async (id: number) => {
+      await queryClient.cancelQueries({
+        queryKey: [`exercises-${sessionId}`],
+      });
+      const previous = queryClient.getQueryData([`exercises-${sessionId}`]);
+      queryClient.setQueryData([`exercises-${sessionId}`], (old: any) => ({
+        exercises: old.exercises.concat(
+          old.other.filter((e: ExerciseType) => e.id === id)
+        ),
+        other: old.other.filter((e: ExerciseType) => e.id !== id),
+      }));
+      return { previous };
+    },
+    onError: (err, newExercise, context) => {
+      queryClient.setQueryData([`exercises-${sessionId}`], context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`exercises-${sessionId}`],
+      });
+    },
+  });
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -63,12 +98,7 @@ export default function ComboBox({
                 key={exercise.value}
                 onSelect={(currentValue) => {
                   setValue("Loading..");
-                  addExerciseToSession(
-                    exercise.exerciseId,
-                    exercise.sessionId
-                  ).then(() => setValue(""));
-                  //   setValue(currentValue === value ? "" : currentValue);
-                  setOpen(false);
+                  mutate(exercise.exerciseId);
                 }}
               >
                 <Check

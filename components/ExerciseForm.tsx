@@ -66,6 +66,8 @@ export default function ExerciseForm() {
   });
 
   async function onSubmit(values: z.infer<typeof exerciseSchema>) {
+    setOpen(false);
+    form.reset();
     await axios
       .post("/api/exercises", values)
       .then(() => queryClient.invalidateQueries(["exercises"]));
@@ -160,11 +162,7 @@ export default function ExerciseForm() {
                 >
                   Close
                 </Button>
-                <Button
-                  variant={"outline"}
-                  type="submit"
-                  className="w-full"
-                >
+                <Button variant={"outline"} type="submit" className="w-full">
                   Create
                 </Button>
               </div>
