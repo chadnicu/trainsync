@@ -32,9 +32,7 @@ export default function Exercises({
   console.log(data);
 
   return (
-    <div className="flex h-fit gap-10 p-10">
-      <ExerciseForm />
-      <div className="grid grid-cols-2 place-items-start gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 items-end gap-2">
         {!data.length && <p>you have no exercises</p>}
         {data.map((e) => (
           <div key={e.id}>
@@ -42,6 +40,5 @@ export default function Exercises({
           </div>
         ))}
       </div>
-    </div>
   );
 }

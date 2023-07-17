@@ -3,6 +3,7 @@ import Sessions from "./Sessions";
 import { session } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@clerk/nextjs";
+import SessionForm from "@/components/SessionForm";
 
 export type SessionType = {
   title: string;
@@ -19,5 +20,10 @@ export default async function Page() {
     .where(eq(session.userId, userId ?? "niger"))
     .all();
 
-  return <Sessions sessions={sessions} />;
+  return (
+    <div className="grid justify-between p-10 md:flex md:flex-row-reverse md:justify-between">
+      <SessionForm />
+      <Sessions sessions={sessions} />
+    </div>
+  );
 }

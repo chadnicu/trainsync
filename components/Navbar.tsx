@@ -50,7 +50,7 @@ export default function Navbar({
   const { userId } = useAuth();
 
   return (
-    <NavigationMenu className="flex justify-between">
+    <NavigationMenu className="sticky top-0 flex flex-none justify-between border bg-background p-3">
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
@@ -68,9 +68,11 @@ export default function Navbar({
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Sessions</NavigationMenuTrigger>
+          <NavigationMenuTrigger>
+            Sessions
+          </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               <ListItem
                 key={"sessions"}
                 title={"All sessions"}

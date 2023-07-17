@@ -58,12 +58,12 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
 
   return (
     <div className="flex gap-10 p-20">
-      <SessionForm />
-      <div className="grid grid-cols-2 gap-2">
+      {!data.length && <p>you have no sessions</p>}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-2">
         {data.map((s) => (
           <div
             key={s.id}
-            className="flex h-fit w-80 items-center justify-between border px-7 py-5"
+            className="flex h-fit gap-10 items-center justify-between border px-7 py-5"
           >
             <div>
               <HoverSession s={s} />

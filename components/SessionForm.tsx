@@ -20,6 +20,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
 import { deleteSession } from "@/app/actions";
+import { useState } from "react";
 
 const sessionSchema = z.object({
   title: z.string().nonempty(),
@@ -30,6 +31,8 @@ const sessionSchema = z.object({
 });
 
 export default function SessionForm() {
+  const [open, setOpen] = useState(false);
+
   const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof sessionSchema>>({
@@ -46,7 +49,7 @@ export default function SessionForm() {
       queryClient.invalidateQueries(["sessions-navbar"]);
     });
   }
-  
+
   const { userId } = useAuth();
 
   const { mutate } = useMutation({
@@ -75,45 +78,64 @@ export default function SessionForm() {
   });
 
   return (
-    <Form {...form}>
-      <form
-        // action={addFramework} // server action
-        onSubmit={form.handleSubmit(
-          async (data: z.infer<typeof sessionSchema>) => mutate(data)
-        )} // api route
-        className="space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Title of the session" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Optionally describe this session"
-                  {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        ></FormField>
-        <div className="flex justify-center">
-          <Button type="submit">Create</Button>
+    <>
+      {open ? (
+        <Form {...form}>
+          <form
+            // action={addFramework} // server action
+            onSubmit={form.handleSubmit(
+              async (data: z.infer<typeof sessionSchema>) => mutate(data)
+            )} // api route
+            className="space-y-6"
+          >
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Title of the session" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            ></FormField>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Optionally describe this session"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            ></FormField>
+            <div className="flex justify-between gap-2">
+              <Button
+                variant={"outline"}
+                onClick={() => setOpen(false)}
+                className="w-full"
+              >
+                Close
+              </Button>
+              <Button variant={"outline"} type="submit" className="w-full">
+                Create
+              </Button>
+            </div>
+          </form>
+        </Form>
+      ) : (
+        <div className="flex justify-end">
+          <Button variant={"outline"} onClick={() => setOpen(true)}>
+            Add new
+          </Button>
         </div>
-      </form>
-    </Form>
+      )}
+    </>
   );
 }

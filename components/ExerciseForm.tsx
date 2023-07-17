@@ -20,14 +20,40 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
 import { ExerciseType } from "@/app/exercises/Exercises";
 import { useAuth } from "@clerk/nextjs";
+import { useState } from "react";
+
+const isYouTubeLink = (url: string): boolean => {
+  // Regular expressions to match valid YouTube links
+  const youtubeRegex1 = /^(https?:\/\/)?(www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/;
+  const youtubeRegex2 =
+    /^(https?:\/\/)?(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/;
+  const youtubeRegex3 =
+    /^(https?:\/\/)?(www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/;
+  const youtubeRegex4 =
+    /^(https?:\/\/)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/;
+
+  return (
+    youtubeRegex1.test(url) ||
+    youtubeRegex2.test(url) ||
+    youtubeRegex3.test(url) ||
+    youtubeRegex4.test(url)
+  );
+};
 
 export const exerciseSchema = z.object({
   title: z.string().nonempty(),
   instructions: z.string().optional(),
-  url: z.string().url().optional().or(z.literal("")),
+  url: z
+    .string()
+    .url()
+    .refine((url) => isYouTubeLink(url), "Invalid YouTube Link")
+    .optional()
+    .or(z.literal("")),
 });
 
 export default function ExerciseForm() {
+  const [open, setOpen] = useState(false);
+
   const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof exerciseSchema>>({
@@ -67,63 +93,91 @@ export default function ExerciseForm() {
   });
 
   return (
-    <Form {...form}>
-      <form
-        // action={addFramework} // server action
-        // onSubmit={form.handleSubmit(onSubmit)} // api route
-        onSubmit={form.handleSubmit(
-          async (data: z.infer<typeof exerciseSchema>) => mutate(data)
-          // im a jenius
-        )}
-        className="space-y-6"
-      >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Name of the exercise" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={form.control}
-          name="instructions"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Instructions</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Tips about how to perform this movement"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <FormField
-          control={form.control}
-          name="url"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>YouTube URL</FormLabel>
-              <FormControl>
-                <Input placeholder="Link to demonstration video" {...field} />
-              </FormControl>
-              {/* <FormDescription>Framework{"'"}s github URL</FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        ></FormField>
-        <div className="flex justify-center">
-          <Button type="submit">Create</Button>
+    <>
+      {open ? (
+        <Form {...form}>
+          <div className="flex justify-end">
+            <form
+              // action={addFramework} // server action
+              // onSubmit={form.handleSubmit(onSubmit)} // api route
+              onSubmit={form.handleSubmit(
+                async (data: z.infer<typeof exerciseSchema>) => mutate(data)
+                // im a jenius
+              )}
+              className="w-fit space-y-6"
+            >
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Name of the exercise" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <FormField
+                control={form.control}
+                name="instructions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Instructions</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tips about how to perform this movement"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <FormField
+                control={form.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>YouTube URL</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Link to demonstration video"
+                        {...field}
+                      />
+                    </FormControl>
+                    {/* <FormDescription>Framework{"'"}s github URL</FormDescription> */}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <div className="flex justify-between gap-2">
+                <Button
+                  variant={"outline"}
+                  onClick={() => setOpen(false)}
+                  className="w-full"
+                >
+                  Close
+                </Button>
+                <Button
+                  variant={"outline"}
+                  type="submit"
+                  className="w-full"
+                >
+                  Create
+                </Button>
+              </div>
+            </form>
+          </div>
+        </Form>
+      ) : (
+        <div className="flex justify-end">
+          <Button variant={"outline"} onClick={() => setOpen(true)}>
+            Add new
+          </Button>
         </div>
-      </form>
-    </Form>
+      )}
+    </>
   );
 }

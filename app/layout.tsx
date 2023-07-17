@@ -39,7 +39,7 @@ export default async function RootLayout({
         <body className={cn(inter.className, "tracking-tight")}>
           <ThemeProvider enableSystem attribute="class" defaultTheme="system">
             <Providers>
-              <div className="min-h-screen p-3">
+              <div className="grid items-start min-h-screen">
                 <Navbar sessions={sessions} />
                 {children}
               </div>
