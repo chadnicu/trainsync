@@ -60,11 +60,11 @@ export default async function Page({ params }: { params: { id: string } }) {
     <div className="p-10 text-center">
       <h1 className="text-5xl font-bold">{currentSession.title}</h1>
 
-      <div className="mt-10 flex justify-around">
+      <div className="mt-10 flex justify-around gap-5">
         <div className="grid gap-2">
           {exercises.map((e) => (
             <div key={e.id}>
-              <div className="flex w-80 items-center justify-between border px-7 py-5">
+              <div className="flex gap-10 items-center justify-between border px-7 py-5">
                 <div className="text-left">
                   <HoverExercise data={e} />
                 </div>
