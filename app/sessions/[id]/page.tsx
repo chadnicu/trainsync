@@ -1,5 +1,5 @@
 import { removeExerciseFromSession } from "@/app/actions";
-import AddButton from "@/components/AddButtonn";
+import AddButton from "@/components/AddButton";
 import ComboBox from "@/components/ComboBox";
 import ComboboxDemo from "@/components/ComboBox";
 import CoolView from "@/components/CoolView";
@@ -98,31 +98,5 @@ export default async function Page({ params }: { params: { id: string } }) {
       exercises={exercises}
       other={other}
     />
-  );
-}
-
-function HoverExercise({
-  data,
-}: {
-  data: {
-    id: number;
-    title: string;
-    instructions: string | null;
-    url: string | null;
-  };
-}) {
-  return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Button variant={"link"} className="p-0 text-left text-xl font-bold">
-          {data.title}
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent className="w-fit max-w-xs">
-        <div className="flex justify-between space-x-4 space-y-1">
-          <p className="text-sm">{data.instructions || "No instructions"}</p>
-        </div>
-      </HoverCardContent>
-    </HoverCard>
   );
 }

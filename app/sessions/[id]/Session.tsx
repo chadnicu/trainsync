@@ -9,7 +9,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@radix-ui/react-hover-card";
+} from "@/components/ui/hover-card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Session } from "../Sessions";
 
@@ -94,17 +94,18 @@ export default function Session({ currentSession, exercises, other }: Props) {
   return (
     <div className="p-10 text-center">
       <h1 className="text-5xl font-bold">{currentSession.title}</h1>
-      <div className="mt-10 flex justify-around gap-5">
+      <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
         <div className="grid gap-2">
           {data.exercises.map((e) => (
-            <div key={e.id}>
-              <div className="flex items-center justify-between gap-10 border px-7 py-5">
-                <div className="text-left">
-                  <HoverExercise data={e} />
-                </div>
-                <div className="">
-                  <DeleteButton mutate={() => mutate(e.id)} />
-                </div>
+            <div
+              className="flex items-center gap-10 border px-7 py-5"
+              key={e.id}
+            >
+              <div>
+                <HoverExercise data={e} />
+              </div>
+              <div>
+                <DeleteButton mutate={() => mutate(e.id)} />
               </div>
             </div>
           ))}
@@ -138,13 +139,11 @@ function HoverExercise({
     <HoverCard>
       <HoverCardTrigger asChild>
         <Button variant={"link"} className="p-0 text-left text-xl font-bold">
-          {data.title}
+          {data?.title}
         </Button>
       </HoverCardTrigger>
-      <HoverCardContent className="w-fit max-w-xs">
-        <div className="flex justify-between space-x-4 space-y-1">
-          <p className="text-sm">{data.instructions || "No instructions"}</p>
-        </div>
+      <HoverCardContent className="flex w-fit max-w-xs justify-between space-x-4 space-y-1">
+        <p className="text-sm">{data?.instructions || "No instructions"}</p>
       </HoverCardContent>
     </HoverCard>
   );

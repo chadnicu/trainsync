@@ -82,7 +82,7 @@ function HoverSession({ s }: { s: Session }) {
     <HoverCard>
       <HoverCardTrigger asChild>
         <Link
-          href={`/sessions/${s.id}`}
+          href={`/sessions/${s?.id}`}
           className={cn(
             buttonVariants({ variant: "link" }),
             "p-0 text-left text-xl font-bold"
@@ -91,10 +91,8 @@ function HoverSession({ s }: { s: Session }) {
           {s.title}
         </Link>
       </HoverCardTrigger>
-      <HoverCardContent className="w-fit max-w-xs">
-        <div className="flex justify-between space-x-4 space-y-1">
-          <p className="text-sm">{s.description || "No description"}</p>
-        </div>
+      <HoverCardContent className="flex w-fit max-w-xs justify-between space-x-4 space-y-1">
+        <p className="text-sm">{s?.description || "No description"}</p>
       </HoverCardContent>
     </HoverCard>
   );
