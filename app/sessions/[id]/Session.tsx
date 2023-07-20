@@ -98,7 +98,7 @@ export default function Session({ currentSession, exercises, other }: Props) {
         <div className="grid gap-2">
           {data.exercises.map((e) => (
             <div
-              className="flex items-center gap-10 border px-7 py-5"
+              className="flex items-center justify-between gap-10 border px-7 py-5"
               key={e.id}
             >
               <div>

@@ -11,7 +11,16 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
-import { deleteSession } from "../actions";
+import { deleteSession, editSession } from "../actions";
+import { EditButton } from "@/components/EditButton";
+import {
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@radix-ui/react-label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export type Session = {
   id: number;
@@ -62,12 +71,53 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
         {data.map((s) => (
           <div
             key={s.id}
-            className="flex h-fit items-center justify-between gap-10 border px-7 py-5"
+            className="grid h-fit place-items-center gap-5 border px-7 py-5"
           >
             <div>
               <HoverSession s={s} />
             </div>
-            <div>
+            <div className="flex justify-between gap-2">
+              <EditButton
+                data={s}
+                action={async (formData) =>
+                  editSession(s, formData).then(() => {
+                    queryClient.invalidateQueries(["sessions"]);
+                    queryClient.invalidateQueries(["sessions-navbar"]);
+                  })
+                }
+                header={
+                  <DialogHeader>
+                    <DialogTitle>Edit</DialogTitle>
+                    <DialogDescription>
+                      Make changes to your session here. Click save when you
+                      {"'"}re done.
+                    </DialogDescription>
+                  </DialogHeader>
+                }
+              >
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="title" className="text-right">
+                    Title
+                  </Label>
+                  <Input
+                    id="title"
+                    name="title"
+                    placeholder={s.title}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="description" className="text-right">
+                    Description
+                  </Label>
+                  <Textarea
+                    id="description"
+                    name="description"
+                    placeholder={s.description ?? ""}
+                    className="col-span-3"
+                  />
+                </div>
+              </EditButton>
               <DeleteButton mutate={() => mutate(s.id)} />
             </div>
           </div>

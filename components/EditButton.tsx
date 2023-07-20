@@ -16,6 +16,7 @@ import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { exerciseSchema } from "./ExerciseForm";
 import { SessionType } from "@/app/sessions/page";
 import { ReactNode } from "react";
+import { Session } from "@/app/sessions/Sessions";
 
 export function EditButton({
   data,
@@ -23,7 +24,7 @@ export function EditButton({
   header,
   children,
 }: {
-  data: ExerciseType | SessionType;
+  data: ExerciseType | Session;
   action: (formData?: FormData) => void;
   header: ReactNode;
   children: ReactNode;
@@ -37,6 +38,11 @@ export function EditButton({
         {header}
         <form className="grid gap-4 py-4" action={action}>
           {children}
+          <div className="mt-5 flex justify-center">
+            <Button type="submit" className="w-fit">
+              Save changes
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

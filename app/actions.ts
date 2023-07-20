@@ -6,6 +6,7 @@ import { and, eq, notInArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { ExerciseType } from "./exercises/Exercises";
 import { auth } from "@clerk/nextjs";
+import { Session } from "./sessions/Sessions";
 
 // export async function addExercise(data: FormData) {
 //   const title = data.get("title")?.toString(),
@@ -48,6 +49,20 @@ export async function editExercise(old: ExerciseType, data?: FormData) {
     );
 
   console.log(res);
+}
+
+export async function editSession(old: Session, data?: FormData) {
+  const title = data?.get("title")?.toString() || old.title,
+    description = data?.get("description")?.toString() || old.description;
+
+  await db
+    .update(session)
+    .set({ title, description })
+    .where(eq(session.id, old.id))
+    .returning()
+    .get();
+
+  revalidatePath(`/sessions/${old.id}`);
 }
 
 export async function deleteExercise(id: number) {

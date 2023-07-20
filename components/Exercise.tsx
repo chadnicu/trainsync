@@ -118,11 +118,7 @@ export default function Exercise({ exercise }: { exercise: ExerciseType }) {
               className="col-span-3"
             />
           </div>
-          <div className="mt-5 flex justify-center">
-            <Button type="submit" className="w-fit">
-              Save changes
-            </Button>
-          </div>
+         
         </EditButton>
         <DeleteButton mutate={() => mutate(id)} />
       </div>

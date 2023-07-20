@@ -18,6 +18,9 @@ import { and, eq, notInArray } from "drizzle-orm";
 import Session from "./Session";
 
 export default async function Page({ params }: { params: { id: string } }) {
+  const { userId } = auth();
+  if (!userId) return <p>Unauthorized</p>;
+
   const sessionId = parseInt(params.id, 10);
 
   const currentSession = await db
@@ -43,8 +46,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   //   .then((data) => (data.length !== 0 ? data.map((e) => e.exerciseId) : [-1]));
 
   const exerciseIds = exercises.length ? exercises.map((e) => e.id) : [-1];
-
-  const { userId } = auth();
 
   const other = await db
     .select()

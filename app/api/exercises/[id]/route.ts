@@ -9,7 +9,7 @@ export async function PUT(
   {
     params,
   }: {
-    params: { slug: string };
+    params: { id: string };
   }
 ) {
   const { userId } = auth();
@@ -19,11 +19,11 @@ export async function PUT(
   const updated = await db
     .update(exercise)
     .set({ ...data, userId })
-    .where(eq(exercise.id, parseInt(params.slug, 10)))
+    .where(eq(exercise.id, parseInt(params.id, 10)))
     .returning()
     .all();
 
-  console.log(data, updated, params.slug, "su");
+  console.log(data, updated, params.id, "su");
 
   return NextResponse.json(updated);
 }
