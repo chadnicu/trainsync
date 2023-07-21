@@ -9,10 +9,11 @@ import { z } from "zod";
 import { exerciseSchema } from "@/components/ExerciseForm";
 import { sessionSchema } from "@/components/SessionForm";
 import { Exercise, Session } from "@/lib/types";
+import { redirect } from "next/navigation";
 
 export async function getExercises() {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return [];
 
   const data = await db
     .select()
@@ -25,7 +26,7 @@ export async function getExercises() {
 
 export async function getSessions() {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return [];
 
   const data = await db
     .select()
@@ -38,33 +39,33 @@ export async function getSessions() {
 
 export async function createExercise(values: z.infer<typeof exerciseSchema>) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return {};
 
   const newExercise = await db
     .insert(exercise)
     .values({ ...values, userId })
     .returning()
-    .all();
+    .get();
 
   return newExercise;
 }
 
 export async function createSession(values: z.infer<typeof sessionSchema>) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return {};
 
   const newSession = await db
     .insert(session)
     .values({ ...values, userId })
     .returning()
-    .all();
+    .get();
 
   return newSession;
 }
 
 export async function editExercise(old: Exercise, data?: FormData) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return;
 
   const title = data?.get("title")?.toString() || old.title,
     instructions = data?.get("instructions")?.toString() || old.instructions,
@@ -85,13 +86,11 @@ export async function editExercise(old: Exercise, data?: FormData) {
     .then((data) =>
       data.forEach(({ id }) => revalidatePath(`/sessions/${id}`))
     );
-
-  console.log(res);
 }
 
 export async function editSession(old: Session, data?: FormData) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return;
 
   const title = data?.get("title")?.toString() || old.title,
     description = data?.get("description")?.toString() || old.description;
@@ -108,40 +107,29 @@ export async function editSession(old: Session, data?: FormData) {
 
 export async function deleteExercise(id: number) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return;
 
-  const foreign = await db
+  // delete it from all sessions first
+  await db
     .delete(exercise_session)
     .where(eq(exercise_session.exerciseId, id))
     .returning()
     .get();
 
-  const deletedExercise = await db
-    .delete(exercise)
-    .where(eq(exercise.id, id))
-    .returning()
-    .get();
-
-  console.log(foreign, deletedExercise);
+  await db.delete(exercise).where(eq(exercise.id, id)).returning().get();
 }
 
 export async function deleteSession(id: number) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return;
 
-  const foreign = await db
+  await db
     .delete(exercise_session)
     .where(eq(exercise_session.sessionId, id))
     .returning()
     .get();
 
-  const deletedSession = await db
-    .delete(session)
-    .where(eq(session.id, id))
-    .returning()
-    .get();
-
-  console.log(foreign, deletedSession);
+  await db.delete(session).where(eq(session.id, id)).returning().get();
 }
 
 export async function addExerciseToSession(
@@ -149,17 +137,15 @@ export async function addExerciseToSession(
   sessionId: number
 ) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return;
 
-  const newEntry = await db
+  await db
     .insert(exercise_session)
     .values({ exerciseId, sessionId })
     .returning()
     .get();
 
   revalidatePath(`/sessions/${sessionId}`);
-
-  console.log(newEntry);
 }
 
 export async function removeExerciseFromSession(
@@ -167,9 +153,9 @@ export async function removeExerciseFromSession(
   sessionId: number
 ) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return;
 
-  const deleted = await db
+  await db
     .delete(exercise_session)
     .where(
       and(
@@ -181,13 +167,11 @@ export async function removeExerciseFromSession(
     .get();
 
   revalidatePath(`/sessions/${sessionId}`);
-
-  console.log(deleted);
 }
 
 export async function getExercisesBySeshId(sessionId: number) {
   const { userId } = auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) return { sessionsExercises: [], otherExercises: [] };
 
   const sessionsExercises = await db
     .select()

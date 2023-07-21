@@ -49,10 +49,10 @@ export default function ComboBox({
       });
       const previous = queryClient.getQueryData([`exercises-${sessionId}`]);
       queryClient.setQueryData([`exercises-${sessionId}`], (old: any) => ({
-        exercises: old.exercises.concat(
-          old.other.filter((e: Exercise) => e.id === id)
+        sessionsExercises: old.sessionsExercises.concat(
+          old.otherExercises.filter((e: Exercise) => e.id === id)
         ),
-        other: old.other.filter((e: Exercise) => e.id !== id),
+        otherExercises: old.otherExercises.filter((e: Exercise) => e.id !== id),
       }));
       return { previous };
     },

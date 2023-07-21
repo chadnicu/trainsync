@@ -9,7 +9,12 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Updater,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Exercise, Session } from "@/lib/types";
 
 type Props = {
@@ -46,9 +51,11 @@ export default function Session({
       });
       const previous = queryClient.getQueryData([`exercises-${session.id}`]);
       queryClient.setQueryData([`exercises-${session.id}`], (old: any) => ({
-        exercises: old.exercises.filter((e: Exercise) => e.id !== id),
-        other: old.other.concat(
-          old.exercises.filter((e: Exercise) => e.id === id)
+        sessionsExercises: old.sessionsExercises.filter(
+          (e: Exercise) => e.id !== id
+        ),
+        otherExercises: old.otherExercises.concat(
+          old.sessionsExercises.filter((e: Exercise) => e.id === id)
         ),
       }));
       return { previous };
