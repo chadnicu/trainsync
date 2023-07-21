@@ -6,28 +6,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import axios from "axios";
-// import { addExercise } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
-import { deleteSession } from "@/app/actions";
+import { createSession, deleteSession } from "@/app/actions";
 import { useState } from "react";
 
-const sessionSchema = z.object({
+export const sessionSchema = z.object({
   title: z.string().nonempty(),
   description: z.string().optional(),
-  //   exerciseId: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-  //     message: "Expected number, received a string",
-  //   }),
 });
 
 export default function SessionForm() {
@@ -46,7 +39,7 @@ export default function SessionForm() {
   async function onSubmit(values: z.infer<typeof sessionSchema>) {
     setOpen(false);
     form.reset();
-    await axios.post("/api/sessions", values).then(() => {
+    await createSession(values).then(() => {
       queryClient.invalidateQueries(["sessions"]);
       queryClient.invalidateQueries(["sessions-navbar"]);
     });
@@ -84,10 +77,9 @@ export default function SessionForm() {
       {open ? (
         <Form {...form}>
           <form
-            // action={addFramework} // server action
             onSubmit={form.handleSubmit(
               async (data: z.infer<typeof sessionSchema>) => mutate(data)
-            )} // api route
+            )}
             className="space-y-6"
           >
             <FormField

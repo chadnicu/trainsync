@@ -11,7 +11,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
-import { deleteSession, editSession } from "../actions";
+import { deleteSession, editSession, getSessions } from "../actions";
 import { EditButton } from "@/components/EditButton";
 import {
   DialogDescription,
@@ -21,22 +21,12 @@ import {
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-export type Session = {
-  id: number;
-  title: string;
-  description: string | null;
-};
-
-export async function getSessions() {
-  const { data } = await axios.get("/api/sessions");
-  return data;
-}
+import { Session } from "@/lib/types";
 
 export default function Sessions({ sessions }: { sessions: Session[] }) {
   const queryClient = useQueryClient();
 
-  const { data }: { data: Session[] } = useQuery({
+  const { data } = useQuery({
     queryKey: ["sessions"],
     queryFn: getSessions,
     initialData: sessions,

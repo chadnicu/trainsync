@@ -23,5 +23,4 @@ export const exercise_session = sqliteTable("exercise_session", {
   sessionId: integer("session_id")
     .notNull()
     .references(() => session.id),
-  // userId: integer("user_id").notNull(),
 });

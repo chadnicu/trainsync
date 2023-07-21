@@ -1,9 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { ExerciseType } from "@/app/exercises/Exercises";
@@ -14,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { exerciseSchema } from "./ExerciseForm";
-import { SessionType } from "@/app/sessions/page";
 import { ReactNode } from "react";
 import { Session } from "@/app/sessions/Sessions";
 
@@ -48,8 +43,9 @@ export function EditButton({
     </Dialog>
   );
 }
-  
-// unused cuz of error
+
+/*
+unused cuz of error
 function EditForm({ exercise }: { exercise: ExerciseType }) {
   const queryClient = useQueryClient();
 
@@ -65,7 +61,7 @@ function EditForm({ exercise }: { exercise: ExerciseType }) {
   async function onSubmit(values: z.infer<typeof exerciseSchema>) {
     await axios
       .put(`/api/exercises/${exercise.id}`, values)
-      .then(() => queryClient.invalidateQueries(["exercises"]));
+      .then(() => queryClient.invalidateQueries(["exercises"])); // deleted, use server action in the future
   }
 
   return (
@@ -122,3 +118,4 @@ function EditForm({ exercise }: { exercise: ExerciseType }) {
     </Form>
   );
 }
+*/

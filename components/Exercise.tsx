@@ -1,6 +1,5 @@
 "use client";
 
-import { ExerciseType } from "@/app/exercises/Exercises";
 import { EditButton } from "./EditButton";
 import { DeleteButton } from "./DeleteButton";
 import { deleteExercise, editExercise } from "@/app/actions";
@@ -9,10 +8,10 @@ import { DialogHeader } from "./ui/dialog";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import { Exercise } from "@/lib/types";
 
-export default function Exercise({ exercise }: { exercise: ExerciseType }) {
+export default function Exercise({ exercise }: { exercise: Exercise }) {
   const queryClient = useQueryClient();
 
   const { id, title, instructions, url } = exercise;
@@ -118,7 +117,6 @@ export default function Exercise({ exercise }: { exercise: ExerciseType }) {
               className="col-span-3"
             />
           </div>
-         
         </EditButton>
         <DeleteButton mutate={() => mutate(id)} />
       </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { getExercisesBySeshId, removeExerciseFromSession } from "@/app/actions";
-import { ExerciseType } from "@/app/exercises/Exercises";
 import ComboBox from "@/components/ComboBox";
 import { DeleteButton } from "@/components/DeleteButton";
 import { Button } from "@/components/ui/button";
@@ -11,92 +10,65 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Session } from "../Sessions";
+import { Exercise, Session } from "@/lib/types";
 
 type Props = {
-  currentSession: {
-    title: string;
-    id: number;
-    description: string | null;
-    userId: string;
-  };
-  exercises: {
-    id: number;
-    title: string;
-    userId: string;
-    instructions: string | null;
-    url: string | null;
-  }[];
-  other: {
-    id: number;
-    title: string;
-    userId: string;
-    instructions: string | null;
-    url: string | null;
-  }[];
+  session: Session;
+  sessionsExercises: Exercise[];
+  otherExercises: Exercise[];
 };
 
-export default function Session({ currentSession, exercises, other }: Props) {
+export default function Session({
+  session,
+  sessionsExercises,
+  otherExercises,
+}: Props) {
   const queryClient = useQueryClient();
 
-  const {
-    data,
-  }: {
-    data: { exercises: ExerciseType[]; other: ExerciseType[] };
-  } = useQuery({
-    queryKey: [`exercises-${currentSession.id}`],
+  const { data } = useQuery({
+    queryKey: [`exercises-${session.id}`],
     queryFn: async () => {
-      const data = await getExercisesBySeshId(currentSession.id);
+      const data = await getExercisesBySeshId(session.id);
       return data;
     },
-    initialData: { exercises, other },
+    initialData: { sessionsExercises, otherExercises },
   });
 
   const { mutate } = useMutation({
     mutationFn: async (id) => {
-      await removeExerciseFromSession(id, currentSession.id).then(() =>
-        queryClient.invalidateQueries([`exercises-${currentSession.id}`])
+      await removeExerciseFromSession(id, session.id).then(() =>
+        queryClient.invalidateQueries([`exercises-${session.id}`])
       );
     },
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({
-        queryKey: [`exercises-${currentSession.id}`],
+        queryKey: [`exercises-${session.id}`],
       });
-      const previous = queryClient.getQueryData([
-        `exercises-${currentSession.id}`,
-      ]);
-      queryClient.setQueryData(
-        [`exercises-${currentSession.id}`],
-        (old: any) => ({
-          exercises: old.exercises.filter((e: ExerciseType) => e.id !== id),
-          other: old.other.concat(
-            old.exercises.filter((e: ExerciseType) => e.id === id)
-          ),
-        })
-      );
+      const previous = queryClient.getQueryData([`exercises-${session.id}`]);
+      queryClient.setQueryData([`exercises-${session.id}`], (old: any) => ({
+        exercises: old.exercises.filter((e: Exercise) => e.id !== id),
+        other: old.other.concat(
+          old.exercises.filter((e: Exercise) => e.id === id)
+        ),
+      }));
       return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData(
-        [`exercises-${currentSession.id}`],
-        context?.previous
-      );
+      queryClient.setQueryData([`exercises-${session.id}`], context?.previous);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [`exercises-${currentSession.id}`],
+        queryKey: [`exercises-${session.id}`],
       });
     },
   });
 
-  console.log(data.other);
-
   return (
     <div className="p-10 text-center">
-      <h1 className="text-5xl font-bold">{currentSession.title}</h1>
+      <h1 className="text-5xl font-bold">{session.title}</h1>
       <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
         <div className="grid gap-2">
-          {data.exercises.map((e) => (
+          {data.sessionsExercises.map((e) => (
             <div
               className="flex items-center justify-between gap-10 border px-7 py-5"
               key={e.id}
@@ -112,13 +84,12 @@ export default function Session({ currentSession, exercises, other }: Props) {
         </div>
 
         <ComboBox
-          exercises={data.other.map((e, i) => ({
+          exercises={data.otherExercises.map((e) => ({
             value: e.title,
             label: e.title,
-            // label: `${i + 1}. ${e.title}`,
             exerciseId: e.id,
           }))}
-          sessionId={currentSession.id}
+          sessionId={session.id}
         />
       </div>
     </div>

@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import { db } from "@/lib/turso";
 import { session } from "@/lib/schema";
 import { ClerkProvider, auth } from "@clerk/nextjs";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { eq } from "drizzle-orm";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,31 +22,31 @@ export default async function RootLayout({
 }) {
   const { userId } = auth();
 
-  const sessions = await db
-    .select()
-    .from(session)
-    .where(eq(session.userId, userId ?? "niger"))
-    .all()
-    .then((data) =>
-      data.map((s) => ({
-        title: s.title,
-        href: s.id,
-        description: s.description || "",
-      }))
-    );
+  const sessions = userId
+    ? await db
+        .select()
+        .from(session)
+        .where(eq(session.userId, userId))
+        .all()
+        .then((data) =>
+          data.map((s) => ({
+            title: s.title,
+            href: s.id,
+            description: s.description || "",
+          }))
+        )
+    : [];
 
   return (
     <ClerkProvider>
       <html lang="en">
         <body className={cn(inter.className, "tracking-tight")}>
-          <ThemeProvider enableSystem attribute="class" defaultTheme="system">
-            <Providers>
-              <div className="grid min-h-screen items-start">
-                <Navbar sessions={sessions} />
-                {children}
-              </div>
-            </Providers>
-          </ThemeProvider>
+          <Providers>
+            <div className="grid min-h-screen items-start">
+              <Navbar sessions={sessions} />
+              {children}
+            </div>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

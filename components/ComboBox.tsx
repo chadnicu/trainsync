@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { addExerciseToSession } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ExerciseType } from "@/app/exercises/Exercises";
+import { Exercise } from "@/lib/types";
 
 export default function ComboBox({
   exercises,
@@ -42,7 +42,6 @@ export default function ComboBox({
       setOpen(false);
       await addExerciseToSession(id, sessionId).then(() => setValue(""));
       queryClient.invalidateQueries([`exercises-${sessionId}`]);
-      //   setValue(currentValue === value ? "" : currentValue);
     },
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({
@@ -51,9 +50,9 @@ export default function ComboBox({
       const previous = queryClient.getQueryData([`exercises-${sessionId}`]);
       queryClient.setQueryData([`exercises-${sessionId}`], (old: any) => ({
         exercises: old.exercises.concat(
-          old.other.filter((e: ExerciseType) => e.id === id)
+          old.other.filter((e: Exercise) => e.id === id)
         ),
-        other: old.other.filter((e: ExerciseType) => e.id !== id),
+        other: old.other.filter((e: Exercise) => e.id !== id),
       }));
       return { previous };
     },
@@ -76,10 +75,7 @@ export default function ComboBox({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? // ? exercises.find((exercises) => exercises.value === value)?.label
-              value
-            : "Add exercise..."}
+          {value ? value : "Add exercise..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

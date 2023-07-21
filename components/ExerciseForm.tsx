@@ -14,13 +14,11 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import axios from "axios";
-// import { addExercise } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
-import { ExerciseType } from "@/app/exercises/Exercises";
 import { useAuth } from "@clerk/nextjs";
 import { useState } from "react";
+import { createExercise } from "@/app/actions";
 
 const isYouTubeLink = (url: string): boolean => {
   // Regular expressions to match valid YouTube links
@@ -68,9 +66,9 @@ export default function ExerciseForm() {
   async function onSubmit(values: z.infer<typeof exerciseSchema>) {
     setOpen(false);
     form.reset();
-    await axios
-      .post("/api/exercises", values)
-      .then(() => queryClient.invalidateQueries(["exercises"]));
+    await createExercise(values).then(() =>
+      queryClient.invalidateQueries(["exercises"])
+    );
   }
 
   const { userId } = useAuth();
@@ -100,11 +98,8 @@ export default function ExerciseForm() {
         <Form {...form}>
           <div className="flex justify-end">
             <form
-              // action={addFramework} // server action
-              // onSubmit={form.handleSubmit(onSubmit)} // api route
               onSubmit={form.handleSubmit(
                 async (data: z.infer<typeof exerciseSchema>) => mutate(data)
-                // im a jenius
               )}
               className="w-fit space-y-6"
             >
@@ -149,7 +144,6 @@ export default function ExerciseForm() {
                         {...field}
                       />
                     </FormControl>
-                    {/* <FormDescription>Framework{"'"}s github URL</FormDescription> */}
                     <FormMessage />
                   </FormItem>
                 )}
