@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import Providers from "../lib/providers";
 import Navbar from "@/components/Navbar";
-import { ClerkProvider, auth } from "@clerk/nextjs";
 import { getSessions } from "./actions";
+import Providers from "@/lib/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,17 +26,15 @@ export default async function RootLayout({
   );
 
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={cn(inter.className, "tracking-tight")}>
-          <Providers>
-            <div className="grid min-h-screen items-start">
-              <Navbar sessions={navbarSessions} />
-              {children}
-            </div>
-          </Providers>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className={cn(inter.className, "tracking-tight")}>
+        <Providers>
+          <div className="grid min-h-screen items-start">
+            <Navbar sessions={navbarSessions} />
+            {children}
+          </div>
+        </Providers>
+      </body>
+    </html>
   );
 }

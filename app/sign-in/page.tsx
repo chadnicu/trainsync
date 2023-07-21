@@ -12,7 +12,7 @@ export default function SignInPage() {
     <div className="flex w-full justify-center">
       <SignIn
         appearance={{
-          baseTheme: theme === "dark" ? dark : undefined,
+          baseTheme: theme === "light" ? undefined : dark,
           elements: {
             formButtonPrimary: buttonVariants(),
           },

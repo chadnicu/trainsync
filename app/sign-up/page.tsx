@@ -12,7 +12,7 @@ export default function SignUpPage() {
     <div className="flex w-full justify-center">
       <SignUp
         appearance={{
-          baseTheme: theme === "dark" ? dark : undefined,
+          baseTheme: theme === "light" ? undefined : dark,
           elements: {
             formButtonPrimary: buttonVariants(),
           },
