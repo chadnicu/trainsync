@@ -7,6 +7,7 @@ import { db } from "@/lib/turso";
 import { session } from "@/lib/schema";
 import { ClerkProvider, auth } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
+import { dark } from "@clerk/themes";
 
 const inter = Inter({ subsets: ["latin"] });
 

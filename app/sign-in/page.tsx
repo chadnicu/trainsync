@@ -1,9 +1,23 @@
-import { SignIn } from "@clerk/nextjs";
+"use client";
 
-export default function Page() {
+import { buttonVariants } from "@/components/ui/button";
+import { SignIn } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+import { useTheme } from "next-themes";
+
+export default function SignInPage() {
+  const { theme } = useTheme();
+
   return (
-    <div className="w-full bg-red-500">
-      <SignIn />
+    <div className="flex w-full justify-center">
+      <SignIn
+        appearance={{
+          baseTheme: theme === "dark" ? dark : undefined,
+          elements: {
+            formButtonPrimary: buttonVariants(),
+          },
+        }}
+      />
     </div>
   );
 }
