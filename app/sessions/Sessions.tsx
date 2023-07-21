@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { DeleteButton } from "@/components/DeleteButton";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -12,16 +11,11 @@ import {
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
 import { deleteSession, editSession, getSessions } from "../actions";
-import { EditButton } from "@/components/EditButton";
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@radix-ui/react-label";
+import EditButton from "@/components/EditButton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Session } from "@/lib/types";
+import { Label } from "@/components/ui/label";
 
 export default function Sessions({ sessions }: { sessions: Session[] }) {
   const queryClient = useQueryClient();
@@ -68,7 +62,6 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
             </div>
             <div className="flex justify-between gap-2">
               <EditButton
-                data={s}
                 action={async (formData) =>
                   editSession(s, formData).then(() => {
                     queryClient.invalidateQueries(["sessions"]);
@@ -76,13 +69,13 @@ export default function Sessions({ sessions }: { sessions: Session[] }) {
                   })
                 }
                 header={
-                  <DialogHeader>
-                    <DialogTitle>Edit</DialogTitle>
-                    <DialogDescription>
+                  <EditButton.Header>
+                    <EditButton.Title>Edit</EditButton.Title>
+                    <EditButton.Description>
                       Make changes to your session here. Click save when you
                       {"'"}re done.
-                    </DialogDescription>
-                  </DialogHeader>
+                    </EditButton.Description>
+                  </EditButton.Header>
                 }
               >
                 <div className="grid grid-cols-4 items-center gap-4">

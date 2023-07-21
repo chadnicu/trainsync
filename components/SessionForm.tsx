@@ -9,6 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -91,6 +92,7 @@ export default function SessionForm() {
                   <FormControl>
                     <Input placeholder="Title of the session" {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             ></FormField>
@@ -106,6 +108,7 @@ export default function SessionForm() {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             ></FormField>

@@ -1,15 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Exercise, Session } from "@/lib/types";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ReactNode } from "react";
 
-export function EditButton({
-  data,
+export default function EditButton({
   action,
   header,
   children,
 }: {
-  data: Exercise | Session;
   action: (formData?: FormData) => void;
   header: ReactNode;
   children: ReactNode;
@@ -33,6 +30,10 @@ export function EditButton({
     </Dialog>
   );
 }
+
+EditButton.Header = DialogHeader
+EditButton.Title = DialogTitle
+EditButton.Description = DialogDescription
 
 /*
 unused cuz of error

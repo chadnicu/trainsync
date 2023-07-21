@@ -1,15 +1,13 @@
 "use client";
 
-import { EditButton } from "./EditButton";
+import EditButton from "./EditButton";
 import { DeleteButton } from "./DeleteButton";
 import { deleteExercise, editExercise } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { DialogHeader } from "./ui/dialog";
-import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Exercise } from "@/lib/types";
+import { Label } from "./ui/label";
 
 export default function Exercise({ exercise }: { exercise: Exercise }) {
   const queryClient = useQueryClient();
@@ -68,20 +66,19 @@ export default function Exercise({ exercise }: { exercise: Exercise }) {
       )}
       <div className="flex gap-2">
         <EditButton
-          data={exercise}
           action={async (formData) =>
             editExercise(exercise, formData).then(() =>
               queryClient.invalidateQueries(["exercises"])
             )
           }
           header={
-            <DialogHeader>
-              <DialogTitle>Edit</DialogTitle>
-              <DialogDescription>
+            <EditButton.Header>
+              <EditButton.Title>Edit</EditButton.Title>
+              <EditButton.Description>
                 Make changes to your exercise here. Click save when you{"'"}re
                 done.
-              </DialogDescription>
-            </DialogHeader>
+              </EditButton.Description>
+            </EditButton.Header>
           }
         >
           <div className="grid grid-cols-4 items-center gap-4">
