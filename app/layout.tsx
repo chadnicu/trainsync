@@ -3,11 +3,8 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "../lib/providers";
 import Navbar from "@/components/Navbar";
-import { db } from "@/lib/turso";
-import { session } from "@/lib/schema";
 import { ClerkProvider, auth } from "@clerk/nextjs";
-import { eq } from "drizzle-orm";
-import { dark } from "@clerk/themes";
+import { getSessions } from "./actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,22 +18,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = auth();
-
-  const sessions = userId
-    ? await db
-        .select()
-        .from(session)
-        .where(eq(session.userId, userId))
-        .all()
-        .then((data) =>
-          data.map((s) => ({
-            title: s.title,
-            href: s.id,
-            description: s.description || "",
-          }))
-        )
-    : [];
+  const navbarSessions = await getSessions().then((data) =>
+    data.map((s) => ({
+      title: s.title,
+      href: s.id,
+      description: s.description || "",
+    }))
+  );
 
   return (
     <ClerkProvider>
@@ -44,7 +32,7 @@ export default async function RootLayout({
         <body className={cn(inter.className, "tracking-tight")}>
           <Providers>
             <div className="grid min-h-screen items-start">
-              <Navbar sessions={sessions} />
+              <Navbar sessions={navbarSessions} />
               {children}
             </div>
           </Providers>

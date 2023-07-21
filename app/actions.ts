@@ -169,6 +169,17 @@ export async function removeExerciseFromSession(
   revalidatePath(`/sessions/${sessionId}`);
 }
 
+export async function getCurrentSession(sessionId: number) {
+  const currentSession = await db
+    .select()
+    .from(session)
+    .where(eq(session.id, sessionId))
+    .limit(1)
+    .get();
+
+  return currentSession;
+}
+
 export async function getExercisesBySeshId(sessionId: number) {
   const { userId } = auth();
   if (!userId) return { sessionsExercises: [], otherExercises: [] };
