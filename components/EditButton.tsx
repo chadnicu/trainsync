@@ -1,17 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
-import { ExerciseType } from "@/app/exercises/Exercises";
-import { useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { Form, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { FormControl, FormField, FormItem, FormLabel } from "./ui/form";
-import { exerciseSchema } from "./ExerciseForm";
+import { Exercise, Session } from "@/lib/types";
 import { ReactNode } from "react";
-import { Session } from "@/app/sessions/Sessions";
 
 export function EditButton({
   data,
@@ -19,7 +9,7 @@ export function EditButton({
   header,
   children,
 }: {
-  data: ExerciseType | Session;
+  data: Exercise | Session;
   action: (formData?: FormData) => void;
   header: ReactNode;
   children: ReactNode;
