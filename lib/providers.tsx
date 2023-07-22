@@ -1,10 +1,15 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import ClientProviders from "./clientProviders";
+"use client";
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
-    <ClerkProvider>
-      <ClientProviders>{children}</ClientProviders>
-    </ClerkProvider>
+    <NextThemesProvider enableSystem attribute="class" defaultTheme="system">
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </NextThemesProvider>
   );
 }

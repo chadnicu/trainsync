@@ -1,9 +1,9 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
 import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
+import { authElements } from "../sign-in/page";
 
 export default function SignUpPage() {
   const { theme } = useTheme();
@@ -13,9 +13,7 @@ export default function SignUpPage() {
       <SignUp
         appearance={{
           baseTheme: theme === "light" ? undefined : dark,
-          elements: {
-            formButtonPrimary: buttonVariants(),
-          },
+          elements: authElements
         }}
       />
     </div>
