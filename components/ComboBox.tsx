@@ -17,20 +17,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { addExerciseToSession } from "@/app/actions";
+import { addExerciseToTemplate } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Exercise } from "@/lib/types";
 
 export default function ComboBox({
   exercises,
-  sessionId,
+  templateId,
 }: {
   exercises: {
     value: string;
     label: string;
     exerciseId: number;
   }[];
-  sessionId: number;
+  templateId: number;
 }) {
   const queryClient = useQueryClient();
 
@@ -40,16 +40,16 @@ export default function ComboBox({
   const { mutate } = useMutation({
     mutationFn: async (id: number) => {
       setOpen(false);
-      await addExerciseToSession(id, sessionId).then(() => setValue(""));
-      queryClient.invalidateQueries([`exercises-${sessionId}`]);
+      await addExerciseToTemplate(id, templateId).then(() => setValue(""));
+      queryClient.invalidateQueries([`exercises-${templateId}`]);
     },
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({
-        queryKey: [`exercises-${sessionId}`],
+        queryKey: [`exercises-${templateId}`],
       });
-      const previous = queryClient.getQueryData([`exercises-${sessionId}`]);
-      queryClient.setQueryData([`exercises-${sessionId}`], (old: any) => ({
-        sessionsExercises: old.sessionsExercises.concat(
+      const previous = queryClient.getQueryData([`exercises-${templateId}`]);
+      queryClient.setQueryData([`exercises-${templateId}`], (old: any) => ({
+        templatesExercises: old.templatesExercises.concat(
           old.otherExercises.filter((e: Exercise) => e.id === id)
         ),
         otherExercises: old.otherExercises.filter((e: Exercise) => e.id !== id),
@@ -57,11 +57,11 @@ export default function ComboBox({
       return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData([`exercises-${sessionId}`], context?.previous);
+      queryClient.setQueryData([`exercises-${templateId}`], context?.previous);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [`exercises-${sessionId}`],
+        queryKey: [`exercises-${templateId}`],
       });
     },
   });

@@ -13,38 +13,22 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserButton, useAuth } from "@clerk/nextjs";
 import { ThemeChanger } from "./ThemeChanger";
-import { dark, shadesOfPurple } from "@clerk/themes";
+import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
-import { getSessions } from "@/app/actions";
-import { Session } from "@/lib/types";
+import { getTemplates } from "@/app/actions";
+import { Template } from "@/lib/types";
 
-export default function Navbar({
-  sessions,
-}: {
-  sessions: { title: string; href: number; description: string }[];
-}) {
-  const query = useQuery({
-    queryKey: ["sessions-navbar"],
-    queryFn: async () => {
-      const res = await getSessions().then((d) =>
-        d.map((s: Session) => ({
-          title: s.title,
-          href: s.id,
-          description: s.description || "",
-        }))
-      );
-      setData(res);
-      return res;
-    },
-    initialData: sessions,
+export default function Navbar({ templates }: { templates: Template[] }) {
+  const { data } = useQuery({
+    queryKey: ["templates"],
+    queryFn: getTemplates,
+    initialData: templates,
   });
 
   const { theme } = useTheme();
-
-  const [data, setData] = React.useState(query.data);
 
   const { userId } = useAuth();
 
@@ -65,25 +49,31 @@ export default function Navbar({
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Sessions</NavigationMenuTrigger>
+          <Link href="/workouts" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Workouts
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Templates</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               <ListItem
-                key={"sessions"}
-                title={"All sessions"}
-                href={`/sessions`}
+                key={"templates"}
+                title={"All templates"}
+                href={`/templates`}
               >
-                {"View all of your sessions"}
+                {"View all of your templates"}
               </ListItem>
-              {data.map((sesh) => (
+              {data?.map((template) => (
                 <ListItem
-                  key={sesh.href}
-                  title={sesh.title}
-                  href={`/sessions/${sesh.href}`}
+                  key={template.id}
+                  title={template.title}
+                  href={`/templates/${template.id}`}
                 >
-                  {sesh.description}
+                  {template.description}
                 </ListItem>
               ))}
             </ul>
@@ -100,6 +90,21 @@ export default function Navbar({
               afterSignOutUrl="/"
               appearance={{
                 baseTheme: theme === "dark" ? dark : undefined,
+                elements: {
+                  // temporary fix for white mode user button
+                  userButtonPopoverCard:
+                    "bg-transparent backdrop-blur-xl border border-zinc-200 dark:border-zinc-700",
+                  userPreview__userButton: "text-foreground",
+                  userPreviewSecondaryIdentifier:
+                    "text-zinc-600 dark:text-zinc-400",
+                  userButtonPopoverActionButton__manageAccount: "text-red-500",
+                  userButtonPopoverActionButtonText:
+                    "text-zinc-500 dark:text-zinc-400",
+                  userButtonPopoverActionButtonIcon__manageAccount:
+                    "text-zinc-400 dark:text-zinc-400",
+                  userButtonPopoverActionButtonIcon__signOut:
+                    "text-zinc-400 dark:text-zinc-400",
+                },
               }}
             />
           ) : (

@@ -9,7 +9,7 @@ export default function SignInPage() {
   const { theme } = useTheme();
 
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full justify-center ">
       <SignIn
         appearance={{
           baseTheme: theme === "light" ? undefined : dark,

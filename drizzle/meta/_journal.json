@@ -8,6 +8,20 @@
       "when": 1688844257152,
       "tag": "0000_glorious_apocalypse",
       "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1690035068136,
+      "tag": "0001_wealthy_siren",
+      "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1690047753295,
+      "tag": "0002_striped_hellion",
+      "breakpoints": false
     }
   ]
 }

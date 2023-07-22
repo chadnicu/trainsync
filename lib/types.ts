@@ -6,7 +6,7 @@ export type Exercise = {
   userId: string;
 };
 
-export type Session = {
+export type Template = {
   id: number;
   title: string;
   description: string | null;

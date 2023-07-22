@@ -16,61 +16,51 @@ import { Button } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
-import { createSession, deleteSession } from "@/app/actions";
+import { createTemplate } from "@/app/actions";
 import { useState } from "react";
 
-export const sessionSchema = z.object({
+export const templateSchema = z.object({
   title: z.string().nonempty(),
   description: z.string().optional(),
 });
 
-export default function SessionForm() {
+export default function TemplateForm() {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const form = useForm<z.infer<typeof sessionSchema>>({
-    resolver: zodResolver(sessionSchema),
+  const form = useForm<z.infer<typeof templateSchema>>({
+    resolver: zodResolver(templateSchema),
     defaultValues: {
       title: "",
       description: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof sessionSchema>) {
+  async function onSubmit(values: z.infer<typeof templateSchema>) {
     setOpen(false);
     form.reset();
-    await createSession(values).then(() => {
-      queryClient.invalidateQueries(["sessions"]);
-      queryClient.invalidateQueries(["sessions-navbar"]);
-    });
+    await createTemplate(values).then(() =>
+      queryClient.invalidateQueries(["templates"])
+    );
   }
 
   const { userId } = useAuth();
 
   const { mutate } = useMutation({
     mutationFn: onSubmit,
-    onMutate: async (newSession: z.infer<typeof sessionSchema>) => {
-      await queryClient.cancelQueries({ queryKey: ["sessions"] });
-      const previous = queryClient.getQueryData(["sessions"]);
-      queryClient.setQueryData(["sessions"], (old: any) => [
+    onMutate: async (newTemplate: z.infer<typeof templateSchema>) => {
+      await queryClient.cancelQueries({ queryKey: ["templates"] });
+      const previous = queryClient.getQueryData(["templates"]);
+      queryClient.setQueryData(["templates"], (old: any) => [
         ...old,
-        { id: old?.length + 1, userId, ...newSession },
-      ]);
-      queryClient.setQueryData(["sessions-navbar"], (old: any) => [
-        ...old,
-        newSession,
+        { id: old?.length + 1, userId, ...newTemplate },
       ]);
       return { previous };
     },
-    onError: (err, newExercise, context) => {
-      queryClient.setQueryData(["sessions"], context?.previous);
-      queryClient.setQueryData(["sessions-navbar"], context?.previous);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["sessions"] });
-      queryClient.invalidateQueries({ queryKey: ["sessions-navbar"] });
-    },
+    onError: (err, newExercise, context) =>
+      queryClient.setQueryData(["templates"], context?.previous),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["templates"] }),
   });
 
   return (
@@ -79,7 +69,7 @@ export default function SessionForm() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(
-              async (data: z.infer<typeof sessionSchema>) => mutate(data)
+              async (data: z.infer<typeof templateSchema>) => mutate(data)
             )}
             className="space-y-6"
           >
@@ -90,7 +80,7 @@ export default function SessionForm() {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Title of the session" {...field} />
+                    <Input placeholder="Title of the template" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,7 +94,7 @@ export default function SessionForm() {
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Optionally describe this session"
+                      placeholder="Optionally describe this template"
                       {...field}
                     />
                   </FormControl>

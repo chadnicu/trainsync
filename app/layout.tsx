@@ -2,9 +2,10 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import { getSessions } from "./actions";
+import { getTemplates } from "./actions";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Providers as ThemeAndQueryProvider } from "@/lib/providers";
+import { dark } from "@clerk/themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,21 +19,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const navbarSessions = await getSessions().then((data) =>
-    data.map((s) => ({
-      title: s.title,
-      href: s.id,
-      description: s.description || "",
-    }))
-  );
+  const templates = await getTemplates();
 
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        baseTheme: dark,
+      }}
+    >
       <html lang="en">
         <body className={cn(inter.className, "tracking-tight")}>
           <ThemeAndQueryProvider>
             <div className="grid min-h-screen items-start">
-              <Navbar sessions={navbarSessions} />
+              <Navbar templates={templates} />
               {children}
             </div>
           </ThemeAndQueryProvider>
