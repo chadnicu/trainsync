@@ -14,8 +14,14 @@ export default function SignInPage() {
         appearance={{
           baseTheme: theme === "light" ? undefined : dark,
           elements: {
-            formButtonPrimary: buttonVariants(),
+            headerTitle: "text-foreground",
+            headerSubtitle: "text-foreground",
+            dividerText: "text-zinc-500",
+            formButtonPrimary: buttonVariants({ variant: "secondary" }),
             formFieldLabel: "text-foreground",
+            socialButtonsProviderIcon__github: "brightness-50 dark:brightness-[10]",
+            formFieldInput: "bg-transparent border border-zinc-300 dark:border-zinc-700",
+            footerActionText: "text-zinc-500",
             formField: "gap-1",
             card: "bg-background dark:border-zinc-700",
             socialButtonsIconButton__google:

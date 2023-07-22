@@ -14,6 +14,8 @@ export default function SignUpPage() {
         appearance={{
           baseTheme: theme === "light" ? undefined : dark,
           elements: {
+            headerTitle: "text-foreground",
+            headerSubtitle: "text-foreground",
             formButtonPrimary: buttonVariants(),
             formFieldLabel: "text-foreground",
             formField: "gap-1",
