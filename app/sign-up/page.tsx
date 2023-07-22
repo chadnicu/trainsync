@@ -1,9 +1,9 @@
 "use client";
 
+import { authElements } from "@/lib/clerk-styles";
 import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
-import { authElements } from "../sign-in/page";
 
 export default function SignUpPage() {
   const { theme } = useTheme();
