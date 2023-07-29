@@ -77,10 +77,9 @@ export default function ExerciseForm() {
     onMutate: async (newExercise: z.infer<typeof exerciseSchema>) => {
       await queryClient.cancelQueries({ queryKey: ["exercises"] });
       const previous = queryClient.getQueryData(["exercises"]);
-      queryClient.setQueryData(["exercises"], (old: any) => [
-        ...old,
-        { id: old?.length + 1, userId, ...newExercise },
-      ]);
+      queryClient.setQueryData(["exercises"], (old: any) => {
+        return [...old, { userId, ...newExercise }];
+      });
       return { previous };
     },
     onError: (err, newExercise, context) => {

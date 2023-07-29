@@ -17,20 +17,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { addExerciseToTemplate } from "@/app/actions";
+import { addExerciseToWorkout } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Exercise } from "@/lib/types";
 
-export default function ComboBox({
+export default function WorkoutComboBox({
   exercises,
-  templateId,
+  workoutId,
 }: {
   exercises: {
     value: string;
     label: string;
     exerciseId: number;
   }[];
-  templateId: number;
+  workoutId: number;
 }) {
   const queryClient = useQueryClient();
 
@@ -40,16 +40,16 @@ export default function ComboBox({
   const { mutate } = useMutation({
     mutationFn: async (id: number) => {
       setOpen(false);
-      await addExerciseToTemplate(id, templateId).then(() => setValue(""));
-      queryClient.invalidateQueries([`exercises-${templateId}`]);
+      await addExerciseToWorkout(id, workoutId).then(() => setValue(""));
+      queryClient.invalidateQueries([`workout-${workoutId}`]);
     },
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({
-        queryKey: [`exercises-${templateId}`],
+        queryKey: [`workout-${workoutId}`],
       });
-      const previous = queryClient.getQueryData([`exercises-${templateId}`]);
-      queryClient.setQueryData([`exercises-${templateId}`], (old: any) => ({
-        templatesExercises: old.templatesExercises.concat(
+      const previous = queryClient.getQueryData([`workout-${workoutId}`]);
+      queryClient.setQueryData([`workout-${workoutId}`], (old: any) => ({
+        workoutsExercises: old.workoutsExercises.concat(
           old.otherExercises.filter((e: Exercise) => e.id === id)
         ),
         otherExercises: old.otherExercises.filter((e: Exercise) => e.id !== id),
@@ -57,11 +57,11 @@ export default function ComboBox({
       return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData([`exercises-${templateId}`], context?.previous);
+      queryClient.setQueryData([`workout-${workoutId}`], context?.previous);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [`exercises-${templateId}`],
+        queryKey: [`workout-${workoutId}`],
       });
     },
   });

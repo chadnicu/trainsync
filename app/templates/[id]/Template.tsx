@@ -4,7 +4,7 @@ import {
   getExercisesByTemplateId,
   removeExerciseFromTemplate,
 } from "@/app/actions";
-import ComboBox from "@/components/ComboBox";
+import TemplateComboBox from "@/components/TemplateComboBox";
 import { DeleteButton } from "@/components/DeleteButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,26 +34,26 @@ export default function Template({
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
-    queryKey: [`exercises-${template.id}`],
+    queryKey: [`template-${template.id}`],
     queryFn: async () => {
       const data = await getExercisesByTemplateId(template.id);
       return data;
     },
-    initialData: { templatesExercises: templatesExercises, otherExercises },
+    initialData: { templatesExercises, otherExercises },
   });
 
   const { mutate } = useMutation({
     mutationFn: async (id) => {
       await removeExerciseFromTemplate(id, template.id).then(() =>
-        queryClient.invalidateQueries([`exercises-${template.id}`])
+        queryClient.invalidateQueries([`template-${template.id}`])
       );
     },
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({
-        queryKey: [`exercises-${template.id}`],
+        queryKey: [`template-${template.id}`],
       });
-      const previous = queryClient.getQueryData([`exercises-${template.id}`]);
-      queryClient.setQueryData([`exercises-${template.id}`], (old: any) => ({
+      const previous = queryClient.getQueryData([`template-${template.id}`]);
+      queryClient.setQueryData([`template-${template.id}`], (old: any) => ({
         templatesExercises: old.templatesExercises.filter(
           (e: Exercise) => e.id !== id
         ),
@@ -64,11 +64,11 @@ export default function Template({
       return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData([`exercises-${template.id}`], context?.previous);
+      queryClient.setQueryData([`template-${template.id}`], context?.previous);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [`exercises-${template.id}`],
+        queryKey: [`template-${template.id}`],
       });
     },
   });
@@ -93,7 +93,7 @@ export default function Template({
           ))}
         </div>
 
-        <ComboBox
+        <TemplateComboBox
           exercises={data.otherExercises.map((e) => ({
             value: e.title,
             label: e.title,
@@ -106,7 +106,7 @@ export default function Template({
   );
 }
 
-function HoverExercise({
+export function HoverExercise({
   data,
 }: {
   data: {

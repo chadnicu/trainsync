@@ -12,3 +12,14 @@ export type Template = {
   description: string | null;
   userId: string;
 };
+
+export type Workout = {
+  id: number;
+  title: string;
+  description: string | null;
+  date: string;
+  started: string | null;
+  finished: string | null;
+  comment: string | null;
+  userId: string;
+};

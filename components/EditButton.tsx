@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ReactNode } from "react";
 
 export default function EditButton({
@@ -31,9 +38,9 @@ export default function EditButton({
   );
 }
 
-EditButton.Header = DialogHeader
-EditButton.Title = DialogTitle
-EditButton.Description = DialogDescription
+EditButton.Header = DialogHeader;
+EditButton.Title = DialogTitle;
+EditButton.Description = DialogDescription;
 
 /*
 unused cuz of error

@@ -1,6 +1,12 @@
 "use server";
 
-import { exercise, exercise_template, template } from "@/lib/schema";
+import {
+  exercise,
+  exercise_template,
+  template,
+  workout,
+  workout_exercise,
+} from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { and, eq, notInArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -8,7 +14,8 @@ import { auth } from "@clerk/nextjs";
 import { z } from "zod";
 import { exerciseSchema } from "@/components/ExerciseForm";
 import { templateSchema } from "@/components/TemplateForm";
-import { Exercise, Template } from "@/lib/types";
+import { Exercise, Template, Workout } from "@/lib/types";
+import { workoutSchema } from "@/components/WorkoutForm";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -204,4 +211,138 @@ export async function getExercisesByTemplateId(templateId: number) {
     .all();
 
   return { templatesExercises, otherExercises };
+}
+
+export async function getWorkouts() {
+  const { userId } = auth();
+  if (!userId) return [];
+
+  const data = await db
+    .select()
+    .from(workout)
+    .where(eq(workout.userId, userId))
+    .all();
+
+  return data;
+}
+
+export async function createWorkout(values: z.infer<typeof workoutSchema>) {
+  const { userId } = auth();
+  if (!userId) return {};
+
+  await db
+    .insert(workout)
+    .values({ ...values, userId, date: values.date.toString() })
+    .returning()
+    .get();
+}
+
+export async function getExercisesByWorkoutId(workoutId: number) {
+  const { userId } = auth();
+  if (!userId) return { workoutsExercises: [], otherExercises: [] };
+
+  const workoutsExercises = await db
+    .select()
+    .from(workout_exercise)
+    .where(eq(workout_exercise.workoutId, workoutId))
+    .innerJoin(exercise, eq(workout_exercise.exerciseId, exercise.id))
+    .all()
+    .then((data) => data.map(({ exercise }) => exercise));
+
+  const exerciseIds = workoutsExercises.length
+    ? workoutsExercises.map((e) => e.id)
+    : [-1];
+
+  const otherExercises = await db
+    .select()
+    .from(exercise)
+    .where(
+      and(eq(exercise.userId, userId), notInArray(exercise.id, exerciseIds))
+    )
+    .all();
+
+  return { workoutsExercises, otherExercises };
+}
+
+export async function editWorkout(old: Workout, data?: FormData) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  const title = data?.get("title")?.toString() || old.title,
+    description = data?.get("description")?.toString() || old.description,
+    date = data?.get("date")?.toString() || old.date,
+    started = data?.get("started")?.toString() || old.started,
+    finished = data?.get("finished")?.toString() || old.finished,
+    comment = data?.get("comment")?.toString() || old.comment;
+
+  await db
+    .update(workout)
+    .set({ title, description, date, started, finished, comment })
+    .where(eq(workout.id, old.id))
+    .returning()
+    .get();
+
+  revalidatePath(`/templates/${old.id}`);
+}
+
+export async function deleteWorkout(workoutId: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .delete(workout_exercise)
+    .where(eq(workout_exercise.workoutId, workoutId))
+    .returning()
+    .get();
+
+  await db.delete(workout).where(eq(workout.id, workoutId)).returning().get();
+}
+
+export async function addExerciseToWorkout(
+  exerciseId: number,
+  workoutId: number,
+  comment?: string
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .insert(workout_exercise)
+    .values({ exerciseId, workoutId })
+    .returning()
+    .get();
+
+  revalidatePath(`/workouts/${workoutId}`);
+}
+
+export async function getCurrentWorkout(workoutId: number) {
+  const currentWorkout = await db
+    .select()
+    .from(workout)
+    .where(eq(workout.id, workoutId))
+    .limit(1)
+    .get();
+
+  return currentWorkout;
+}
+
+export async function removeExerciseFromWorkout(
+  exerciseId: number,
+  workoutId: number
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .delete(workout_exercise)
+    .where(
+      and(
+        eq(workout_exercise.exerciseId, exerciseId),
+        eq(workout_exercise.workoutId, workoutId)
+      )
+    )
+    .returning()
+    .get();
+
+  revalidatePath(`/workoutss/${workoutId}`);
 }

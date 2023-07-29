@@ -74,23 +74,15 @@
           "name": "exercise_session_exercise_id_exercise_id_fk",
           "tableFrom": "exercise_session",
           "tableTo": "exercise",
-          "columnsFrom": [
-            "exercise_id"
-          ],
-          "columnsTo": [
-            "id"
-          ]
+          "columnsFrom": ["exercise_id"],
+          "columnsTo": ["id"]
         },
         "exercise_session_session_id_session_id_fk": {
           "name": "exercise_session_session_id_session_id_fk",
           "tableFrom": "exercise_session",
           "tableTo": "session",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ]
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"]
         }
       },
       "compositePrimaryKeys": {}
@@ -166,12 +158,8 @@
           "name": "sets_workout_exercise_id_workout_exercise_id_fk",
           "tableFrom": "sets",
           "tableTo": "workout_exercise",
-          "columnsFrom": [
-            "workout_exercise_id"
-          ],
-          "columnsTo": [
-            "id"
-          ]
+          "columnsFrom": ["workout_exercise_id"],
+          "columnsTo": ["id"]
         }
       },
       "compositePrimaryKeys": {}
@@ -264,23 +252,15 @@
           "name": "workout_exercise_workout_id_workout_id_fk",
           "tableFrom": "workout_exercise",
           "tableTo": "workout",
-          "columnsFrom": [
-            "workout_id"
-          ],
-          "columnsTo": [
-            "id"
-          ]
+          "columnsFrom": ["workout_id"],
+          "columnsTo": ["id"]
         },
         "workout_exercise_exercise_id_exercise_id_fk": {
           "name": "workout_exercise_exercise_id_exercise_id_fk",
           "tableFrom": "workout_exercise",
           "tableTo": "exercise",
-          "columnsFrom": [
-            "exercise_id"
-          ],
-          "columnsTo": [
-            "id"
-          ]
+          "columnsFrom": ["exercise_id"],
+          "columnsTo": ["id"]
         }
       },
       "compositePrimaryKeys": {}

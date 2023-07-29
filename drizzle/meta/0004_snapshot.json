@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "75e5da36-6b10-46b6-b2a6-461d32b15a43",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5bf04d48-b99a-4beb-aa4b-20ca2745222b",
+  "prevId": "c4ec661c-1fde-497d-88eb-e3bcbcbb7bd4",
   "tables": {
     "exercise": {
       "name": "exercise",
@@ -43,8 +43,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {}
     },
-    "exercise_session": {
-      "name": "exercise_session",
+    "exercise_template": {
+      "name": "exercise_template",
       "columns": {
         "id": {
           "name": "id",
@@ -60,8 +60,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "session_id": {
-          "name": "session_id",
+        "template_id": {
+          "name": "template_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -70,25 +70,25 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "exercise_session_exercise_id_exercise_id_fk": {
-          "name": "exercise_session_exercise_id_exercise_id_fk",
-          "tableFrom": "exercise_session",
+        "exercise_template_exercise_id_exercise_id_fk": {
+          "name": "exercise_template_exercise_id_exercise_id_fk",
+          "tableFrom": "exercise_template",
           "tableTo": "exercise",
           "columnsFrom": ["exercise_id"],
           "columnsTo": ["id"]
         },
-        "exercise_session_session_id_session_id_fk": {
-          "name": "exercise_session_session_id_session_id_fk",
-          "tableFrom": "exercise_session",
-          "tableTo": "session",
-          "columnsFrom": ["session_id"],
+        "exercise_template_template_id_template_id_fk": {
+          "name": "exercise_template_template_id_template_id_fk",
+          "tableFrom": "exercise_template",
+          "tableTo": "template",
+          "columnsFrom": ["template_id"],
           "columnsTo": ["id"]
         }
       },
       "compositePrimaryKeys": {}
     },
-    "session": {
-      "name": "session",
+    "template": {
+      "name": "template",
       "columns": {
         "id": {
           "name": "id",

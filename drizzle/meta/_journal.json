@@ -22,6 +22,27 @@
       "when": 1690047753295,
       "tag": "0002_striped_hellion",
       "breakpoints": false
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1690384598617,
+      "tag": "0003_dizzy_nuke",
+      "breakpoints": false
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1690384944693,
+      "tag": "0004_perfect_marten_broadcloak",
+      "breakpoints": false
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1690384984321,
+      "tag": "0005_groovy_tarot",
+      "breakpoints": false
     }
   ]
 }

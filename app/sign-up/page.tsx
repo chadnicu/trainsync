@@ -6,7 +6,7 @@ export default function SignUpPage() {
     <div className="flex w-full justify-center">
       <SignUp
         appearance={{
-          elements: appearance
+          elements: appearance,
         }}
       />
     </div>

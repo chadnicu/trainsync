@@ -13,11 +13,19 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-export function DeleteButton({ mutate }: { mutate: () => void }) {
+export function DeleteButton({
+  mutate,
+  disabled,
+}: {
+  mutate: () => void;
+  disabled?: boolean;
+}) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild className="w-full">
-        <Button variant="outline">Delete</Button>
+        <Button variant="outline" disabled={disabled ?? false}>
+          Delete
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

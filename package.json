@@ -32,6 +32,7 @@
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
+    "date-fns": "^2.30.0",
     "drizzle-orm": "^0.26.5",
     "encoding": "^0.1.13",
     "eslint": "8.42.0",
@@ -41,6 +42,7 @@
     "next-themes": "^0.2.1",
     "postcss": "8.4.24",
     "react": "^18.2.0",
+    "react-day-picker": "^8.8.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.44.3",
     "tailwind-merge": "^1.13.2",
@@ -51,7 +53,7 @@
   },
   "devDependencies": {
     "drizzle-kit": "^0.18.1",
-    "prettier": "^2.8.8",
+    "prettier": "2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0"
   }
 }
