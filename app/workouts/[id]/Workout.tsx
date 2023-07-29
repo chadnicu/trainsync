@@ -73,7 +73,7 @@ export default function Workout({
       const data = await getSets();
       return data;
     },
-    initialData: [],
+    initialData: initialSets,
   });
 
   return (
