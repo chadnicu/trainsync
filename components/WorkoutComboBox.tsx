@@ -42,6 +42,7 @@ export default function WorkoutComboBox({
       setOpen(false);
       await addExerciseToWorkout(id, workoutId).then(() => setValue(""));
       queryClient.invalidateQueries([`workout-${workoutId}`]);
+      queryClient.invalidateQueries([`sets`]);
     },
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({

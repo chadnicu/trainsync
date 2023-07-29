@@ -3,6 +3,7 @@
 import {
   exercise,
   exercise_template,
+  sets,
   template,
   workout,
   workout_exercise,
@@ -247,7 +248,12 @@ export async function getExercisesByWorkoutId(workoutId: number) {
     .where(eq(workout_exercise.workoutId, workoutId))
     .innerJoin(exercise, eq(workout_exercise.exerciseId, exercise.id))
     .all()
-    .then((data) => data.map(({ exercise }) => exercise));
+    .then((data) =>
+      data.map(({ exercise, workout_exercise }) => ({
+        ...exercise,
+        workoutExerciseId: workout_exercise.id,
+      }))
+    );
 
   const exerciseIds = workoutsExercises.length
     ? workoutsExercises.map((e) => e.id)
@@ -345,4 +351,23 @@ export async function removeExerciseFromWorkout(
     .get();
 
   revalidatePath(`/workoutss/${workoutId}`);
+}
+
+export async function getSets() {
+  const { userId } = auth();
+  if (!userId) return [];
+
+  // treb cu workoutExerciseId nu workoutId
+
+  const data = await db
+    .select()
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .all()
+    .then((data) => data.map(({ sets }) => sets));
+
+  return data;
 }

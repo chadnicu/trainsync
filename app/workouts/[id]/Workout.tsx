@@ -2,32 +2,38 @@
 
 import {
   getExercisesByWorkoutId,
+  getSets,
   removeExerciseFromWorkout,
 } from "@/app/actions";
 import { HoverExercise } from "@/app/templates/[id]/Template";
 import { DeleteButton } from "@/components/DeleteButton";
 import WorkoutComboBox from "@/components/WorkoutComboBox";
-import { Exercise, Workout } from "@/lib/types";
+import { Exercise, Set, Workout } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   workout: Workout;
-  exercises: {
-    workoutsExercises: Exercise[];
+  initialExercises: {
+    workoutsExercises: (Exercise & { workoutExerciseId: number })[];
     otherExercises: Exercise[];
   };
+  initialSets: Set[];
 };
 
-export default function Workout({ workout, exercises }: Props) {
+export default function Workout({
+  workout,
+  initialExercises,
+  initialSets,
+}: Props) {
   const queryClient = useQueryClient();
 
-  const { data } = useQuery({
+  const { data: exercises } = useQuery({
     queryKey: [`workout-${workout.id}`],
     queryFn: async () => {
       const data = await getExercisesByWorkoutId(workout.id);
       return data;
     },
-    initialData: exercises,
+    initialData: initialExercises,
   });
 
   const { mutate } = useMutation({
@@ -61,12 +67,21 @@ export default function Workout({ workout, exercises }: Props) {
     },
   });
 
+  const { data: sets } = useQuery({
+    queryKey: ["sets"],
+    queryFn: async () => {
+      const data = await getSets();
+      return data;
+    },
+    initialData: [],
+  });
+
   return (
     <div className="p-10 text-center">
       <h1 className="text-5xl font-bold">{workout.title}</h1>
       <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
         <div className="grid gap-2">
-          {data.workoutsExercises.map((e) => (
+          {exercises.workoutsExercises.map((e) => (
             <div
               className="flex items-center justify-between gap-10 border px-7 py-5"
               key={e.id}
@@ -77,12 +92,23 @@ export default function Workout({ workout, exercises }: Props) {
               <div>
                 <DeleteButton mutate={() => mutate(e.id)} />
               </div>
+              <div>
+                {sets
+                  .filter(
+                    (set) => set.workoutExerciseId === e.workoutExerciseId
+                  )
+                  .map((d) => (
+                    <div key={d.id}>
+                      {d.reps} x {d.weight}
+                    </div>
+                  ))}
+              </div>
             </div>
           ))}
         </div>
 
         <WorkoutComboBox
-          exercises={data.otherExercises.map((e) => ({
+          exercises={exercises.otherExercises.map((e) => ({
             value: e.title,
             label: e.title,
             exerciseId: e.id,

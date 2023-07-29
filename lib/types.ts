@@ -23,3 +23,11 @@ export type Workout = {
   comment: string | null;
   userId: string;
 };
+
+export type Set = {
+  id: number;
+  reps: number | null;
+  weight: number | null;
+  userId: string;
+  workoutExerciseId: number;
+};
