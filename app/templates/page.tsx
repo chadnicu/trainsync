@@ -3,9 +3,12 @@ import TemplateForm from "@/components/TemplateForm";
 
 export default async function Page() {
   return (
-    <div className="grid gap-2 p-10 md:flex md:flex-row-reverse md:justify-between">
-      <TemplateForm />
-      <Templates />
-    </div>
+    <>
+      <h1 className="text-center text-5xl font-bold">Templates</h1>
+      <div className="grid gap-5 md:flex md:flex-row-reverse md:justify-between">
+        <TemplateForm />
+        <Templates />
+      </div>
+    </>
   );
 }

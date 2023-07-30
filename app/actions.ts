@@ -17,6 +17,7 @@ import { exerciseSchema } from "@/components/ExerciseForm";
 import { templateSchema } from "@/components/TemplateForm";
 import { Exercise, Template, Workout } from "@/lib/types";
 import { workoutSchema } from "@/components/WorkoutForm";
+import { setSchema } from "@/components/AddSet";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -370,4 +371,25 @@ export async function getSets() {
     .then((data) => data.map(({ sets }) => sets));
 
   return data;
+}
+
+export async function createSet(
+  values: z.infer<typeof setSchema>,
+  workoutExerciseId: number
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .insert(sets)
+    .values({ ...values, workoutExerciseId, userId })
+    .returning()
+    .get();
+}
+
+export async function deleteSet(id: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db.delete(sets).where(eq(sets.id, id)).returning().get();
 }

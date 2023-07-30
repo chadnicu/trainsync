@@ -13,7 +13,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { UserButton, useAuth } from "@clerk/nextjs";
 import { ThemeChanger } from "./ThemeChanger";
 import { dark } from "@clerk/themes";
@@ -33,58 +33,122 @@ export default function Navbar({ templates }: { templates: Template[] }) {
   const { userId } = useAuth();
 
   return (
-    <NavigationMenu className="sticky top-0 flex flex-none justify-between border-b bg-background p-3">
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Home
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/exercises" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Exercises
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/workouts" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Workouts
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Templates</NavigationMenuTrigger>
+    <>
+      <NavigationMenu className="sticky top-0 hidden flex-none justify-between border-b bg-background p-3 sm:flex">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link href="/" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Home
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/exercises" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Exercises
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/workouts" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Workouts
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Templates</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ListItem
+                  key={"templates"}
+                  title={"All templates"}
+                  href={`/templates`}
+                >
+                  {"View all of your templates"}
+                </ListItem>
+                {data?.map((template) => (
+                  <ListItem
+                    key={template.id}
+                    title={template.title}
+                    href={`/templates/${template.id}`}
+                  >
+                    {template.description}
+                  </ListItem>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+        <NavigationMenuList className="flex gap-2">
+          <NavigationMenuItem className="flex">
+            <ThemeChanger />
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            {userId ? (
+              <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  baseTheme: theme === "dark" ? dark : undefined,
+                  elements: {
+                    // temporary fix for white mode user button
+                    userButtonPopoverCard:
+                      "bg-transparent backdrop-blur-xl border border-zinc-200 dark:border-zinc-700",
+                    userPreview__userButton: "text-foreground",
+                    userPreviewSecondaryIdentifier:
+                      "text-zinc-600 dark:text-zinc-400",
+                    userButtonPopoverActionButton__manageAccount:
+                      "text-red-500",
+                    userButtonPopoverActionButtonText:
+                      "text-zinc-500 dark:text-zinc-400",
+                    userButtonPopoverActionButtonIcon__manageAccount:
+                      "text-zinc-400 dark:text-zinc-400",
+                    userButtonPopoverActionButtonIcon__signOut:
+                      "text-zinc-400 dark:text-zinc-400",
+                  },
+                }}
+              />
+            ) : (
+              <Link href="/sign-in" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Sign in
+                </NavigationMenuLink>
+              </Link>
+            )}
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <NavigationMenu className="sticky top-0 flex flex-none justify-between gap-2 border-b bg-background p-3 sm:hidden sm:gap-0">
+        <NavigationMenuItem className="flex w-24 list-none justify-start">
+          <NavigationMenuTrigger>Menu</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <ul className="place-items-right grid w-fit gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+              <ListItem key={"home"} title={"Home"} href={`/`}></ListItem>
+              <ListItem
+                key={"exercises"}
+                title={"Exercises"}
+                href={`/exercises`}
+              >
+                {/* {"View all of your exercises"} */}
+              </ListItem>
+              <ListItem
+                key={"workouts"}
+                title={"Workouts"}
+                href={`/workouts`}
+              ></ListItem>
               <ListItem
                 key={"templates"}
-                title={"All templates"}
+                title={"Templates"}
                 href={`/templates`}
-              >
-                {"View all of your templates"}
-              </ListItem>
-              {data?.map((template) => (
-                <ListItem
-                  key={template.id}
-                  title={template.title}
-                  href={`/templates/${template.id}`}
-                >
-                  {template.description}
-                </ListItem>
-              ))}
+              ></ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-      </NavigationMenuList>
-      <NavigationMenuList className="flex gap-2">
-        <NavigationMenuItem className="flex">
+        <NavigationMenuItem className="flex w-24 list-none justify-center">
           <ThemeChanger />
         </NavigationMenuItem>
-        <NavigationMenuItem>
+        <NavigationMenuItem className="flex w-24 list-none justify-end">
           {userId ? (
             <UserButton
               afterSignOutUrl="/"
@@ -115,8 +179,8 @@ export default function Navbar({ templates }: { templates: Template[] }) {
             </Link>
           )}
         </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+      </NavigationMenu>
+    </>
   );
 }
 

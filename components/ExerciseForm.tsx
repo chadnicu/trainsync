@@ -94,7 +94,7 @@ export default function ExerciseForm() {
     <>
       {open ? (
         <Form {...form}>
-          <div className="flex justify-end">
+          <div className="flex justify-center lg:justify-end">
             <form
               onSubmit={form.handleSubmit(
                 async (data: z.infer<typeof exerciseSchema>) => mutate(data)

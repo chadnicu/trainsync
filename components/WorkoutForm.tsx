@@ -72,73 +72,72 @@ export default function WorkoutForm() {
     <>
       {open ? (
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(
-              async (data: z.infer<typeof workoutSchema>) => {
-                mutate(data);
-              }
-            )}
-            className="space-y-6"
-          >
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Title of the workout" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+          <div className="flex justify-center lg:justify-end">
+            <form
+              onSubmit={form.handleSubmit(
+                async (data: z.infer<typeof workoutSchema>) => {
+                  mutate(data);
+                }
               )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Optionally describe this workout"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
-                  <DatePicker field={field} />
-                  {/* <FormDescription>
-                    Your date of birth is used to calculate your age.
-                  </FormDescription> */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-
-            <div className="flex justify-between gap-2">
-              <Button
-                variant={"outline"}
-                onClick={() => setOpen(false)}
-                className="w-full"
-              >
-                Close
-              </Button>
-              <Button variant={"outline"} type="submit" className="w-full">
-                Create
-              </Button>
-            </div>
-          </form>
+              className="w-fit space-y-6"
+            >
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Title of the workout" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Optionally describe this workout"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Date</FormLabel>
+                    <DatePicker field={field} />
+                    {/* <FormDescription>
+                      Your date of birth is used to calculate your age.
+                    </FormDescription> */}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <div className="flex justify-between gap-2">
+                <Button
+                  variant={"outline"}
+                  onClick={() => setOpen(false)}
+                  className="w-full"
+                >
+                  Close
+                </Button>
+                <Button variant={"outline"} type="submit" className="w-full">
+                  Create
+                </Button>
+              </div>
+            </form>
+          </div>
         </Form>
       ) : (
         <div className="flex justify-end">

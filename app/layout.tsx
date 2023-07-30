@@ -32,7 +32,7 @@ export default async function RootLayout({
           <ThemeAndQueryProvider>
             <div className="grid min-h-screen items-start">
               <Navbar templates={templates} />
-              {children}
+              <div className="space-y-10 p-10 lg:px-20">{children}</div>
             </div>
           </ThemeAndQueryProvider>
         </body>

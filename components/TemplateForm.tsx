@@ -66,54 +66,56 @@ export default function TemplateForm() {
     <>
       {open ? (
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(
-              async (data: z.infer<typeof templateSchema>) => mutate(data)
-            )}
-            className="space-y-6"
-          >
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Title of the template" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+          <div className="flex justify-center lg:justify-end">
+            <form
+              onSubmit={form.handleSubmit(
+                async (data: z.infer<typeof templateSchema>) => mutate(data)
               )}
-            ></FormField>
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Optionally describe this template"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-            <div className="flex justify-between gap-2">
-              <Button
-                variant={"outline"}
-                onClick={() => setOpen(false)}
-                className="w-full"
-              >
-                Close
-              </Button>
-              <Button variant={"outline"} type="submit" className="w-full">
-                Create
-              </Button>
-            </div>
-          </form>
+              className="w-fit space-y-6"
+            >
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Title of the template" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Optionally describe this template"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              ></FormField>
+              <div className="flex justify-between gap-2">
+                <Button
+                  variant={"outline"}
+                  onClick={() => setOpen(false)}
+                  className="w-full"
+                >
+                  Close
+                </Button>
+                <Button variant={"outline"} type="submit" className="w-full">
+                  Create
+                </Button>
+              </div>
+            </form>
+          </div>
         </Form>
       ) : (
         <div className="flex justify-end">
