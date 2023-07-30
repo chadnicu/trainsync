@@ -20,10 +20,16 @@ import { DeleteButton } from "@/components/DeleteButton";
 export default function Workouts({ workouts }: { workouts: Workout[] }) {
   const queryClient = useQueryClient();
 
+  function queryWorkouts() {
+    const data = queryClient.getQueryData(["workouts"]);
+    if (!data) return [];
+    return data as Workout[];
+  }
+
   const { data } = useQuery({
     queryKey: ["workouts"],
-    queryFn: getWorkouts,
-    initialData: workouts,
+    queryFn: queryWorkouts,
+    initialData: () => queryWorkouts(),
   });
 
   const { mutate } = useMutation({

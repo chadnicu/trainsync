@@ -7,13 +7,15 @@ import {
   removeExerciseFromWorkout,
 } from "@/app/actions";
 import { HoverExercise } from "@/app/templates/[id]/Template";
-import AddSet from "@/components/AddSet";
+import AddSetForm from "@/components/AddSetForm";
 import { DeleteButton } from "@/components/DeleteButton";
+import EditSetForm from "@/components/EditSetForm";
 import WorkoutComboBox from "@/components/WorkoutComboBox";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { Exercise, Set, Workout } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 type Props = {
   workout: Workout;
@@ -101,6 +103,8 @@ export default function Workout({
     },
   });
 
+  const [editable, setEditable] = useState(0);
+
   return (
     <div className="p-10 text-center">
       <h1 className="text-5xl font-bold">{workout.title}</h1>
@@ -116,23 +120,37 @@ export default function Workout({
                   <DeleteButton mutate={() => mutate(e.id)} />
                 </div>
                 <div>
-                  {sets
-                    .filter(
-                      (set) => set.workoutExerciseId === e.workoutExerciseId
-                    )
-                    .map((d) => (
-                      <div key={d.id} className="flex items-center gap-2">
-                        <p>
-                          {d.reps} x {d.weight}
-                        </p>
-                        <button onClick={() => mutateSet(d.id)}>
-                          <Icons.trash size={12} />
-                        </button>
-                      </div>
-                    ))}
+                  {sets.map(
+                    (set) =>
+                      set.workoutExerciseId === e.workoutExerciseId && (
+                        <div key={set.id} className="flex items-center gap-2">
+                          {editable == set.id ? (
+                            <EditSetForm
+                              workoutExerciseId={set.workoutExerciseId}
+                              setId={set.id}
+                              defaultValues={{
+                                reps: set.reps ?? 0,
+                                weight: set.weight ?? 0,
+                              }}
+                              setEditable={() => setEditable(0)}
+                            />
+                          ) : (
+                            <p>
+                              {set.reps} x {set.weight}
+                            </p>
+                          )}
+                          <button onClick={() => mutateSet(set.id)}>
+                            <Icons.trash size={12} />
+                          </button>
+                          <button onClick={() => setEditable(set.id)}>
+                            <Icons.edit size={12} />
+                          </button>
+                        </div>
+                      )
+                  )}
                 </div>
               </div>
-              <AddSet workoutExerciseId={e.workoutExerciseId} />
+              <AddSetForm workoutExerciseId={e.workoutExerciseId} />
             </div>
           ))}
         </div>

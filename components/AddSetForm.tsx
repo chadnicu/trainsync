@@ -23,7 +23,7 @@ export const setSchema = z.object({
   weight: z.coerce.number(),
 });
 
-export default function AddSet({
+export default function AddSetForm({
   workoutExerciseId,
 }: {
   workoutExerciseId: number;

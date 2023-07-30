@@ -393,3 +393,13 @@ export async function deleteSet(id: number) {
 
   await db.delete(sets).where(eq(sets.id, id)).returning().get();
 }
+
+export async function editSet(
+  values: { reps: number; weight: number },
+  id: number
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db.update(sets).set(values).where(eq(sets.id, id)).returning().get();
+}

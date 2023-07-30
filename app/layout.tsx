@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import { getTemplates } from "./actions";
+import { getTemplates, getWorkouts } from "./actions";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Providers as ThemeAndQueryProvider } from "@/lib/providers";
 import { dark } from "@clerk/themes";
@@ -20,6 +20,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const templates = await getTemplates();
+  const workouts = await getWorkouts();
 
   return (
     <ClerkProvider
@@ -31,7 +32,7 @@ export default async function RootLayout({
         <body className={cn(inter.className, "tracking-tight")}>
           <ThemeAndQueryProvider>
             <div className="grid min-h-screen items-start">
-              <Navbar templates={templates} />
+              <Navbar initialTemplates={templates} initialWorkouts={workouts} />
               <div className="space-y-10 p-10 lg:px-20">{children}</div>
             </div>
           </ThemeAndQueryProvider>

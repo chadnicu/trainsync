@@ -18,14 +18,26 @@ import { UserButton, useAuth } from "@clerk/nextjs";
 import { ThemeChanger } from "./ThemeChanger";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
-import { getTemplates } from "@/app/actions";
-import { Template } from "@/lib/types";
+import { getTemplates, getWorkouts } from "@/app/actions";
+import { Template, Workout } from "@/lib/types";
 
-export default function Navbar({ templates }: { templates: Template[] }) {
-  const { data } = useQuery({
+export default function Navbar({
+  initialTemplates,
+  initialWorkouts,
+}: {
+  initialTemplates: Template[];
+  initialWorkouts: Workout[];
+}) {
+  const { data: templates } = useQuery({
     queryKey: ["templates"],
     queryFn: getTemplates,
-    initialData: templates,
+    initialData: initialTemplates,
+  });
+
+  const { data: workouts } = useQuery({
+    queryKey: ["workouts"],
+    queryFn: getWorkouts,
+    initialData: initialWorkouts,
   });
 
   const { theme } = useTheme();
@@ -50,13 +62,31 @@ export default function Navbar({ templates }: { templates: Template[] }) {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
+
           <NavigationMenuItem>
-            <Link href="/workouts" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Workouts
-              </NavigationMenuLink>
-            </Link>
+            <NavigationMenuTrigger>Workouts</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ListItem
+                  key={"workouts"}
+                  title={"All workouts"}
+                  href={`/workouts`}
+                >
+                  {"View all of your workouts"}
+                </ListItem>
+                {workouts?.map((workout) => (
+                  <ListItem
+                    key={workout.id}
+                    title={workout.title}
+                    href={`/workouts/${workout.id}`}
+                  >
+                    {workout.description}
+                  </ListItem>
+                ))}
+              </ul>
+            </NavigationMenuContent>
           </NavigationMenuItem>
+
           <NavigationMenuItem>
             <NavigationMenuTrigger>Templates</NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -68,7 +98,7 @@ export default function Navbar({ templates }: { templates: Template[] }) {
                 >
                   {"View all of your templates"}
                 </ListItem>
-                {data?.map((template) => (
+                {templates?.map((template) => (
                   <ListItem
                     key={template.id}
                     title={template.title}
