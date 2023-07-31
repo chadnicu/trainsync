@@ -74,13 +74,13 @@ export default function Template({
   });
 
   return (
-    <div className="p-10 text-center">
+    <div className="text-center">
       <h1 className="text-5xl font-bold">{template.title}</h1>
       <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
         <div className="grid gap-2">
           {data.templatesExercises.map((e) => (
             <div
-              className="flex items-center justify-between gap-10 border px-7 py-5"
+              className="flex h-fit items-center justify-between gap-10 border px-7 py-5"
               key={e.id}
             >
               <div>

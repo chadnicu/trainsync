@@ -367,6 +367,7 @@ export async function getSets() {
       workout_exercise,
       eq(workout_exercise.id, sets.workoutExerciseId)
     )
+    .where(eq(sets.userId, userId))
     .all()
     .then((data) => data.map(({ sets }) => sets));
 
@@ -418,20 +419,20 @@ export async function getLogs() {
     )
     .innerJoin(exercise, eq(exercise.id, workout_exercise.exerciseId))
     .all()
-    .then((data) =>
-      data
-        .map(({ sets, exercise }) => {
+    .then(
+      (data) =>
+        data.map(({ sets, exercise }) => {
           return {
             ...sets,
             title: exercise.title,
             exerciseId: exercise.id,
           };
         })
-        .filter(
-          (item, i, arr) =>
-            arr.findIndex((each) => each.title === item.title) === i
-        )
-        .sort((a, b) => a.title.localeCompare(b.title))
+      // .filter(
+      //   (item, i, arr) =>
+      //     arr.findIndex((each) => each.title === item.title) === i
+      // )
+      // .sort((a, b) => a.title.localeCompare(b.title))
     );
 
   return logs;

@@ -55,13 +55,24 @@ export default function AddSetForm({
       await queryClient.cancelQueries({ queryKey: ["logs"] });
       const previous = queryClient.getQueryData(["logs"]);
       queryClient.setQueryData(["logs"], (old: any) => {
-        return [...old, { ...newSet, workoutExerciseId, userId }];
+        return [
+          ...old,
+          {
+            ...newSet,
+            workoutExerciseId,
+            userId,
+            // title: "title",
+            // exerciseId: 0,
+          },
+        ];
       });
       return { previous };
     },
     onError: (err, newExercise, context) =>
       queryClient.setQueryData(["logs"], context?.previous),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["logs"] }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["logs"] });
+    },
   });
 
   return (
@@ -134,7 +145,11 @@ export default function AddSetForm({
         </Form>
       ) : (
         <div className="flex items-center">
-          <Button variant={"outline"} onClick={() => setOpen(true)}>
+          <Button
+            variant={"outline"}
+            className="w-24"
+            onClick={() => setOpen(true)}
+          >
             Add set
           </Button>
         </div>

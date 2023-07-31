@@ -73,7 +73,7 @@ export default function Workout({
     },
   });
 
-  function querySets() {
+  function queryLogs() {
     const data = queryClient.getQueryData(["logs"]);
     if (!data) return [];
     return data as (Set & {
@@ -84,8 +84,8 @@ export default function Workout({
 
   const { data: sets } = useQuery({
     queryKey: ["logs"],
-    queryFn: querySets,
-    initialData: () => querySets(),
+    queryFn: queryLogs,
+    initialData: () => queryLogs(),
   });
 
   const { mutate: mutateSet } = useMutation({
@@ -112,24 +112,39 @@ export default function Workout({
   const [editable, setEditable] = useState(0);
 
   return (
-    <div className="p-10 text-center">
+    <div className="text-center">
       <h1 className="text-5xl font-bold">{workout.title}</h1>
       <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
         <div className="grid gap-2">
           {exercises.workoutsExercises.map((e) => (
-            <div key={e.id} className="flex gap-10">
-              <div className="flex items-center justify-between gap-10 border px-7 py-5">
-                <div>
-                  <HoverExercise data={e} />
+            <div
+              key={e.id}
+              className="grid place-items-center sm:flex sm:gap-10"
+            >
+              <div className="mb-1 mt-5 grid w-full items-center border px-7 py-5 sm:mb-0 sm:mt-0 sm:flex sm:gap-10">
+                <div className="flex justify-between gap-2">
+                  <div>
+                    <HoverExercise data={e} />
+                  </div>
+                  <div>
+                    <DeleteButton mutate={() => mutate(e.id)} />
+                  </div>
                 </div>
-                <div>
-                  <DeleteButton mutate={() => mutate(e.id)} />
-                </div>
-                <div>
+                <div className="mt-2 sm:mt-0">
                   {sets.map(
                     (set) =>
                       set.workoutExerciseId === e.workoutExerciseId && (
-                        <div key={set.id} className="flex items-center gap-2">
+                        <div
+                          key={set.id}
+                          className="flex items-center justify-center gap-2"
+                        >
+                          <button
+                            onClick={() =>
+                              setEditable(editable === set.id ? 0 : set.id)
+                            }
+                          >
+                            <Icons.edit size={12} />
+                          </button>
                           {editable == set.id ? (
                             <EditSetForm
                               workoutExerciseId={set.workoutExerciseId}
@@ -148,13 +163,13 @@ export default function Workout({
                           <button onClick={() => mutateSet(set.id)}>
                             <Icons.trash size={12} />
                           </button>
-                          <button
+                          {/* <button
                             onClick={() =>
                               setEditable(editable === set.id ? 0 : set.id)
                             }
                           >
                             <Icons.edit size={12} />
-                          </button>
+                          </button> */}
                         </div>
                       )
                   )}

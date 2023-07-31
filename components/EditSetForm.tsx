@@ -51,7 +51,13 @@ export default function EditSetForm({
       queryClient.setQueryData(["logs"], (old: any) => {
         return old
           .filter((e: any) => e.id !== setId)
-          .concat({ ...newSet, workoutExerciseId, userId });
+          .concat({
+            ...newSet,
+            workoutExerciseId,
+            userId,
+            // title: "title",
+            // exerciseId: "exid",
+          });
       });
       return { previous };
     },

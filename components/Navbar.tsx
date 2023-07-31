@@ -129,16 +129,22 @@ export default function Navbar({
                 <ListItem key={"logs"} title={"All logs"} href={`/logs`}>
                   {"View all of your logs"}
                 </ListItem>
-                {logs?.map((log) => (
-                  <ListItem
-                    key={log.id}
-                    title={log.title}
-                    href={`/logs/${log.exerciseId}`}
-                  >
-                    {/* {log.} */}
-                    Logs for {log.title}
-                  </ListItem>
-                ))}
+                {logs
+                  .filter(
+                    (item, i, arr) =>
+                      arr.findIndex((each) => each.title === item.title) === i
+                  )
+                  .sort((a, b) => a.title?.localeCompare(b.title))
+                  .map((log) => (
+                    <ListItem
+                      key={log.id}
+                      title={log.title}
+                      href={`/logs/${log.exerciseId}`}
+                    >
+                      {/* {log.} */}
+                      Logs for {log.title}
+                    </ListItem>
+                  ))}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
