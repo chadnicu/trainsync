@@ -9,7 +9,7 @@ import {
   workout_exercise,
 } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { and, eq, notInArray } from "drizzle-orm";
+import { and, eq, inArray, notInArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs";
 import { z } from "zod";
@@ -339,6 +339,28 @@ export async function removeExerciseFromWorkout(
 ) {
   const { userId } = auth();
   if (!userId) return;
+
+  const setIdsToDelete = await db
+    .select()
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .where(
+      and(
+        eq(workout_exercise.exerciseId, exerciseId),
+        eq(workout_exercise.workoutId, workoutId)
+      )
+    )
+    .all()
+    .then((data) => data.map(({ sets }) => sets.id));
+
+  await db
+    .delete(sets)
+    .where(inArray(sets.id, setIdsToDelete))
+    .returning()
+    .get();
 
   await db
     .delete(workout_exercise)
