@@ -18,6 +18,8 @@ import { templateSchema } from "@/components/TemplateForm";
 import { Exercise, Template, Workout } from "@/lib/types";
 import { workoutSchema } from "@/components/WorkoutForm";
 import { setSchema } from "@/components/AddSetForm";
+import { templateToWorkoutSchema } from "./templates/[id]/Template";
+import { NextResponse } from "next/server";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -486,4 +488,48 @@ export async function getLogsByExerciseId(id: number) {
     );
 
   return logs;
+}
+
+export async function addTemplateToWorkout(
+  templateId: number,
+  values: z.infer<typeof templateToWorkoutSchema>
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  const { title, description } = await db
+    .select()
+    .from(template)
+    .where(eq(template.id, templateId))
+    .limit(1)
+    .get();
+
+  const { id: workoutId } = await db
+    .insert(workout)
+    .values({
+      title,
+      description,
+      userId,
+      date: values.date.toString(),
+    })
+    .returning()
+    .get();
+
+  await db
+    .select()
+    .from(exercise_template)
+    .where(eq(exercise_template.templateId, templateId))
+    .all()
+    .then((data) =>
+      data
+        .reverse()
+        .map(
+          async ({ exerciseId }) =>
+            await db
+              .insert(workout_exercise)
+              .values({ workoutId, exerciseId })
+              .returning()
+              .get()
+        )
+    );
 }

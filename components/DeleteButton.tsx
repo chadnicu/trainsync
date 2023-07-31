@@ -12,17 +12,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function DeleteButton({
   mutate,
   disabled,
+  className,
 }: {
   mutate: () => void;
   disabled?: boolean;
+  className?: string;
 }) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild className="w-full">
+      <AlertDialogTrigger asChild className={cn("w-full", className)}>
         <Button variant="outline" disabled={disabled ?? false}>
           Delete
         </Button>
