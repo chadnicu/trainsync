@@ -1,7 +1,11 @@
 import { getLogsByExerciseId } from "@/app/actions";
+import Log from "./Log";
+
+export const dynamic = "force-dynamic";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const logs = await getLogsByExerciseId(parseInt(params.id, 10));
+  const exerciseId = parseInt(params.id, 10);
+  const logs = await getLogsByExerciseId(exerciseId);
 
   return (
     <div className="grid place-items-center gap-10">
@@ -20,4 +24,5 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
     </div>
   );
+  // return <Log initialLog={logs} exerciseId={exerciseId} />;
 }
