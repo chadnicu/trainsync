@@ -1,5 +1,4 @@
 import { getLogsByExerciseId } from "@/app/actions";
-import Log from "./Log";
 
 export const dynamic = "force-dynamic";
 
