@@ -1,0 +1,23 @@
+import { getLogsByExerciseId } from "@/app/actions";
+
+export default async function Page({ params }: { params: { id: string } }) {
+  const logs = await getLogsByExerciseId(parseInt(params.id, 10));
+
+  return (
+    <div className="grid place-items-center gap-10">
+      <h1 className="text-5xl font-bold">{logs[0]?.exerciseTitle ?? ""}</h1>
+      <div>
+        {logs.map((e) => (
+          <div key={e.id} className="flex gap-5">
+            <p className="font-semibold">{e.date.toString().slice(0, 15)}</p>{" "}
+            <h1>
+              {e.reps} x {e.weight}
+            </h1>
+            <p className="italic">({e.workoutTitle})</p>
+            {e.comment && <p>{e.comment}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

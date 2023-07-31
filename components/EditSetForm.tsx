@@ -37,7 +37,7 @@ export default function EditSetForm({
     setEditable();
     form.reset();
     await editSet(values, setId).then(() => {
-      queryClient.invalidateQueries(["sets"]);
+      queryClient.invalidateQueries(["logs"]);
     });
   }
 
@@ -46,9 +46,9 @@ export default function EditSetForm({
   const { mutate } = useMutation({
     mutationFn: onSubmit,
     onMutate: async (newSet: z.infer<typeof setSchema>) => {
-      await queryClient.cancelQueries({ queryKey: ["sets"] });
-      const previous = queryClient.getQueryData(["sets"]);
-      queryClient.setQueryData(["sets"], (old: any) => {
+      await queryClient.cancelQueries({ queryKey: ["logs"] });
+      const previous = queryClient.getQueryData(["logs"]);
+      queryClient.setQueryData(["logs"], (old: any) => {
         return old
           .filter((e: any) => e.id !== setId)
           .concat({ ...newSet, workoutExerciseId, userId });
@@ -56,8 +56,8 @@ export default function EditSetForm({
       return { previous };
     },
     onError: (err, newExercise, context) =>
-      queryClient.setQueryData(["sets"], context?.previous),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["sets"] }),
+      queryClient.setQueryData(["logs"], context?.previous),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["logs"] }),
   });
 
   return (

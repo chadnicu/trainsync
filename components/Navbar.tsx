@@ -18,15 +18,20 @@ import { UserButton, useAuth } from "@clerk/nextjs";
 import { ThemeChanger } from "./ThemeChanger";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
-import { getTemplates, getWorkouts } from "@/app/actions";
-import { Template, Workout } from "@/lib/types";
+import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
+import { Set, Template, Workout } from "@/lib/types";
 
 export default function Navbar({
   initialTemplates,
   initialWorkouts,
+  initialLogs,
 }: {
   initialTemplates: Template[];
   initialWorkouts: Workout[];
+  initialLogs: (Set & {
+    title: string;
+    exerciseId: number;
+  })[];
 }) {
   const { data: templates } = useQuery({
     queryKey: ["templates"],
@@ -38,6 +43,12 @@ export default function Navbar({
     queryKey: ["workouts"],
     queryFn: getWorkouts,
     initialData: initialWorkouts,
+  });
+
+  const { data: logs } = useQuery({
+    queryKey: ["logs"],
+    queryFn: getLogs,
+    initialData: initialLogs,
   });
 
   const { theme } = useTheme();
@@ -110,6 +121,27 @@ export default function Navbar({
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Logs</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                <ListItem key={"logs"} title={"All logs"} href={`/logs`}>
+                  {"View all of your logs"}
+                </ListItem>
+                {logs?.map((log) => (
+                  <ListItem
+                    key={log.id}
+                    title={log.title}
+                    href={`/logs/${log.exerciseId}`}
+                  >
+                    {/* {log.} */}
+                    Logs for {log.title}
+                  </ListItem>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
         </NavigationMenuList>
         <NavigationMenuList className="flex gap-2">
           <NavigationMenuItem className="flex">
@@ -149,6 +181,7 @@ export default function Navbar({
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
+
       <NavigationMenu className="sticky top-0 flex flex-none justify-between gap-2 border-b bg-background p-3 sm:hidden sm:gap-0">
         <NavigationMenuItem className="flex w-24 list-none justify-start">
           <NavigationMenuTrigger>Menu</NavigationMenuTrigger>
@@ -172,6 +205,7 @@ export default function Navbar({
                 title={"Templates"}
                 href={`/templates`}
               ></ListItem>
+              <ListItem key={"logs"} title={"Logs"} href={`/logs`}></ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

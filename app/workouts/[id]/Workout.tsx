@@ -73,33 +73,39 @@ export default function Workout({
     },
   });
 
+  function querySets() {
+    const data = queryClient.getQueryData(["logs"]);
+    if (!data) return [];
+    return data as (Set & {
+      title: string;
+      exerciseId: number;
+    })[];
+  }
+
   const { data: sets } = useQuery({
-    queryKey: ["sets"],
-    queryFn: async () => {
-      const data = await getSets();
-      return data;
-    },
-    initialData: initialSets,
+    queryKey: ["logs"],
+    queryFn: querySets,
+    initialData: () => querySets(),
   });
 
   const { mutate: mutateSet } = useMutation({
     mutationFn: async (id) => {
       await deleteSet(id);
-      queryClient.invalidateQueries(["sets"]);
+      queryClient.invalidateQueries(["logs"]);
     },
     onMutate: async (id: number) => {
-      await queryClient.cancelQueries({ queryKey: ["sets"] });
-      const previous = queryClient.getQueryData(["sets"]);
-      queryClient.setQueryData(["sets"], (old: any) =>
+      await queryClient.cancelQueries({ queryKey: ["logs"] });
+      const previous = queryClient.getQueryData(["logs"]);
+      queryClient.setQueryData(["logs"], (old: any) =>
         old.filter((s: any) => s.id !== id)
       );
       return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData(["sets"], context?.previous);
+      queryClient.setQueryData(["logs"], context?.previous);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["sets"] });
+      queryClient.invalidateQueries({ queryKey: ["logs"] });
     },
   });
 
@@ -142,7 +148,11 @@ export default function Workout({
                           <button onClick={() => mutateSet(set.id)}>
                             <Icons.trash size={12} />
                           </button>
-                          <button onClick={() => setEditable(set.id)}>
+                          <button
+                            onClick={() =>
+                              setEditable(editable === set.id ? 0 : set.id)
+                            }
+                          >
                             <Icons.edit size={12} />
                           </button>
                         </div>

@@ -403,3 +403,64 @@ export async function editSet(
 
   await db.update(sets).set(values).where(eq(sets.id, id)).returning().get();
 }
+
+export async function getLogs() {
+  const { userId } = auth();
+  if (!userId) return [];
+
+  const logs = await db
+    .select()
+    .from(sets)
+    .where(eq(sets.userId, userId))
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .innerJoin(exercise, eq(exercise.id, workout_exercise.exerciseId))
+    .all()
+    .then((data) =>
+      data
+        .map(({ sets, exercise }) => {
+          return {
+            ...sets,
+            title: exercise.title,
+            exerciseId: exercise.id,
+          };
+        })
+        .filter(
+          (item, i, arr) =>
+            arr.findIndex((each) => each.title === item.title) === i
+        )
+        .sort((a, b) => a.title.localeCompare(b.title))
+    );
+
+  return logs;
+}
+
+export async function getLogsByExerciseId(id: number) {
+  const { userId } = auth();
+  if (!userId) return [];
+
+  const logs = await db
+    .select()
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .innerJoin(workout, eq(workout.id, workout_exercise.workoutId))
+    .innerJoin(exercise, eq(exercise.id, workout_exercise.exerciseId))
+    .where(eq(exercise.id, id))
+    .all()
+    .then((data) =>
+      data.map(({ sets, workout_exercise, workout, exercise }) => ({
+        ...sets,
+        comment: workout_exercise.comment,
+        date: workout.date,
+        workoutTitle: workout.title,
+        exerciseTitle: exercise.title,
+      }))
+    );
+
+  return logs;
+}

@@ -43,7 +43,7 @@ export default function AddSetForm({
     setOpen(false);
     form.reset();
     await createSet(values, workoutExerciseId).then(() => {
-      queryClient.invalidateQueries(["sets"]);
+      queryClient.invalidateQueries(["logs"]);
     });
   }
 
@@ -52,16 +52,16 @@ export default function AddSetForm({
   const { mutate } = useMutation({
     mutationFn: onSubmit,
     onMutate: async (newSet: z.infer<typeof setSchema>) => {
-      await queryClient.cancelQueries({ queryKey: ["sets"] });
-      const previous = queryClient.getQueryData(["sets"]);
-      queryClient.setQueryData(["sets"], (old: any) => {
+      await queryClient.cancelQueries({ queryKey: ["logs"] });
+      const previous = queryClient.getQueryData(["logs"]);
+      queryClient.setQueryData(["logs"], (old: any) => {
         return [...old, { ...newSet, workoutExerciseId, userId }];
       });
       return { previous };
     },
     onError: (err, newExercise, context) =>
-      queryClient.setQueryData(["sets"], context?.previous),
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["sets"] }),
+      queryClient.setQueryData(["logs"], context?.previous),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["logs"] }),
   });
 
   return (
