@@ -75,9 +75,8 @@ export default function EditSetForm({
               mutate(data);
             }
           )}
-          className="space-y-2"
+          className="space-y-2 flex gap-2"
         >
-          <div className="flex gap-2">
             <FormField
               control={form.control}
               name="reps"
@@ -116,7 +115,6 @@ export default function EditSetForm({
                 </FormItem>
               )}
             />
-          </div>
           <div className="flex justify-between gap-2">
             <Button
               variant={"outline"}
