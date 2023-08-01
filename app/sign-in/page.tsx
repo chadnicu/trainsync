@@ -20,7 +20,9 @@ export const appearance = {
   formButtonPrimary: buttonVariants({ variant: "secondary" }),
   formFieldLabel: "text-foreground",
   socialButtonsProviderIcon__github: "brightness-50 dark:brightness-[10]",
-  formFieldInput: "bg-transparent border border-zinc-300 dark:border-zinc-700",
+  formFieldInput:
+    "bg-transparent border border-zinc-300 dark:border-zinc-700 text-foreground",
+  formFieldSuccessText: "text-zinc-500",
   footerActionText: "text-zinc-500",
   formField: "gap-1",
   card: "bg-background dark:border-zinc-700",
