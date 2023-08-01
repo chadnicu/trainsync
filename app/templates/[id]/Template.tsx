@@ -123,9 +123,8 @@ export default function Template({
                 queryClient.invalidateQueries(["workouts"]);
               }
             )}
-            className="mt-5 flex w-full justify-center space-y-6"
+            className="mt-5 grid w-full justify-center space-y-6"
           >
-            <div className="grid">
               <FormField
                 control={form.control}
                 name="date"
@@ -152,7 +151,6 @@ export default function Template({
                   Create
                 </Button>
               </div>
-            </div>
           </form>
         </FormProvider>
       ) : (

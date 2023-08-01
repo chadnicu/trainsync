@@ -126,6 +126,29 @@ export async function deleteExercise(id: number) {
     .returning()
     .get();
 
+  // and from sets
+  const setIds = await db
+    .select()
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .where(eq(workout_exercise.exerciseId, id))
+    .all()
+    .then((data) => data.map(({ sets }) => sets.id));
+
+  if (setIds.length) {
+    await db.delete(sets).where(inArray(sets.id, setIds)).returning().get();
+  }
+
+  // and from workouts
+  await db
+    .delete(workout_exercise)
+    .where(eq(workout_exercise.exerciseId, id))
+    .returning()
+    .get();
+
   await db.delete(exercise).where(eq(exercise.id, id)).returning().get();
 }
 
