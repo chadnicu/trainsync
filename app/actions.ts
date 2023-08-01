@@ -298,6 +298,23 @@ export async function deleteWorkout(workoutId: number) {
   const { userId } = auth();
   if (!userId) return;
 
+  const setIdsToDelete = await db
+    .select()
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .where(eq(workout_exercise.workoutId, workoutId))
+    .all()
+    .then((data) => (data.length ? data.map(({ sets }) => sets.id) : [-1]));
+
+  await db
+    .delete(sets)
+    .where(inArray(sets.id, setIdsToDelete))
+    .returning()
+    .get();
+
   await db
     .delete(workout_exercise)
     .where(eq(workout_exercise.workoutId, workoutId))
@@ -356,7 +373,7 @@ export async function removeExerciseFromWorkout(
       )
     )
     .all()
-    .then((data) => data.map(({ sets }) => sets.id));
+    .then((data) => (data.length ? data.map(({ sets }) => sets.id) : [-1]));
 
   await db
     .delete(sets)
@@ -375,7 +392,7 @@ export async function removeExerciseFromWorkout(
     .returning()
     .get();
 
-  revalidatePath(`/workoutss/${workoutId}`);
+  revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function getSets() {
