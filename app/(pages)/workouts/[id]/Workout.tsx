@@ -3,19 +3,17 @@
 import {
   deleteSet,
   getExercisesByWorkoutId,
-  getSets,
   removeExerciseFromWorkout,
-} from "@/app/actions";
-import { HoverExercise } from "@/app/templates/[id]/Template";
+} from "@/app/(pages)/actions";
 import AddSetForm from "@/components/AddSetForm";
 import { DeleteButton } from "@/components/DeleteButton";
 import EditSetForm from "@/components/EditSetForm";
 import WorkoutComboBox from "@/components/WorkoutComboBox";
-import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { Exercise, Set, Workout } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { HoverExercise } from "../../templates/[id]/Template";
 
 type Props = {
   workout: Workout;
@@ -112,7 +110,7 @@ export default function Workout({
   const [editable, setEditable] = useState(0);
 
   return (
-    <div className="text-center">
+    <>
       <h1 className="text-5xl font-bold">{workout.title}</h1>
       <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
         <div className="grid gap-2">
@@ -189,6 +187,6 @@ export default function Workout({
           workoutId={workout.id}
         />
       </div>
-    </div>
+    </>
   );
 }

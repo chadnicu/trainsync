@@ -2,7 +2,7 @@ import {
   getCurrentWorkout,
   getExercisesByWorkoutId,
   getSets,
-} from "@/app/actions";
+} from "@/app/(pages)/actions";
 import Workout from "./Workout";
 
 export default async function Page({ params }: { params: { id: string } }) {

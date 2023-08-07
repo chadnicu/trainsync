@@ -4,7 +4,7 @@ import {
   addTemplateToWorkout,
   getExercisesByTemplateId,
   removeExerciseFromTemplate,
-} from "@/app/actions";
+} from "@/app/(pages)/actions";
 import TemplateComboBox from "@/components/TemplateComboBox";
 import { DeleteButton } from "@/components/DeleteButton";
 import { Button } from "@/components/ui/button";
@@ -110,7 +110,7 @@ export default function Template({
   });
 
   return (
-    <div className="text-center">
+    <>
       <h1 className="text-5xl font-bold">{template.title}</h1>
       {open ? (
         <FormProvider {...form}>
@@ -125,32 +125,32 @@ export default function Template({
             )}
             className="mt-5 grid w-full justify-center space-y-6"
           >
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Date</FormLabel>
-                    <DatePicker field={field} />
-                    {/* <FormDescription>
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date</FormLabel>
+                  <DatePicker field={field} />
+                  {/* <FormDescription>
                           Your date of birth is used to calculate your age.
                         </FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <div className="mt-2 flex justify-between gap-2">
-                <Button
-                  variant={"outline"}
-                  onClick={() => setOpen(false)}
-                  className="w-full"
-                >
-                  Close
-                </Button>
-                <Button variant={"outline"} type="submit" className="w-full">
-                  Create
-                </Button>
-              </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+            <div className="mt-2 flex justify-between gap-2">
+              <Button
+                variant={"outline"}
+                onClick={() => setOpen(false)}
+                className="w-full"
+              >
+                Close
+              </Button>
+              <Button variant={"outline"} type="submit" className="w-full">
+                Create
+              </Button>
+            </div>
           </form>
         </FormProvider>
       ) : (
@@ -188,7 +188,7 @@ export default function Template({
           templateId={template.id}
         />
       </div>
-    </div>
+    </>
   );
 }
 

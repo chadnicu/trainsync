@@ -2,7 +2,7 @@
 
 import EditButton from "./EditButton";
 import { DeleteButton } from "./DeleteButton";
-import { deleteExercise, editExercise } from "@/app/actions";
+import { deleteExercise, editExercise } from "@/app/(pages)/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";

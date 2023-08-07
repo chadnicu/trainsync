@@ -1,7 +1,7 @@
 "use client";
 
 import { Workout } from "@/lib/types";
-import { deleteWorkout, editWorkout, getWorkouts } from "../actions";
+import { deleteWorkout, editWorkout } from "../actions";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";

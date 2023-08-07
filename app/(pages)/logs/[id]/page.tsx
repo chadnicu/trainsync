@@ -1,4 +1,4 @@
-import { getLogsByExerciseId } from "@/app/actions";
+import { getLogsByExerciseId } from "@/app/(pages)/actions";
 
 export const dynamic = "force-dynamic";
 

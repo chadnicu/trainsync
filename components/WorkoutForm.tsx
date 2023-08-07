@@ -17,7 +17,7 @@ import { Button } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
-import { createWorkout } from "@/app/actions";
+import { createWorkout } from "@/app/(pages)/actions";
 import { useState } from "react";
 import DatePicker from "./DatePicker";
 
@@ -28,7 +28,7 @@ export const workoutSchema = z.object({
     required_error: "Date of the workout is required.",
   }),
 });
-  
+
 export default function WorkoutForm() {
   const [open, setOpen] = useState(false);
 

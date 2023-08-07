@@ -18,7 +18,7 @@ import { UserButton, useAuth } from "@clerk/nextjs";
 import { ThemeChanger } from "./ThemeChanger";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
-import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
+import { getLogs, getTemplates, getWorkouts } from "@/app/(pages)/actions";
 import { Set, Template, Workout } from "@/lib/types";
 
 export default function Navbar({

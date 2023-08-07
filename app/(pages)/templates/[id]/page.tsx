@@ -1,5 +1,8 @@
 import Template from "./Template";
-import { getCurrentTemplate, getExercisesByTemplateId } from "@/app/actions";
+import {
+  getCurrentTemplate,
+  getExercisesByTemplateId,
+} from "@/app/(pages)/actions";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const templateId = parseInt(params.id, 10);

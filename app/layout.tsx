@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import { getLogs, getTemplates, getWorkouts } from "./actions";
+import { getLogs, getTemplates, getWorkouts } from "./(pages)/actions";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Providers as ThemeAndQueryProvider } from "@/lib/providers";
 import { dark } from "@clerk/themes";
@@ -45,9 +45,7 @@ export default async function RootLayout({
                 initialWorkouts={workouts}
                 initialLogs={logs}
               />
-              <div className="space-y-10 p-10 lg:px-20">
-                {children}
-              </div>
+              {children}
             </div>
           </ThemeAndQueryProvider>
         </body>

@@ -25,7 +25,7 @@ export default function Logs() {
   });
 
   return (
-    <div className="grid grid-cols-1 items-end gap-5 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid grid-cols-1 items-end gap-5 space-y-10 p-10 lg:grid-cols-4 xl:grid-cols-5">
       {!logs.length && <p>you have no logs</p>}
       {logs
         .filter(
