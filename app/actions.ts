@@ -9,7 +9,7 @@ import {
   workout_exercise,
 } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { and, eq, inArray, notInArray } from "drizzle-orm";
+import { and, desc, eq, inArray, notInArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs";
 import { z } from "zod";
@@ -560,16 +560,14 @@ export async function addTemplateToWorkout(
     .from(exercise_template)
     .where(eq(exercise_template.templateId, templateId))
     .all()
-    .then((data) =>
-      data
-        .reverse()
-        .map(
-          async ({ exerciseId }) =>
-            await db
-              .insert(workout_exercise)
-              .values({ workoutId, exerciseId })
-              .returning()
-              .get()
-        )
-    );
+    .then(async (data) => {
+      for (let i = 0; i < data.length; ) {
+        await db
+          .insert(workout_exercise)
+          .values({ workoutId, exerciseId: data[i].exerciseId })
+          .returning()
+          .get()
+          .then(() => i++);
+      }
+    });
 }

@@ -28,7 +28,7 @@ export const workoutSchema = z.object({
     required_error: "Date of the workout is required.",
   }),
 });
-
+  
 export default function WorkoutForm() {
   const [open, setOpen] = useState(false);
 

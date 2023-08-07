@@ -26,7 +26,7 @@ export default function Exercise({ exercise }: { exercise: Exercise }) {
 
   const embedUrl = playbackId
     ? "https://www.youtube.com/embed/" + playbackId
-    : "";
+    : url;
 
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -50,7 +50,7 @@ export default function Exercise({ exercise }: { exercise: Exercise }) {
   });
 
   return (
-    <div key={id} className="grid gap-2">
+    <div key={id} className="grid w-[299px] gap-2">
       <h2 className="text-xl font-bold">{title}</h2>
       <p className="text-sm">{instructions}</p>
       {embedUrl && (
