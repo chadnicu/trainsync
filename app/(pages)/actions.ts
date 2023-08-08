@@ -73,46 +73,45 @@ export async function createTemplate(values: z.infer<typeof templateSchema>) {
   return newTemplate;
 }
 
-export async function editExercise(old: Exercise, data?: FormData) {
+export async function editExercise(
+  exerciseId: number,
+  data: z.infer<typeof exerciseSchema>
+) {
   const { userId } = auth();
   if (!userId) return;
 
-  const title = data?.get("title")?.toString() || old.title,
-    instructions = data?.get("instructions")?.toString() || old.instructions,
-    url = data?.get("url")?.toString() || old.url;
-
-  const res = await db
+  await db
     .update(exercise)
-    .set({ title, instructions, url })
-    .where(eq(exercise.id, old.id))
+    .set(data)
+    .where(eq(exercise.id, exerciseId))
     .returning()
     .get();
 
   await db
     .select()
     .from(exercise_template)
-    .where(eq(exercise_template.exerciseId, old.id))
+    .where(eq(exercise_template.exerciseId, exerciseId))
     .all()
     .then((data) =>
       data.forEach(({ id }) => revalidatePath(`/templates/${id}`))
     );
 }
 
-export async function editTemplate(old: Template, data?: FormData) {
+export async function editTemplate(
+  templateId: number,
+  values: z.infer<typeof templateSchema>
+) {
   const { userId } = auth();
   if (!userId) return;
 
-  const title = data?.get("title")?.toString() || old.title,
-    description = data?.get("description")?.toString() || old.description;
-
   await db
     .update(template)
-    .set({ title, description })
-    .where(eq(template.id, old.id))
+    .set(values)
+    .where(eq(template.id, templateId))
     .returning()
     .get();
 
-  revalidatePath(`/templates/${old.id}`);
+  revalidatePath(`/templates/${templateId}`);
 }
 
 export async function deleteExercise(id: number) {
@@ -296,25 +295,29 @@ export async function getExercisesByWorkoutId(workoutId: number) {
   return { workoutsExercises, otherExercises };
 }
 
-export async function editWorkout(old: Workout, data?: FormData) {
+export async function editWorkout(
+  workoutId: number,
+  values: z.infer<typeof workoutSchema>
+) {
   const { userId } = auth();
   if (!userId) return;
 
-  const title = data?.get("title")?.toString() || old.title,
-    description = data?.get("description")?.toString() || old.description,
-    date = data?.get("date")?.toString() || old.date,
-    started = data?.get("started")?.toString() || old.started,
-    finished = data?.get("finished")?.toString() || old.finished,
-    comment = data?.get("comment")?.toString() || old.comment;
+  // const title = data?.get("title")?.toString() || old.title,
+  //   description = data?.get("description")?.toString() || old.description,
+  //   date = data?.get("date")?.toString() || old.date,
+  //   started = data?.get("started")?.toString() || old.started,
+  //   finished = data?.get("finished")?.toString() || old.finished,
+  //   comment = data?.get("comment")?.toString() || old.comment;
 
+  const { title, date, description } = values;
   await db
     .update(workout)
-    .set({ title, description, date, started, finished, comment })
-    .where(eq(workout.id, old.id))
+    .set({ userId, title, description, date: date.toString() })
+    .where(eq(workout.id, workoutId))
     .returning()
     .get();
 
-  revalidatePath(`/templates/${old.id}`);
+  revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function deleteWorkout(workoutId: number) {

@@ -109,6 +109,34 @@ export default function Template({
     },
   });
 
+  const { mutate: addOptimistically } = useMutation({
+    mutationFn: async (values: z.infer<typeof templateToWorkoutSchema>) => {
+      setOpen(false);
+      form.reset();
+      await addTemplateToWorkout(template.id, values);
+      queryClient.invalidateQueries(["workouts"]);
+    },
+    onMutate: async (newWorkout: z.infer<typeof templateToWorkoutSchema>) => {
+      await queryClient.cancelQueries({ queryKey: ["workouts"] });
+      const previous = queryClient.getQueryData(["workouts"]);
+      queryClient.setQueryData(["workouts"], (old: any) => {
+        return [
+          ...old,
+          {
+            ...newWorkout,
+            title: template.title,
+            userId: template.userId,
+            description: template.description,
+          },
+        ];
+      });
+      return { previous };
+    },
+    onError: (err, newExercise, context) =>
+      queryClient.setQueryData(["workouts"], context?.previous),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["workouts"] }),
+  });
+
   return (
     <>
       <h1 className="text-5xl font-bold">{template.title}</h1>
@@ -116,12 +144,8 @@ export default function Template({
         <FormProvider {...form}>
           <form
             onSubmit={form.handleSubmit(
-              async (data: z.infer<typeof templateToWorkoutSchema>) => {
-                setOpen(false);
-                form.reset();
-                await addTemplateToWorkout(template.id, data);
-                queryClient.invalidateQueries(["workouts"]);
-              }
+              (data: z.infer<typeof templateToWorkoutSchema>) =>
+                addOptimistically(data)
             )}
             className="mt-5 grid w-full justify-center space-y-6"
           >

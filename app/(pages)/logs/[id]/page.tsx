@@ -12,7 +12,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       <div>
         {logs.map((e) => (
           <div key={e.id} className="flex gap-5">
-            <p className="font-semibold">{e.date.toString().slice(0, 15)}</p>{" "}
+            <p className="font-semibold">{e.date.toString().slice(0, 15)}</p>
             <h1>
               {e.reps} x {e.weight}
             </h1>

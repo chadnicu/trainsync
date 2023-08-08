@@ -99,7 +99,7 @@ export default function ExerciseForm() {
               onSubmit={form.handleSubmit(
                 async (data: z.infer<typeof exerciseSchema>) => mutate(data)
               )}
-              className="w-fit space-y-6"
+              className="w-fit space-y-6 text-left"
             >
               <FormField
                 control={form.control}
