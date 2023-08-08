@@ -49,15 +49,9 @@ export default function EditSetForm({
       await queryClient.cancelQueries({ queryKey: ["logs"] });
       const previous = queryClient.getQueryData(["logs"]);
       queryClient.setQueryData(["logs"], (old: any) => {
-        return old
-          .filter((e: any) => e.id !== setId)
-          .concat({
-            ...newSet,
-            workoutExerciseId,
-            userId,
-            // title: "title",
-            // exerciseId: "exid",
-          });
+        return old.map((e: any) =>
+          e.id === setId ? { ...newSet, workoutExerciseId, userId } : e
+        );
       });
       return { previous };
     },

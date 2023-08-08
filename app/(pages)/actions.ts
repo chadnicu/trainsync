@@ -574,3 +574,25 @@ export async function addTemplateToWorkout(
       }
     });
 }
+
+export async function getLastSets(workoutId: number) {
+  const { userId } = auth();
+  if (!userId) return [];
+
+  const data = await db
+    .select()
+    .from(workout_exercise)
+    .where(eq(sets.userId, userId))
+    // .where(eq(workout_exercise.workoutId, workoutId))
+    .innerJoin(sets, eq(sets.workoutExerciseId, workout_exercise.id))
+    .all()
+    .then((data) =>
+      data.map(({ workout_exercise, sets }) => ({
+        ...sets,
+        workoutId: workout_exercise.workoutId,
+        exerciseId: workout_exercise.exerciseId,
+      }))
+    );
+
+  return data;
+}

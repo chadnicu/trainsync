@@ -21,14 +21,16 @@ type Props = {
     workoutsExercises: (Exercise & { workoutExerciseId: number })[];
     otherExercises: Exercise[];
   };
-  initialSets: Set[];
+  // initialSets: Set[];
+  // lastSets: (Set & { exerciseId: number; workoutId: number })[];
 };
 
 export default function Workout({
   workout,
   initialExercises,
-  initialSets,
-}: Props) {
+}: // initialSets,
+// lastSets,
+Props) {
   const queryClient = useQueryClient();
 
   const { data: exercises } = useQuery({
@@ -129,41 +131,64 @@ export default function Workout({
                   </div>
                 </div>
                 <div>
-                  {sets.map(
+                  {/* {lastSets.map(
                     (set) =>
-                      set.workoutExerciseId === e.workoutExerciseId && (
-                        <div
-                          key={set.id}
-                          className="flex items-center justify-center gap-2"
-                        >
-                          <button
-                            onClick={() =>
-                              setEditable(editable === set.id ? 0 : set.id)
-                            }
-                          >
-                            <Icons.edit size={12} />
-                          </button>
-                          {editable == set.id ? (
-                            <EditSetForm
-                              workoutExerciseId={set.workoutExerciseId}
-                              setId={set.id}
-                              defaultValues={{
-                                reps: set.reps ?? 0,
-                                weight: set.weight ?? 0,
-                              }}
-                              setEditable={() => setEditable(0)}
-                            />
-                          ) : (
-                            <p>
-                              {set.reps} x {set.weight}
+                      set.workoutExerciseId !== e.workoutExerciseId &&
+                      set.exerciseId === e.id &&
+                      set.workoutExerciseId ===
+                        sets[sets.length - 1].workoutExerciseId && (
+                        <p key={set.id}>
+                          Last: {set.reps} x {set.weight}
+                        </p>
+                      )
+                  )} */}
+                  {sets.map((set) => {
+                    return (
+                      <div key={set.id}>
+                        {set.workoutExerciseId !== e.workoutExerciseId &&
+                          set.exerciseId === e.id &&
+                          set.workoutExerciseId ===
+                            sets[sets.length - 1].workoutExerciseId && (
+                            <p key={set.id}>
+                              Last: {set.reps} x {set.weight}
                             </p>
                           )}
-                          <button onClick={() => mutateSet(set.id)}>
-                            <Icons.trash size={12} />
-                          </button>
-                        </div>
-                      )
-                  )}
+
+                        {set.workoutExerciseId === e.workoutExerciseId && (
+                          <div
+                            key={set.id}
+                            className="flex items-center justify-center gap-2"
+                          >
+                            <button
+                              onClick={() =>
+                                setEditable(editable === set.id ? 0 : set.id)
+                              }
+                            >
+                              <Icons.edit size={12} />
+                            </button>
+                            {editable == set.id ? (
+                              <EditSetForm
+                                workoutExerciseId={set.workoutExerciseId}
+                                setId={set.id}
+                                defaultValues={{
+                                  reps: set.reps ?? 0,
+                                  weight: set.weight ?? 0,
+                                }}
+                                setEditable={() => setEditable(0)}
+                              />
+                            ) : (
+                              <p>
+                                {set.reps} x {set.weight}
+                              </p>
+                            )}
+                            <button onClick={() => mutateSet(set.id)}>
+                              <Icons.trash size={12} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
               <AddSetForm workoutExerciseId={e.workoutExerciseId} />
