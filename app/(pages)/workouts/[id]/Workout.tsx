@@ -145,14 +145,14 @@ Props) {
                   {sets.map((set) => {
                     return (
                       <div key={set.id}>
-                        {set.workoutExerciseId !== e.workoutExerciseId &&
+                        {/* {set.workoutExerciseId !== e.workoutExerciseId &&
                           set.exerciseId === e.id &&
                           set.workoutExerciseId ===
                             sets[sets.length - 1].workoutExerciseId && (
                             <p key={set.id}>
                               Last: {set.reps} x {set.weight}
                             </p>
-                          )}
+                          )} */}
 
                         {set.workoutExerciseId === e.workoutExerciseId && (
                           <div
