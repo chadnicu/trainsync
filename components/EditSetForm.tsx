@@ -75,46 +75,48 @@ export default function EditSetForm({
               mutate(data);
             }
           )}
-          className="flex gap-2 space-y-2"
+          className="grid gap-2"
         >
-          <FormField
-            control={form.control}
-            name="reps"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center justify-between gap-2">
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="0"
-                      className="w-20 text-center"
-                      {...field}
-                    />
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="weight"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center justify-between gap-2">
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="0"
-                      className="w-20 text-center"
-                      {...field}
-                    />
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex gap-2">
+            <FormField
+              control={form.control}
+              name="reps"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between gap-2">
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        className="w-20 text-center"
+                        {...field}
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="weight"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between gap-2">
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="0"
+                        className="w-20 text-center"
+                        {...field}
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="flex justify-between gap-2">
             <Button
               variant={"outline"}

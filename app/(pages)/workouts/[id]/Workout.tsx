@@ -113,22 +113,22 @@ export default function Workout({
     <>
       <h1 className="text-5xl font-bold">{workout.title}</h1>
       <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
-        <div className="grid gap-2">
+        <div className="grid gap-5">
           {exercises.workoutsExercises.map((e) => (
             <div
               key={e.id}
               className="grid place-items-center sm:flex sm:gap-10"
             >
-              <div className="mb-1 mt-5 grid w-full items-center border px-7 py-5 sm:mb-0 sm:mt-0 sm:flex sm:gap-10">
-                <div className="flex justify-between gap-2">
-                  <div>
+              <div className="mb-3 grid h-fit w-full items-center gap-10 border px-7 py-5 sm:mb-0 sm:mt-0 sm:flex">
+                <div className="flex h-full justify-between gap-2">
+                  <div className="h-full">
                     <HoverExercise data={e} />
                   </div>
                   <div>
                     <DeleteButton mutate={() => mutate(e.id)} />
                   </div>
                 </div>
-                <div className="mt-2 sm:mt-0">
+                <div>
                   {sets.map(
                     (set) =>
                       set.workoutExerciseId === e.workoutExerciseId && (
@@ -161,13 +161,6 @@ export default function Workout({
                           <button onClick={() => mutateSet(set.id)}>
                             <Icons.trash size={12} />
                           </button>
-                          {/* <button
-                            onClick={() =>
-                              setEditable(editable === set.id ? 0 : set.id)
-                            }
-                          >
-                            <Icons.edit size={12} />
-                          </button> */}
                         </div>
                       )
                   )}
