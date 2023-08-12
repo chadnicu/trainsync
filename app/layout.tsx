@@ -45,7 +45,7 @@ export default async function RootLayout({
                 initialWorkouts={workouts}
                 initialLogs={logs}
               />
-              <div>{children}</div>
+              <div>{children}</div> 
             </div>
           </ThemeAndQueryProvider>
         </body>

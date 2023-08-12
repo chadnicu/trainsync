@@ -1,8 +1,7 @@
 "use client";
 
 import { Workout } from "@/lib/types";
-import { deleteWorkout, editWorkout } from "../actions";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -11,11 +10,6 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
-import EditButton from "@/components/EditButton";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { DeleteButton } from "@/components/DeleteButton";
 import WorkoutCard from "@/components/WorkoutCard";
 
 export default function Workouts({ workouts }: { workouts: Workout[] }) {
@@ -37,7 +31,7 @@ export default function Workouts({ workouts }: { workouts: Workout[] }) {
     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
       {!data.length && <p>you have no workouts</p>}
       {data.map((workout) => (
-        <WorkoutCard key={workout.id} workout={workout}/>
+        <WorkoutCard key={workout.id} workout={workout} />
       ))}
     </div>
   );

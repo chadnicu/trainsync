@@ -142,6 +142,7 @@ Props) {
                         </p>
                       )
                   )} */}
+
                   {sets.map((set) => {
                     return (
                       <div key={set.id}>
@@ -191,7 +192,22 @@ Props) {
                   })}
                 </div>
               </div>
-              <AddSetForm workoutExerciseId={e.workoutExerciseId} />
+              <div className="grid gap-2">
+                <div className="flex gap-1">
+                  {getLastSets(e, sets)
+                    .reverse()
+                    .map((set, i, arr) => (
+                      <div key={set.id} className="flex gap-1 text-xs">
+                        {i === 0 && <p>Last:</p>}
+                        <p>
+                          {set.reps}x{set.weight}
+                          {arr.length !== i + 1 && ","}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+                <AddSetForm workoutExerciseId={e.workoutExerciseId} />
+              </div>
             </div>
           ))}
         </div>
@@ -207,4 +223,37 @@ Props) {
       </div>
     </>
   );
+}
+
+function getLastSets(
+  workoutsExercise: Exercise & {
+    workoutExerciseId: number;
+  },
+  sets: (Set & {
+    title: string;
+    exerciseId: number;
+  })[]
+) {
+  const arr = [];
+
+  for (let i = sets.length - 1; i >= 0; i--) {
+    if (
+      sets[i].workoutExerciseId !== workoutsExercise.workoutExerciseId &&
+      sets[i].exerciseId === workoutsExercise.id
+    ) {
+      arr.push(sets[i]);
+      for (let j = i - 1; j >= 0; j--) {
+        if (sets[i].workoutExerciseId === sets[j].workoutExerciseId) {
+          arr.push(sets[j]);
+        } else {
+          j = 0;
+          break;
+        }
+      }
+      i = 0;
+      break;
+    }
+  }
+
+  return arr;
 }
