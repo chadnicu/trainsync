@@ -92,7 +92,7 @@ export default function Navbar({
                     href={`/workouts/${workout.id}`}
                   >
                     {/* {workout.description} */}
-                    {workout.date.toString().slice(0, 15)}
+                    {workout.date?.toString().slice(0, 15)}
                   </ListItem>
                 ))}
               </ul>

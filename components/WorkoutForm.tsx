@@ -79,7 +79,7 @@ export default function WorkoutForm() {
                   mutate(data);
                 }
               )}
-              className="w-fit space-y-6"
+              className="mb-10 w-fit space-y-6"
             >
               <FormField
                 control={form.control}
@@ -142,7 +142,7 @@ export default function WorkoutForm() {
       ) : (
         <div className="flex justify-end">
           <Button variant={"outline"} onClick={() => setOpen(true)}>
-            Add new
+            Create new
           </Button>
         </div>
       )}
