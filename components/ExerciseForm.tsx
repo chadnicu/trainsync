@@ -18,6 +18,14 @@ import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
 import { useState } from "react";
 import { createExercise } from "@/app/(pages)/actions";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 const isYouTubeLink = (url: string): boolean => {
   // Regular expressions to match valid YouTube links
@@ -93,74 +101,103 @@ export default function ExerciseForm() {
   return (
     <>
       {open ? (
-        <Form {...form}>
-          <div className="flex justify-center lg:justify-end">
-            <form
-              onSubmit={form.handleSubmit(
-                async (data: z.infer<typeof exerciseSchema>) => mutate(data)
-              )}
-              className="w-fit space-y-6 text-left"
-            >
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name of the exercise" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <FormField
-                control={form.control}
-                name="instructions"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Instructions</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Tips about how to perform this movement"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <FormField
-                control={form.control}
-                name="url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>YouTube URL</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Link to demonstration video"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <div className="flex justify-between gap-2">
-                <Button
-                  variant={"outline"}
-                  onClick={() => setOpen(false)}
-                  className="w-full"
+        <Card className="h-fit w-fit text-left">
+          <CardHeader>
+            <CardTitle className="text-lg">Create a new exercise</CardTitle>
+            <CardDescription>
+              Instructions and URL are not mandatory
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <div className="flex justify-center lg:justify-end">
+                <form
+                  onSubmit={form.handleSubmit(
+                    async (data: z.infer<typeof exerciseSchema>) => mutate(data)
+                  )}
+                  className="w-fit space-y-3"
                 >
-                  Close
-                </Button>
-                <Button variant={"outline"} type="submit" className="w-full">
-                  Create
-                </Button>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Name of the exercise"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  ></FormField>
+                  <FormField
+                    control={form.control}
+                    name="instructions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Instructions</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tips about how to perform this movement"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  ></FormField>
+                  <FormField
+                    control={form.control}
+                    name="url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>YouTube URL</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Link to demonstration video"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  ></FormField>
+                  <div className="flex justify-between gap-2 pt-4">
+                    <Button
+                      variant={"outline"}
+                      onClick={() => setOpen(false)}
+                      className="w-full"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      variant={"default"}
+                      type="submit"
+                      className="w-full"
+                    >
+                      Create
+                    </Button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-        </Form>
+            </Form>
+          </CardContent>
+          {/* <CardFooter className="flex justify-between gap-2">
+            <Button
+              variant={"outline"}
+              onClick={() => setOpen(false)}
+              className="w-full"
+            >
+              Close
+            </Button>
+            <Button variant={"default"} type="submit" className="w-full">
+              Create
+            </Button>
+          </CardFooter> */}
+        </Card>
       ) : (
         <div className="flex justify-end">
           <Button variant={"outline"} onClick={() => setOpen(true)}>

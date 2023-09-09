@@ -20,6 +20,13 @@ import { useAuth } from "@clerk/nextjs";
 import { createWorkout } from "@/app/(pages)/actions";
 import { useState } from "react";
 import DatePicker from "./DatePicker";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export const workoutSchema = z.object({
   title: z.string().nonempty(),
@@ -71,74 +78,89 @@ export default function WorkoutForm() {
   return (
     <>
       {open ? (
-        <Form {...form}>
-          <div className="flex justify-center lg:justify-end">
-            <form
-              onSubmit={form.handleSubmit(
-                async (data: z.infer<typeof workoutSchema>) => {
-                  mutate(data);
-                }
-              )}
-              className="mb-10 w-fit space-y-6"
-            >
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Title of the workout" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Optionally describe this workout"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="date"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Date</FormLabel>
-                    <DatePicker field={field} />
-                    {/* <FormDescription>
-                      Your date of birth is used to calculate your age.
-                    </FormDescription> */}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <div className="flex justify-between gap-2">
-                <Button
-                  variant={"outline"}
-                  onClick={() => setOpen(false)}
-                  className="w-full"
+        <Card className="h-fit w-fit text-left">
+          <CardHeader>
+            <CardTitle className="text-lg">Create workout</CardTitle>
+            <CardDescription>Create a workout from scratch</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <div className="flex justify-center lg:justify-end">
+                <form
+                  onSubmit={form.handleSubmit(
+                    async (data: z.infer<typeof workoutSchema>) => {
+                      mutate(data);
+                    }
+                  )}
+                  className="w-fit space-y-3"
                 >
-                  Close
-                </Button>
-                <Button variant={"outline"} type="submit" className="w-full">
-                  Create
-                </Button>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Title of the workout"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Optionally describe this workout"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Date</FormLabel>
+                        <DatePicker field={field} />
+                        {/* <FormDescription>
+                          Your date of birth is used to calculate your age.
+                        </FormDescription> */}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  ></FormField>
+                  <div className="flex justify-between gap-2 pt-4">
+                    <Button
+                      variant={"outline"}
+                      onClick={() => setOpen(false)}
+                      className="w-full"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      variant={"default"}
+                      type="submit"
+                      className="w-full"
+                    >
+                      Create
+                    </Button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-        </Form>
+            </Form>
+          </CardContent>
+        </Card>
       ) : (
         <div className="flex justify-end">
           <Button variant={"outline"} onClick={() => setOpen(true)}>

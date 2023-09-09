@@ -33,6 +33,13 @@ import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import { addTemplateToWorkout } from "@/app/(pages)/actions";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 // import { toast } from "@/components/ui/use-toast"
 
 const fromTemplateSchema = z.object({
@@ -96,100 +103,108 @@ export default function AddFromTemplateForm({
   return (
     <>
       {open ? (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(
-              async (data: z.infer<typeof fromTemplateSchema>) =>
-                addOptimistically(data)
-            )}
-            className="mt-10 space-y-6 text-left"
-          >
-            <FormField
-              control={form.control}
-              name="templateId"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Template</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-[240px] justify-between",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value
-                            ? templates.find(
-                                (template) => template.id === field.value
-                              )?.title
-                            : "Select template"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[240px] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search framework..." />
-                        <CommandEmpty>No framework found.</CommandEmpty>
-                        <CommandGroup>
-                          {templates?.map((template) => (
-                            <CommandItem
-                              value={template.title}
-                              key={template.id}
-                              onSelect={() => {
-                                form.setValue("templateId", template.id);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  template.id === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              {template.title}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {/* <FormDescription>
-                    This is the template blabla.
-                  </FormDescription> */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
-                  <DatePicker field={field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-            <div className="flex w-full justify-around gap-2">
-              <Button
-                variant={"outline"}
-                className="w-full"
-                onClick={() => setOpen(false)}
+        <Card className="h-fit w-fit text-left">
+          <CardHeader>
+            <CardTitle className="text-lg">Add from template</CardTitle>
+            <CardDescription>Import a workout from a template</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(
+                  async (data: z.infer<typeof fromTemplateSchema>) =>
+                    addOptimistically(data)
+                )}
+                className="space-y-3"
               >
-                Cancel
-              </Button>
-              <Button type="submit" variant={"outline"} className="w-full">
-                Add
-              </Button>
-            </div>
-          </form>
-        </Form>
+                <FormField
+                  control={form.control}
+                  name="templateId"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Template</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "w-[240px] justify-between",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value
+                                ? templates.find(
+                                    (template) => template.id === field.value
+                                  )?.title
+                                : "Select template"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[240px] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search framework..." />
+                            <CommandEmpty>No framework found.</CommandEmpty>
+                            <CommandGroup>
+                              {templates?.map((template) => (
+                                <CommandItem
+                                  value={template.title}
+                                  key={template.id}
+                                  onSelect={() => {
+                                    form.setValue("templateId", template.id);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      template.id === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {template.title}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      {/* <FormDescription>
+                        This is the template blabla.
+                      </FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date</FormLabel>
+                      <DatePicker field={field} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                ></FormField>
+                <div className="flex w-full justify-around gap-2 pt-4">
+                  <Button
+                    variant={"outline"}
+                    className="w-full"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" variant={"default"} className="w-full">
+                    Add
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       ) : (
         <div>
           <Button

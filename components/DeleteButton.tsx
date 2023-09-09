@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function DeleteButton({
@@ -26,7 +26,8 @@ export function DeleteButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild className={cn("w-full", className)}>
-        <Button variant="outline" disabled={disabled ?? false}>
+        {/* using default cus red seems more aggressive */}
+        <Button variant="default" disabled={disabled ?? false}>
           Delete
         </Button>
       </AlertDialogTrigger>
@@ -39,8 +40,15 @@ export function DeleteButton({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={mutate}>Continue</AlertDialogAction>
+          <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            className={buttonVariants({ variant: "default" })}
+            onClick={mutate}
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

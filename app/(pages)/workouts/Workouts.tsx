@@ -36,24 +36,3 @@ export default function Workouts({ workouts }: { workouts: Workout[] }) {
     </div>
   );
 }
-
-function HoverWorkout({ w }: { w: Workout }) {
-  return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Link
-          href={`/workouts/${w.id}`}
-          className={cn(
-            buttonVariants({ variant: "link" }),
-            "p-0 text-left text-xl font-bold"
-          )}
-        >
-          {w.title}
-        </Link>
-      </HoverCardTrigger>
-      <HoverCardContent className="flex w-fit max-w-xs justify-between space-x-4 space-y-1">
-        <p className="text-sm">{w?.description || "No description"}</p>
-      </HoverCardContent>
-    </HoverCard>
-  );
-}

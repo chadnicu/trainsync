@@ -22,6 +22,14 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export default function WorkoutCard({ workout }: { workout: Workout }) {
   const queryClient = useQueryClient();
@@ -83,12 +91,16 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
   });
 
   return (
-    <div className="grid h-fit place-items-center gap-5 border px-7 py-5">
-      <div>
+    <Card className="h-fit w-fit">
+      <CardHeader>
+        {/* <CardTitle> */}
         <HoverWorkout workout={workout} />
-      </div>
-      <p className="text-xs">{workout.date.toString().slice(0, 15)}</p>
-      <div className="flex justify-between gap-2">
+        {/* </CardTitle> */}
+        <CardDescription>
+          {workout.date.toString().slice(0, 15)}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex justify-between gap-2">
         <EditButton description="workout">
           <FormProvider {...form}>
             <form
@@ -141,8 +153,8 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
           </FormProvider>
         </EditButton>
         <DeleteButton mutate={() => mutate(workout.id)} />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -154,7 +166,7 @@ function HoverWorkout({ workout }: { workout: Workout }) {
           href={`/workouts/${workout.id}`}
           className={cn(
             buttonVariants({ variant: "link" }),
-            "p-0 text-left text-xl font-bold"
+            "p-0 text-left text-2xl font-bold text-foreground"
           )}
         >
           {workout.title}
