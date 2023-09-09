@@ -97,7 +97,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   });
 
   return (
-    <div className="grid w-[299px] gap-2 text-left">
+    <div className="grid w-[299px] gap-2 rounded-md text-left">
       <h2 className="text-xl font-bold">{title}</h2>
       <p className="text-sm">{instructions}</p>
       {embedUrl && (
