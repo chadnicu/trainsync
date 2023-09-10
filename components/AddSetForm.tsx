@@ -17,6 +17,13 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { useAuth } from "@clerk/nextjs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export const setSchema = z.object({
   reps: z.coerce.number().positive(),
@@ -78,71 +85,78 @@ export default function AddSetForm({
   return (
     <>
       {open ? (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(
-              async (data: z.infer<typeof setSchema>) => {
-                mutate(data);
-              }
-            )}
-            className="space-y-2"
-          >
-            <div className="flex gap-2">
-              <FormField
-                control={form.control}
-                name="reps"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center justify-between gap-2">
-                      <FormLabel>Reps</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          className="w-20 text-center"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
+        <Card>
+          <CardHeader>
+            <CardTitle>Add set</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(
+                  async (data: z.infer<typeof setSchema>) => {
+                    mutate(data);
+                  }
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="weight"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center justify-between gap-2">
-                      <FormLabel>Weight</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          className="w-20 text-center"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex justify-between gap-2">
-              <Button
-                variant={"outline"}
-                onClick={() => setOpen(false)}
-                className="w-full"
+                className="space-y-2"
               >
-                Close
-              </Button>
-              <Button variant={"outline"} type="submit" className="w-full">
-                Add
-              </Button>
-            </div>
-          </form>
-        </Form>
+                <div className="flex gap-2">
+                  <FormField
+                    control={form.control}
+                    name="reps"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center justify-between gap-2">
+                          <FormLabel>Reps</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="0"
+                              className="w-20 text-center"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="weight"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex items-center justify-between gap-2">
+                          <FormLabel>Weight</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="0"
+                              className="w-20 text-center"
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex justify-between gap-2 pt-2">
+                  <Button
+                    variant={"outline"}
+                    onClick={() => setOpen(false)}
+                    className="w-full"
+                  >
+                    Close
+                  </Button>
+                  <Button variant={"default"} type="submit" className="w-full">
+                    Add
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       ) : (
         <div className="flex items-center">
           <Button

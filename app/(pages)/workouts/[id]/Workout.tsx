@@ -14,6 +14,12 @@ import { Exercise, Set, Workout } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { HoverExercise } from "../../templates/[id]/Template";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 
 type Props = {
   workout: Workout;
@@ -113,101 +119,95 @@ Props) {
 
   return (
     <>
-      <h1 className="text-5xl font-bold">{workout.title}</h1>
-      <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
-        <div className="grid gap-5">
+      <div className="grid gap-2">
+        <h3 className="text-sm">{workout.date.toString().slice(0, 15)}</h3>
+        <h1 className="text-5xl font-bold">{workout.title}</h1>
+        <p className="text-sm">{workout.description}</p>
+      </div>
+      <div className="flex flex-col items-center gap-10 md:items-center md:justify-center md:gap-5">
+        <div className="grid gap-5 px-5">
           {exercises.workoutsExercises.map((e) => (
             <div
               key={e.id}
-              className="grid place-items-center sm:flex sm:gap-10"
+              className="grid place-items-center sm:flex sm:justify-between sm:gap-5"
             >
-              <div className="mb-3 grid h-fit w-full items-center gap-10 border px-7 py-5 sm:mb-0 sm:mt-0 sm:flex">
-                <div className="flex h-full justify-between gap-2">
-                  <div className="h-full">
-                    <HoverExercise data={e} />
-                  </div>
-                  <div>
-                    <DeleteButton mutate={() => mutate(e.id)} />
-                  </div>
-                </div>
-                <div>
-                  {/* {lastSets.map(
-                    (set) =>
-                      set.workoutExerciseId !== e.workoutExerciseId &&
-                      set.exerciseId === e.id &&
-                      set.workoutExerciseId ===
-                        sets[sets.length - 1].workoutExerciseId && (
-                        <p key={set.id}>
-                          Last: {set.reps} x {set.weight}
-                        </p>
-                      )
-                  )} */}
-
-                  {sets.map((set) => {
-                    return (
-                      <div key={set.id}>
-                        {/* {set.workoutExerciseId !== e.workoutExerciseId &&
-                          set.exerciseId === e.id &&
-                          set.workoutExerciseId ===
-                            sets[sets.length - 1].workoutExerciseId && (
-                            <p key={set.id}>
-                              Last: {set.reps} x {set.weight}
+              <Card className="mb-2 md:flex md:items-center">
+                <CardHeader>
+                  <div className="grid h-full justify-between gap-2">
+                    <div
+                      className={
+                        getLastSets(e, sets).length ? "flex" : "hidden"
+                      }
+                    >
+                      {getLastSets(e, sets)
+                        .reverse()
+                        .map((set, i, arr) => (
+                          <div key={set.id} className="flex gap-1 text-xs">
+                            {i === 0 && <p>Last:</p>}
+                            <p>
+                              {set.reps}x{set.weight}
+                              {arr.length !== i + 1 && ","}
                             </p>
-                          )} */}
-
-                        {set.workoutExerciseId === e.workoutExerciseId && (
-                          <div
-                            key={set.id}
-                            className="flex items-center justify-center gap-2"
-                          >
-                            <button
-                              onClick={() =>
-                                setEditable(editable === set.id ? 0 : set.id)
-                              }
-                            >
-                              <Icons.edit size={12} />
-                            </button>
-                            {editable == set.id ? (
-                              <EditSetForm
-                                workoutExerciseId={set.workoutExerciseId}
-                                setId={set.id}
-                                defaultValues={{
-                                  reps: set.reps ?? 0,
-                                  weight: set.weight ?? 0,
-                                }}
-                                setEditable={() => setEditable(0)}
-                              />
-                            ) : (
-                              <p>
-                                {set.reps} x {set.weight}
-                              </p>
-                            )}
-                            <button onClick={() => mutateSet(set.id)}>
-                              <Icons.trash size={12} />
-                            </button>
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <div className="flex gap-1">
-                  {getLastSets(e, sets)
-                    .reverse()
-                    .map((set, i, arr) => (
-                      <div key={set.id} className="flex gap-1 text-xs">
-                        {i === 0 && <p>Last:</p>}
-                        <p>
-                          {set.reps}x{set.weight}
-                          {arr.length !== i + 1 && ","}
-                        </p>
-                      </div>
-                    ))}
-                </div>
-                <AddSetForm workoutExerciseId={e.workoutExerciseId} />
-              </div>
+                        ))}
+                    </div>
+                    <div className="h-full">
+                      <HoverExercise data={e} />
+                    </div>
+                    <div>
+                      <DeleteButton mutate={() => mutate(e.id)} />
+                    </div>
+                  </div>
+                </CardHeader>
+                {/* <div className="mb-2 grid h-fit w-full items-center gap-5 border px-7 py-5 sm:mb-0 sm:mt-0 sm:flex"> */}
+                <CardContent className="m-0 flex h-full items-center justify-center px-0 pb-4 md:py-0">
+                  <div className="py-0 md:py-4">
+                    {sets.map((set) => {
+                      if (set.workoutExerciseId === e.workoutExerciseId)
+                        return (
+                          <div key={set.id} className="md:pr-4">
+                            {set.workoutExerciseId === e.workoutExerciseId && (
+                              <div
+                                key={set.id}
+                                className="flex items-center justify-center gap-2"
+                              >
+                                <button
+                                  onClick={() =>
+                                    setEditable(
+                                      editable === set.id ? 0 : set.id
+                                    )
+                                  }
+                                >
+                                  <Icons.edit size={12} />
+                                </button>
+                                {editable == set.id ? (
+                                  <EditSetForm
+                                    workoutExerciseId={set.workoutExerciseId}
+                                    setId={set.id}
+                                    defaultValues={{
+                                      reps: set.reps ?? 0,
+                                      weight: set.weight ?? 0,
+                                    }}
+                                    setEditable={() => setEditable(0)}
+                                  />
+                                ) : (
+                                  <p>
+                                    {set.reps} x {set.weight}
+                                  </p>
+                                )}
+                                <button onClick={() => mutateSet(set.id)}>
+                                  <Icons.trash size={12} />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        );
+                    })}
+                  </div>
+                </CardContent>
+                {/* </div> */}
+              </Card>
+              <AddSetForm workoutExerciseId={e.workoutExerciseId} />
             </div>
           ))}
         </div>

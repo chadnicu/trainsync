@@ -69,7 +69,7 @@ export default function EditSetForm({
               mutate(data);
             }
           )}
-          className="grid gap-2"
+          className="grid gap-2 py-2"
         >
           <div className="flex gap-2">
             <FormField
@@ -119,7 +119,7 @@ export default function EditSetForm({
             >
               Close
             </Button>
-            <Button variant={"outline"} type="submit" className="w-full">
+            <Button variant={"default"} type="submit" className="w-full">
               Done
             </Button>
           </div>
