@@ -163,7 +163,11 @@ export default function WorkoutForm() {
         </Card>
       ) : (
         <div className="flex justify-end">
-          <Button variant={"outline"} onClick={() => setOpen(true)}>
+          <Button
+            variant={"outline"}
+            onClick={() => setOpen(true)}
+            className="w-full"
+          >
             Create new
           </Button>
         </div>

@@ -8,7 +8,7 @@ export default async function Page() {
   return (
     <>
       <h1 className="text-center text-5xl font-bold">Exercises</h1>
-      <div className="grid gap-5 md:flex md:flex-row-reverse md:justify-between">
+      <div className="grid place-items-center gap-5 md:flex md:flex-row-reverse md:items-start md:justify-between">
         <ExerciseForm />
         <Exercises exercises={exercises} />
       </div>

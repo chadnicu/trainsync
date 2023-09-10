@@ -1,3 +1,7 @@
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <div className="space-y-10 p-10 text-center">{children}</div>;
+  return (
+    <div className="grid justify-center gap-10 py-10 text-center">
+      {children}
+    </div>
+  );
 }

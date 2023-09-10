@@ -199,7 +199,7 @@ export default function ExerciseForm() {
           </CardFooter> */}
         </Card>
       ) : (
-        <div className="flex justify-end">
+        <div className="flex justify-center">
           <Button variant={"outline"} onClick={() => setOpen(true)}>
             Add new
           </Button>
