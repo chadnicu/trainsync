@@ -10,6 +10,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { Card, CardHeader } from "@/components/ui/card";
 
 export default function Logs() {
   const queryClient = useQueryClient();
@@ -30,7 +31,7 @@ export default function Logs() {
   });
 
   return (
-    <div className="grid h-full w-full grid-cols-1 items-end gap-5 space-y-10 p-10 lg:grid-cols-4 xl:grid-cols-5">
+    <div className="grid h-full w-full grid-cols-1 place-items-center items-end gap-5 space-y-10 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {!logs.length && <p>you have no logs</p>}
       {logs
         .filter(
@@ -39,11 +40,10 @@ export default function Logs() {
         )
         .sort((a, b) => a.title?.localeCompare(b.title))
         .map((e) => (
-          <div
-            key={e.id}
-            className="grid h-fit place-items-center gap-5 border px-7 py-5"
-          >
-            <HoverLog log={e} />
+          <Card key={e.id} className="w-fit max-w-[300px]">
+            <CardHeader className="break-words">
+              <HoverLog log={e} />
+            </CardHeader>
             {/* <Link
               className={cn(
                 buttonVariants({ variant: "link" }),
@@ -53,7 +53,7 @@ export default function Logs() {
             >
               {e.title}
             </Link> */}
-          </div>
+          </Card>
         ))}
     </div>
   );
@@ -74,7 +74,7 @@ function HoverLog({
           href={`/logs/${log.exerciseId}`}
           className={cn(
             buttonVariants({ variant: "link" }),
-            "px-0 py-3 text-left text-xl font-bold"
+            "px-0 py-3 text-left text-xl font-bold text-foreground"
           )}
         >
           {log.title}
