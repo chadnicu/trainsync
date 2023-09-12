@@ -21,6 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { Card, CardContent, CardDescription, CardHeader } from "./ui/card";
 
 export default function TemplateCard({ template }: { template: Template }) {
   const queryClient = useQueryClient();
@@ -81,11 +82,14 @@ export default function TemplateCard({ template }: { template: Template }) {
   });
 
   return (
-    <div className="grid h-fit place-items-center gap-5 border px-7 py-5">
-      <div>
+    <Card className="h-fit w-fit max-w-[190px]">
+      <CardHeader>
         <HoverTemplate template={template} />
-      </div>
-      <div className="flex justify-between gap-2">
+        <CardDescription className="-mx-4 break-words">
+          {template.description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex justify-between gap-2">
         <EditButton description="template">
           <FormProvider {...form}>
             <form
@@ -138,8 +142,8 @@ export default function TemplateCard({ template }: { template: Template }) {
           </FormProvider>
         </EditButton>
         <DeleteButton mutate={() => mutate(template.id)} />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -151,7 +155,7 @@ function HoverTemplate({ template }: { template: Template }) {
           href={`/templates/${template?.id}`}
           className={cn(
             buttonVariants({ variant: "link" }),
-            "p-0 text-left text-xl font-bold"
+            "p-0 text-left text-2xl font-bold text-foreground"
           )}
         >
           {template.title}

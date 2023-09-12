@@ -18,6 +18,13 @@ import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
 import { createTemplate } from "@/app/(pages)/actions";
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export const templateSchema = z.object({
   title: z.string().nonempty(),
@@ -65,62 +72,81 @@ export default function TemplateForm() {
   return (
     <>
       {open ? (
-        <Form {...form}>
-          <div className="flex justify-center lg:justify-end">
-            <form
-              onSubmit={form.handleSubmit(
-                async (data: z.infer<typeof templateSchema>) => mutate(data)
-              )}
-              className="w-fit space-y-6"
-            >
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Title of the template" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Optionally describe this template"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              ></FormField>
-              <div className="flex justify-between gap-2">
-                <Button
-                  variant={"outline"}
-                  onClick={() => setOpen(false)}
-                  className="w-full"
+        <Card className="h-fit w-fit text-left">
+          <CardHeader>
+            <CardTitle className="text-lg">Create template</CardTitle>
+            <CardDescription>Create a new template</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <div className="flex justify-center lg:justify-end">
+                <form
+                  onSubmit={form.handleSubmit(
+                    async (data: z.infer<typeof templateSchema>) => mutate(data)
+                  )}
+                  className="w-fit space-y-6"
                 >
-                  Close
-                </Button>
-                <Button variant={"outline"} type="submit" className="w-full">
-                  Create
-                </Button>
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Title</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Title of the template"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  ></FormField>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Optionally describe this template"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  ></FormField>
+                  <div className="flex justify-between gap-2">
+                    <Button
+                      variant={"outline"}
+                      onClick={() => setOpen(false)}
+                      className="w-full"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      variant={"default"}
+                      type="submit"
+                      className="w-full"
+                    >
+                      Create
+                    </Button>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-        </Form>
+            </Form>
+          </CardContent>
+        </Card>
       ) : (
         <div className="flex justify-end">
-          <Button variant={"outline"} onClick={() => setOpen(true)}>
-            Add new
+          <Button
+            variant={"outline"}
+            onClick={() => setOpen(true)}
+            className="w-[158px]"
+          >
+            Create new
           </Button>
         </div>
       )}

@@ -29,7 +29,6 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Label } from "./ui/label";
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   const { id, title, instructions, url } = exercise;
@@ -72,7 +71,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   });
 
   return (
-    <Card className="w-[350px]">
+    <Card className="h-fit w-fit">
       <CardHeader className="pb-3 text-left">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{instructions}</CardDescription>

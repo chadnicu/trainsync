@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -81,7 +80,7 @@ export default function WorkoutForm() {
         <Card className="h-fit w-fit text-left">
           <CardHeader>
             <CardTitle className="text-lg">Create workout</CardTitle>
-            <CardDescription>Create a workout from scratch</CardDescription>
+            <CardDescription>Create a new workout from scratch</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>

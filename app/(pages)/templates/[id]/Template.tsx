@@ -40,6 +40,13 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type Props = {
   template: Template;
@@ -139,67 +146,85 @@ export default function Template({
 
   return (
     <>
-      <h1 className="text-5xl font-bold">{template.title}</h1>
+      <div className="grid gap-2">
+        <h1 className="text-5xl font-bold">{template.title}</h1>
+        <p className="text-sm">{template.description}</p>
+      </div>
       {open ? (
-        <FormProvider {...form}>
-          <form
-            onSubmit={form.handleSubmit(
-              (data: z.infer<typeof templateToWorkoutSchema>) =>
-                addOptimistically(data)
-            )}
-            className="mt-5 grid w-full justify-center space-y-6"
-          >
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
-                  <DatePicker field={field} />
-                  {/* <FormDescription>
-                          Your date of birth is used to calculate your age.
-                        </FormDescription> */}
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-            <div className="mt-2 flex justify-between gap-2">
-              <Button
-                variant={"outline"}
-                onClick={() => setOpen(false)}
-                className="w-full"
-              >
-                Close
-              </Button>
-              <Button variant={"outline"} type="submit" className="w-full">
-                Create
-              </Button>
-            </div>
-          </form>
-        </FormProvider>
+        <div className="flex items-center justify-center">
+          <Card className="h-fit w-fit text-left">
+            <CardHeader>
+              <CardTitle className="text-lg">Create workout</CardTitle>
+              <CardDescription>
+                Create a workout from this template
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FormProvider {...form}>
+                <form
+                  onSubmit={form.handleSubmit(
+                    (data: z.infer<typeof templateToWorkoutSchema>) =>
+                      addOptimistically(data)
+                  )}
+                  className="grid w-full justify-center space-y-6"
+                >
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Date</FormLabel>
+                        <DatePicker field={field} />
+                        {/* <FormDescription>
+                                Your date of birth is used to calculate your age.
+                              </FormDescription> */}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  ></FormField>
+                  <div className="mt-2 flex justify-between gap-2">
+                    <Button
+                      variant={"outline"}
+                      onClick={() => setOpen(false)}
+                      className="w-full"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      variant={"default"}
+                      type="submit"
+                      className="w-full"
+                    >
+                      Create
+                    </Button>
+                  </div>
+                </form>
+              </FormProvider>
+            </CardContent>
+          </Card>
+        </div>
       ) : (
-        <Button
-          variant={"outline"}
-          className="mt-5 w-fit"
-          onClick={() => setOpen(true)}
-        >
-          Add to calendar
-        </Button>
+        <div className="flex items-center justify-center">
+          <Button
+            variant={"default"}
+            className="w-fit"
+            onClick={() => setOpen(true)}
+          >
+            Add to calendar
+          </Button>
+        </div>
       )}
-      <div className="mt-10 flex flex-col-reverse items-center gap-5 md:flex-row md:justify-around">
+      <div className="flex flex-col items-center gap-5 px-5 md:justify-around">
         <div className="grid gap-2">
           {data.templatesExercises.map((e) => (
-            <div
-              className="flex h-fit items-center justify-between gap-10 border px-7 py-5"
-              key={e.id}
-            >
-              <div>
+            <Card key={e.id} className="flex justify-between">
+              <CardHeader>
                 <HoverExercise data={e} />
-              </div>
-              <div className="flex gap-2">
+              </CardHeader>
+              <CardContent className="flex items-center justify-center py-0">
                 <DeleteButton mutate={() => mutate(e.id)} className="w-fit" />
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
 

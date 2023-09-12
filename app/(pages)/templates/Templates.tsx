@@ -20,13 +20,11 @@ export default function Templates() {
   });
 
   return (
-    <div>
-      {!data?.length && <p>you have no templates</p>}
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {data?.map((template) => (
-          <TemplateCard key={template.id} template={template}></TemplateCard>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 xl:grid-cols-3">
+      {!data.length && <p>you have no templates</p>}
+      {data.map((template) => (
+        <TemplateCard key={template.id} template={template} />
+      ))}
     </div>
   );
 }

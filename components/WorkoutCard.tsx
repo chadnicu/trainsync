@@ -4,7 +4,6 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { DeleteButton } from "./DeleteButton";
