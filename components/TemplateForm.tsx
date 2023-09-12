@@ -140,7 +140,7 @@ export default function TemplateForm() {
           </CardContent>
         </Card>
       ) : (
-        <div className="flex justify-end">
+        <div className="flex justify-center">
           <Button
             variant={"outline"}
             onClick={() => setOpen(true)}

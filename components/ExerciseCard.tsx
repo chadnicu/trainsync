@@ -71,7 +71,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   });
 
   return (
-    <Card className="h-fit w-fit">
+    <Card className="h-fit w-fit max-w-[350px]">
       <CardHeader className="pb-3 text-left">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{instructions}</CardDescription>

@@ -201,7 +201,7 @@ export default function ExerciseForm() {
       ) : (
         <div className="flex justify-center">
           <Button variant={"outline"} onClick={() => setOpen(true)}>
-            Add new
+            Create new
           </Button>
         </div>
       )}

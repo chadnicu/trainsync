@@ -206,7 +206,7 @@ export default function Template({
       ) : (
         <div className="flex items-center justify-center">
           <Button
-            variant={"default"}
+            variant={"outline"}
             className="w-fit"
             onClick={() => setOpen(true)}
           >
