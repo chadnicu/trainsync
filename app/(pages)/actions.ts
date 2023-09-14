@@ -596,3 +596,28 @@ export async function getLastSets(workoutId: number) {
 
   return data;
 }
+
+export async function startWorkout(workoutId: number, started: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .update(workout)
+    .set({ started: started.toString() })
+    .where(eq(workout.id, workoutId))
+    .returning()
+    .get();
+}
+
+export async function getTimeStarted(workoutId: number) {
+  const { userId } = auth();
+  if (!userId) return "0";
+
+  return await db
+    .select()
+    .from(workout)
+    .where(eq(workout.id, workoutId))
+    .limit(1)
+    .get()
+    .then((data) => data.started);
+}

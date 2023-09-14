@@ -3,7 +3,9 @@
 import {
   deleteSet,
   getExercisesByWorkoutId,
+  getTimeStarted,
   removeExerciseFromWorkout,
+  startWorkout,
 } from "@/app/(pages)/actions";
 import AddSetForm from "@/components/AddSetForm";
 import { DeleteButton } from "@/components/DeleteButton";
@@ -12,7 +14,7 @@ import WorkoutComboBox from "@/components/WorkoutComboBox";
 import { Icons } from "@/components/ui/icons";
 import { Exercise, Set, Workout } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HoverExercise } from "../../templates/[id]/Template";
 import {
   Card,
@@ -20,6 +22,9 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { u } from "drizzle-orm/query-promise.d-d7b61248";
+import TimePassed from "./TimePassed";
 
 type Props = {
   workout: Workout;
@@ -117,12 +122,41 @@ Props) {
 
   const [editable, setEditable] = useState(0);
 
+  const { data: started } = useQuery({
+    queryKey: [`started`],
+    queryFn: async () => {
+      const data = await getTimeStarted(workout.id);
+      return parseInt(data ?? "0", 10);
+      // const diffInUnix = new Date().getTime() - parseInt(unixInDb ?? "0", 10);
+      // const date = new Date(diffInUnix);
+      // return { h: date.getHours(), m: date.getMinutes(), s: date.getSeconds() };
+    },
+    initialData: 0,
+  });
+
+  const date = new Date(started);
+
   return (
     <>
       <div className="grid gap-2">
         <h3 className="text-sm">{workout.date.toString().slice(0, 15)}</h3>
         <h1 className="text-5xl font-bold">{workout.title}</h1>
         <p className="text-sm">{workout.description}</p>
+        <Button
+          onClick={async () =>
+            await startWorkout(workout.id, new Date().getTime()).then(() =>
+              queryClient.invalidateQueries([`started`])
+            )
+          }
+          variant={"outline"}
+          className="w-fit items-end"
+        >
+          Start
+        </Button>
+        <p>
+          Started at: {date.getHours()}:{date.getMinutes()}:{date.getSeconds()}
+        </p>
+        <TimePassed started={started} />
       </div>
       <div className="flex flex-col items-center gap-10 md:items-center md:justify-center md:gap-5">
         <div className="grid gap-5 px-5">
