@@ -611,13 +611,44 @@ export async function startWorkout(workoutId: number, started: number) {
 
 export async function getTimeStarted(workoutId: number) {
   const { userId } = auth();
-  if (!userId) return "0";
+  if (!userId) return null;
 
-  return await db
+  const res = await db
     .select()
     .from(workout)
     .where(eq(workout.id, workoutId))
     .limit(1)
     .get()
     .then((data) => data.started);
+
+  if (!res || res === "-1") return null;
+  return res;
+}
+
+export async function finishWorkout(workoutId: number, finished: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .update(workout)
+    .set({ finished: finished.toString() })
+    .where(eq(workout.id, workoutId))
+    .returning()
+    .get();
+}
+
+export async function getTimeFinished(workoutId: number) {
+  const { userId } = auth();
+  if (!userId) return null;
+
+  const res = await db
+    .select()
+    .from(workout)
+    .where(eq(workout.id, workoutId))
+    .limit(1)
+    .get()
+    .then((data) => data.finished);
+
+  if (!res || res === "-1") return null;
+  return res;
 }

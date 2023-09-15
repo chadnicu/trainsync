@@ -2,7 +2,9 @@
 
 import {
   deleteSet,
+  finishWorkout,
   getExercisesByWorkoutId,
+  getTimeFinished,
   getTimeStarted,
   removeExerciseFromWorkout,
   startWorkout,
@@ -123,10 +125,11 @@ Props) {
   const [editable, setEditable] = useState(0);
 
   const { data: started } = useQuery({
-    queryKey: [`started`],
+    queryKey: [`started-${workout.id}`],
     queryFn: async () => {
       const data = await getTimeStarted(workout.id);
-      return parseInt(data ?? "0", 10);
+      if (!data) return null;
+      return parseInt(data, 10);
       // const diffInUnix = new Date().getTime() - parseInt(unixInDb ?? "0", 10);
       // const date = new Date(diffInUnix);
       // return { h: date.getHours(), m: date.getMinutes(), s: date.getSeconds() };
@@ -134,7 +137,22 @@ Props) {
     initialData: 0,
   });
 
-  const date = new Date(started);
+  const { data: ended } = useQuery({
+    queryKey: [`finished-${workout.id}`],
+    queryFn: async () => {
+      const data = await getTimeFinished(workout.id);
+      if (!data) return null;
+      return parseInt(data, 10);
+    },
+    initialData: 0,
+  });
+
+  const startedDate = started ? new Date(started) : null;
+  const finishedDate = ended ? new Date(ended) : null;
+  const timeSpent =
+    finishedDate && startedDate
+      ? new Date(finishedDate.getTime() - startedDate.getTime())
+      : null;
 
   return (
     <>
@@ -142,21 +160,56 @@ Props) {
         <h3 className="text-sm">{workout.date.toString().slice(0, 15)}</h3>
         <h1 className="text-5xl font-bold">{workout.title}</h1>
         <p className="text-sm">{workout.description}</p>
-        <Button
-          onClick={async () =>
-            await startWorkout(workout.id, new Date().getTime()).then(() =>
-              queryClient.invalidateQueries([`started`])
-            )
-          }
-          variant={"outline"}
-          className="w-fit items-end"
-        >
-          Start
-        </Button>
-        <p>
-          Started at: {date.getHours()}:{date.getMinutes()}:{date.getSeconds()}
-        </p>
-        <TimePassed started={started} />
+        <div className="flex justify-center gap-2 px-20 py-2">
+          <Button
+            onClick={async () => {
+              const now = new Date().getTime();
+              queryClient.setQueryData([`started-${workout.id}`], now);
+              queryClient.setQueryData([`finished-${workout.id}`], null);
+              await startWorkout(workout.id, now);
+              queryClient.invalidateQueries([`started-${workout.id}`]);
+              await finishWorkout(workout.id, -1);
+            }}
+            variant={"outline"}
+            className="w-full items-end"
+          >
+            {started ? "Restart" : "Start"}
+          </Button>
+          {started && !ended && (
+            <Button
+              onClick={async () => {
+                const now = new Date().getTime();
+
+                queryClient.setQueryData([`finished-${workout.id}`], now);
+                await finishWorkout(workout.id, now);
+                queryClient.invalidateQueries([`finished-${workout.id}`]);
+              }}
+              variant={"outline"}
+              className="w-full items-end"
+            >
+              Finish
+            </Button>
+          )}
+        </div>
+        {startedDate && (
+          <p>
+            Started at: {startedDate.getHours()}:{startedDate.getMinutes()}:
+            {startedDate.getSeconds()}
+          </p>
+        )}
+        {finishedDate && (
+          <p>
+            Ended at: {finishedDate.getHours()}:{finishedDate.getMinutes()}:
+            {finishedDate.getSeconds()}
+          </p>
+        )}
+        {started && !ended && <TimePassed since={started} />}
+        {timeSpent && (
+          <p>
+            Duration: {timeSpent.getHours() - 3}:{timeSpent.getMinutes()}:
+            {timeSpent.getSeconds()}
+          </p>
+        )}
       </div>
       <div className="flex flex-col items-center gap-10 md:items-center md:justify-center md:gap-5">
         <div className="grid gap-5 px-5">
