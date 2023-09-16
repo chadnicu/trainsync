@@ -134,21 +134,21 @@ Props) {
       // const date = new Date(diffInUnix);
       // return { h: date.getHours(), m: date.getMinutes(), s: date.getSeconds() };
     },
-    initialData: 0,
+    initialData: null,
   });
 
-  const { data: ended } = useQuery({
+  const { data: finished } = useQuery({
     queryKey: [`finished-${workout.id}`],
     queryFn: async () => {
       const data = await getTimeFinished(workout.id);
       if (!data) return null;
       return parseInt(data, 10);
     },
-    initialData: 0,
+    initialData: null,
   });
 
   const startedDate = started ? new Date(started) : null;
-  const finishedDate = ended ? new Date(ended) : null;
+  const finishedDate = finished ? new Date(finished) : null;
   const timeSpent =
     finishedDate && startedDate
       ? new Date(finishedDate.getTime() - startedDate.getTime())
@@ -161,6 +161,21 @@ Props) {
         <h1 className="text-5xl font-bold">{workout.title}</h1>
         <p className="text-sm">{workout.description}</p>
         <div className="flex justify-center gap-2 px-20 py-2">
+          {(started || finished) && (
+            <Button
+              onClick={async () => {
+                queryClient.setQueryData([`started-${workout.id}`], null);
+                queryClient.setQueryData([`finished-${workout.id}`], null);
+                await startWorkout(workout.id, -1);
+                await finishWorkout(workout.id, -1);
+                queryClient.invalidateQueries([`started-${workout.id}`]);
+                queryClient.invalidateQueries([`finished-${workout.id}`]);
+              }}
+              variant={"outline"}
+            >
+              {!finished ? "Cancel" : "Delete"}
+            </Button>
+          )}
           <Button
             onClick={async () => {
               const now = new Date().getTime();
@@ -175,7 +190,7 @@ Props) {
           >
             {started ? "Restart" : "Start"}
           </Button>
-          {started && !ended && (
+          {started && !finished && (
             <Button
               onClick={async () => {
                 const now = new Date().getTime();
@@ -203,7 +218,7 @@ Props) {
             {finishedDate.getSeconds()}
           </p>
         )}
-        {started && !ended && <TimePassed since={started} />}
+        {started && !finished && <TimePassed since={started} />}
         {timeSpent && (
           <p>
             Duration: {timeSpent.getHours() - 3}:{timeSpent.getMinutes()}:
