@@ -160,7 +160,7 @@ Props) {
         <h3 className="text-sm">{workout.date.toString().slice(0, 15)}</h3>
         <h1 className="text-5xl font-bold">{workout.title}</h1>
         <p className="text-sm">{workout.description}</p>
-        <div className="flex justify-center gap-2 px-20 py-2">
+        <div className="max-w-screen flex justify-center gap-2 overflow-hidden px-20 py-2">
           {(started || finished) && (
             <Button
               onClick={async () => {
