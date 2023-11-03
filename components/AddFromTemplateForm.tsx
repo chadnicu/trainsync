@@ -88,6 +88,7 @@ export default function AddFromTemplateForm({
           {
             date: newWorkout.date,
             ...template,
+            id: 0,
           },
         ];
       });

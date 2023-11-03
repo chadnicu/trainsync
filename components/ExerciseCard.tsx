@@ -29,6 +29,8 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { cn } from "@/lib/utils";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   const { id, title, instructions, url } = exercise;
@@ -58,7 +60,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
       await queryClient.cancelQueries({ queryKey: ["exercises"] });
       const previous = queryClient.getQueryData(["exercises"]);
       queryClient.setQueryData(["exercises"], (old: any) =>
-        old.filter((e: any) => e.id !== id)
+        old.filter((e: any) => e.id && e.id !== id)
       );
       return { previous };
     },
@@ -71,8 +73,9 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   });
 
   return (
-    <Card className="h-fit w-fit max-w-[350px]">
-      <CardHeader className="pb-3 text-left">
+    <Card className={cn("h-fit w-fit max-w-[350px]", { "opacity-50": !id })}>
+      <CardHeader className="relative pb-3 text-left">
+        {!id && <LoadingSpinner className="absolute right-[5px] top-[8px]" />}
         <CardTitle>{title}</CardTitle>
         <CardDescription>{instructions}</CardDescription>
       </CardHeader>
@@ -92,7 +95,7 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
       </CardContent>
       <CardFooter className="flex justify-between gap-2 pb-5">
         <EditFormButton exercise={exercise} />
-        <DeleteButton mutate={() => mutate(id)} />
+        <DeleteButton disabled={!id} mutate={() => mutate(id)} />
       </CardFooter>
     </Card>
   );

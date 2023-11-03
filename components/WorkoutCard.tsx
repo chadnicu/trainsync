@@ -29,6 +29,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function WorkoutCard({ workout }: { workout: Workout }) {
   const queryClient = useQueryClient();
@@ -42,7 +43,7 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
       await queryClient.cancelQueries({ queryKey: ["workouts"] });
       const previous = queryClient.getQueryData(["workouts"]);
       queryClient.setQueryData(["workouts"], (old: any) =>
-        old.filter((s: any) => s.id !== id)
+        old.filter((s: any) => s.id && s.id !== id)
       );
       return { previous };
     },
@@ -90,8 +91,11 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
   });
 
   return (
-    <Card className="h-fit w-fit">
-      <CardHeader>
+    <Card className={cn("h-fit w-fit", { "opacity-50": !workout.id })}>
+      <CardHeader className="relative">
+        {!workout.id && (
+          <LoadingSpinner className="absolute right-[5px] top-[8px]" />
+        )}
         {/* <CardTitle> */}
         <HoverWorkout workout={workout} />
         {/* </CardTitle> */}
@@ -167,6 +171,7 @@ function HoverWorkout({ workout }: { workout: Workout }) {
             buttonVariants({ variant: "link" }),
             "p-0 text-left text-2xl font-bold text-foreground"
           )}
+          aria-disabled={workout.id === -1}
         >
           {workout.title}
         </Link>

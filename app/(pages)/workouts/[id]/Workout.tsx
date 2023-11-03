@@ -110,7 +110,7 @@ Props) {
       await queryClient.cancelQueries({ queryKey: ["logs"] });
       const previous = queryClient.getQueryData(["logs"]);
       queryClient.setQueryData(["logs"], (old: any) =>
-        old.filter((s: any) => s.id !== id)
+        old.filter((s: any) => s.id && s.id !== id)
       );
       return { previous };
     },

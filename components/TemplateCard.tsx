@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Card, CardContent, CardDescription, CardHeader } from "./ui/card";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function TemplateCard({ template }: { template: Template }) {
   const queryClient = useQueryClient();
@@ -35,7 +36,7 @@ export default function TemplateCard({ template }: { template: Template }) {
       await queryClient.cancelQueries({ queryKey: ["templates"] });
       const previous = queryClient.getQueryData(["templates"]);
       queryClient.setQueryData(["templates"], (old: any) =>
-        old.filter((s: any) => s.id !== id)
+        old.filter((s: any) => s.id && s.id !== id)
       );
       return { previous };
     },
@@ -82,8 +83,15 @@ export default function TemplateCard({ template }: { template: Template }) {
   });
 
   return (
-    <Card className="h-fit w-fit max-w-[190px]">
-      <CardHeader>
+    <Card
+      className={cn("h-fit w-fit max-w-[190px]", {
+        "opacity-50": !template.id,
+      })}
+    >
+      <CardHeader className="relative">
+        {!template.id && (
+          <LoadingSpinner className="absolute right-[5px] top-[8px]" />
+        )}
         <HoverTemplate template={template} />
         <CardDescription className="-mx-4 break-words">
           {template.description}
@@ -157,6 +165,7 @@ function HoverTemplate({ template }: { template: Template }) {
             buttonVariants({ variant: "link" }),
             "p-0 text-left text-2xl font-bold text-foreground"
           )}
+          aria-disabled={!template.id}
         >
           {template.title}
         </Link>

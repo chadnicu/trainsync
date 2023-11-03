@@ -60,7 +60,7 @@ export default function TemplateForm() {
       await queryClient.cancelQueries({ queryKey: ["templates"] });
       const previous = queryClient.getQueryData(["templates"]);
       queryClient.setQueryData(["templates"], (old: any) => {
-        return [...old, { userId, ...newTemplate }];
+        return [...old, { userId, ...newTemplate, id: 0 }];
       });
       return { previous };
     },

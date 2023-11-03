@@ -29,6 +29,7 @@ export async function getExercises() {
     .select()
     .from(exercise)
     .where(eq(exercise.userId, userId))
+    .orderBy(desc(exercise.id))
     .all();
 
   return data;
