@@ -2,10 +2,16 @@ import WorkoutForm from "@/components/WorkoutForm";
 import { getTemplates, getWorkouts } from "../actions";
 import Workouts from "./Workouts";
 import AddFromTemplateForm from "@/components/AddFromTemplateForm";
+import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@nextui-org/react";
 
-export default async function Page() {
-  const workouts = await getWorkouts();
-  const templates = await getTemplates();
+export default function Page() {
+  const fallback = (
+    <Button variant={"outline"} className="w-full overflow-hidden p-0">
+      <Skeleton className="h-10 w-full" />
+    </Button>
+  );
 
   return (
     <>
@@ -13,10 +19,17 @@ export default async function Page() {
       <div className="grid gap-10 md:flex md:flex-row-reverse md:justify-between">
         <div className="flex flex-col gap-2">
           <WorkoutForm />
-          <AddFromTemplateForm templates={templates} />
+          <Suspense fallback={fallback}>
+            <FetchTemplates />
+          </Suspense>
         </div>
-        <Workouts workouts={workouts} />
+        <Workouts />
       </div>
     </>
   );
+}
+
+async function FetchTemplates() {
+  const templates = await getTemplates();
+  return <AddFromTemplateForm templates={templates} />;
 }

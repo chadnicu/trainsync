@@ -1,14 +1,14 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getExercises } from "../actions";
 import { Exercise } from "@/lib/types";
 import ExerciseCard from "@/components/ExerciseCard";
+import { getExercises } from "../actions";
 
 export default function Exercises({ exercises }: { exercises: Exercise[] }) {
   const { data } = useQuery({
     queryKey: ["exercises"],
-    queryFn: getExercises,
+    queryFn: async () => getExercises(),
     initialData: exercises,
   });
 

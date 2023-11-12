@@ -73,7 +73,11 @@ export default function ExerciseCard({ exercise }: { exercise: Exercise }) {
   });
 
   return (
-    <Card className={cn("h-fit w-fit max-w-[350px]", { "opacity-50": !id })}>
+    <Card
+      className={cn("flex h-full max-w-[350px] flex-col justify-between", {
+        "opacity-50": !id,
+      })}
+    >
       <CardHeader className="relative pb-3 text-left">
         {!id && <LoadingSpinner className="absolute right-[5px] top-[8px]" />}
         <CardTitle>{title}</CardTitle>

@@ -1,7 +1,7 @@
 import Templates from "./Templates";
 import TemplateForm from "@/components/TemplateForm";
 
-export default async function Page() {
+export default function Page() {
   return (
     <>
       <h1 className="text-center text-5xl font-bold">Templates</h1>

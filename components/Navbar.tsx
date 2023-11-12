@@ -35,19 +35,28 @@ export default function Navbar({
 }) {
   const { data: templates } = useQuery({
     queryKey: ["templates"],
-    queryFn: getTemplates,
+    queryFn: async () => getTemplates(),
     initialData: initialTemplates,
   });
 
   const { data: workouts } = useQuery({
     queryKey: ["workouts"],
-    queryFn: getWorkouts,
+    queryFn: async () => getWorkouts(),
     initialData: initialWorkouts,
   });
 
   const { data: logs } = useQuery({
     queryKey: ["logs"],
-    queryFn: getLogs,
+    queryFn: async () => {
+      return getLogs().then((data) =>
+        data
+          .filter(
+            (item, i, arr) =>
+              arr.findIndex((each) => each.title === item.title) === i
+          )
+          .sort((a, b) => a.title?.localeCompare(b.title))
+      );
+    },
     initialData: initialLogs,
   });
 
@@ -90,6 +99,8 @@ export default function Navbar({
                     key={workout.id}
                     title={workout.title}
                     href={`/workouts/${workout.id}`}
+                    aria-disabled={!workout.id}
+                    className={cn({ "opacity-50": !workout.id })}
                   >
                     {/* {workout.description} */}
                     {workout.date?.toString().slice(0, 15)}
@@ -130,22 +141,16 @@ export default function Navbar({
                 <ListItem key={"logs"} title={"All logs"} href={`/logs`}>
                   {"View all of your logs"}
                 </ListItem>
-                {logs
-                  .filter(
-                    (item, i, arr) =>
-                      arr.findIndex((each) => each.title === item.title) === i
-                  )
-                  .sort((a, b) => a.title?.localeCompare(b.title))
-                  .map((log) => (
-                    <ListItem
-                      key={log.id}
-                      title={log.title}
-                      href={`/logs/${log.exerciseId}`}
-                    >
-                      {/* {log.} */}
-                      Logs for {log.title}
-                    </ListItem>
-                  ))}
+                {logs.map((log) => (
+                  <ListItem
+                    key={log.id}
+                    title={log.title}
+                    href={`/logs/${log.exerciseId}`}
+                  >
+                    {/* {log.} */}
+                    Logs for {log.title}
+                  </ListItem>
+                ))}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>

@@ -248,6 +248,7 @@ export async function getWorkouts() {
     .select()
     .from(workout)
     .where(eq(workout.userId, userId))
+    .orderBy(workout.started)
     .all();
 
   return data;

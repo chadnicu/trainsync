@@ -134,6 +134,7 @@ export default function Template({
             title: template.title,
             userId: template.userId,
             description: template.description,
+            id: 0,
           },
         ];
       });

@@ -4,7 +4,7 @@ import { Workout } from "@/lib/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import WorkoutCard from "@/components/WorkoutCard";
 
-export default function Workouts({ workouts }: { workouts: Workout[] }) {
+export default function Workouts() {
   const queryClient = useQueryClient();
 
   function queryWorkouts() {

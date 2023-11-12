@@ -64,10 +64,10 @@ export default function AddFromTemplateForm({
     },
   });
 
-  function onSubmit(data: z.infer<typeof fromTemplateSchema>) {
-    addTemplateToWorkout(data.templateId, { date: data.date });
-    queryClient.invalidateQueries(["workouts"]);
-  }
+  // function onSubmit(data: z.infer<typeof fromTemplateSchema>) {
+  //   addTemplateToWorkout(data.templateId, { date: data.date });
+  //   queryClient.invalidateQueries(["workouts"]);
+  // }
 
   const { mutate: addOptimistically } = useMutation({
     mutationFn: async (data: z.infer<typeof fromTemplateSchema>) => {

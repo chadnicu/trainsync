@@ -1,10 +1,30 @@
 import { getLogsByExerciseId } from "@/app/(pages)/actions";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const exerciseId = parseInt(params.id, 10);
-  const logs = await getLogsByExerciseId(exerciseId);
+export default function Page({ params }: { params: { id: string } }) {
+  const fallback = (
+    <div className="grid place-items-center gap-10">
+      <Skeleton className="h-12 w-[500px]" />
+      <div className="space-y-3">
+        {new Array(8).fill(null).map((_, i) => (
+          <Skeleton key={i} className="h-6 w-[350px]" />
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <Suspense fallback={fallback}>
+      <FetchLogs exerciseId={params.id} />
+    </Suspense>
+  );
+}
+
+async function FetchLogs({ exerciseId }: { exerciseId: string }) {
+  const logs = await getLogsByExerciseId(parseInt(exerciseId, 10));
 
   return (
     <div className="grid place-items-center gap-10">
@@ -23,5 +43,4 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
     </div>
   );
-  // return <Log initialLog={logs} exerciseId={exerciseId} />;
 }
