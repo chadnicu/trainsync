@@ -48,10 +48,7 @@ Props) {
 
   const { data: exercises } = useQuery({
     queryKey: [`workout-${workout.id}`],
-    queryFn: async () => {
-      const data = await getExercisesByWorkoutId(workout.id);
-      return data;
-    },
+    queryFn: async () => getExercisesByWorkoutId(workout.id),
     initialData: initialExercises,
   });
 

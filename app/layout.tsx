@@ -21,14 +21,15 @@ export default async function RootLayout({
 }) {
   const templates = await getTemplates();
   const workouts = await getWorkouts();
-  const logs = await getLogs().then((data) =>
-    data
-      .filter(
-        (item, i, arr) =>
-          arr.findIndex((each) => each.title === item.title) === i
-      )
-      .sort((a, b) => a.title?.localeCompare(b.title))
-  );
+  const logs = await getLogs();
+  // .then((data) =>
+  //   data
+  //     .filter(
+  //       (item, i, arr) =>
+  //         arr.findIndex((each) => each.title === item.title) === i
+  //     )
+  //     .sort((a, b) => a.title?.localeCompare(b.title))
+  // );
 
   return (
     <ClerkProvider

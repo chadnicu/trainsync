@@ -4,7 +4,7 @@ import { Set } from "@/lib/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, filterLogs } from "@/lib/utils";
 import {
   HoverCard,
   HoverCardContent,
@@ -18,10 +18,12 @@ export default function Logs() {
   function queryLogs() {
     const data = queryClient.getQueryData(["logs"]);
     if (!data) return [];
-    return data as (Set & {
-      title: string;
-      exerciseId: number;
-    })[];
+    return filterLogs(
+      data as (Set & {
+        title: string;
+        exerciseId: number;
+      })[]
+    );
   }
 
   const { data: logs } = useQuery({

@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
+import { cn, filterLogs } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -47,18 +47,10 @@ export default function Navbar({
 
   const { data: logs } = useQuery({
     queryKey: ["logs"],
-    queryFn: async () => {
-      return getLogs().then((data) =>
-        data
-          .filter(
-            (item, i, arr) =>
-              arr.findIndex((each) => each.title === item.title) === i
-          )
-          .sort((a, b) => a.title?.localeCompare(b.title))
-      );
-    },
+    queryFn: async () => getLogs(),
     initialData: initialLogs,
   });
+  const filteredLogs = filterLogs(logs);
 
   const { theme } = useTheme();
 
@@ -141,13 +133,12 @@ export default function Navbar({
                 <ListItem key={"logs"} title={"All logs"} href={`/logs`}>
                   {"View all of your logs"}
                 </ListItem>
-                {logs.map((log) => (
+                {filteredLogs.map((log) => (
                   <ListItem
                     key={log.id}
                     title={log.title}
                     href={`/logs/${log.exerciseId}`}
                   >
-                    {/* {log.} */}
                     Logs for {log.title}
                   </ListItem>
                 ))}
