@@ -18,12 +18,10 @@ export default function Logs() {
   function queryLogs() {
     const data = queryClient.getQueryData(["logs"]);
     if (!data) return [];
-    return filterLogs(
-      data as (Set & {
-        title: string;
-        exerciseId: number;
-      })[]
-    );
+    return data as (Set & {
+      title: string;
+      exerciseId: number;
+    })[];
   }
 
   const { data: logs } = useQuery({
@@ -31,11 +29,12 @@ export default function Logs() {
     queryFn: queryLogs,
     initialData: () => queryLogs(),
   });
+  const filteredLogs = filterLogs(logs);
 
   return (
     <div className="grid h-full w-full grid-cols-1 place-items-center items-end gap-3 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {!logs.length && <p>you have no logs</p>}
-      {logs.map((e) => (
+      {filteredLogs.map((e) => (
         <Card key={e.id} className="w-full max-w-[300px]">
           <CardHeader className="break-words">
             <HoverLog log={e} />
