@@ -43,6 +43,7 @@ export async function getTemplates() {
     .select()
     .from(template)
     .where(eq(template.userId, userId))
+    .orderBy(desc(template.id))
     .all();
 
   return data;

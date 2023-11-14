@@ -84,12 +84,12 @@ export default function AddFromTemplateForm({
           ({ id }) => id === newWorkout.templateId
         );
         return [
-          ...old,
           {
             date: newWorkout.date,
             ...template,
             id: 0,
           },
+          ...old,
         ];
       });
       return { previous };

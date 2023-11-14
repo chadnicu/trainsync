@@ -65,7 +65,7 @@ export default function WorkoutForm() {
       await queryClient.cancelQueries({ queryKey: ["workouts"] });
       const previous = queryClient.getQueryData(["workouts"]);
       queryClient.setQueryData(["workouts"], (old: any) => {
-        return [...old, { userId, ...newWorkout }];
+        return [{ userId, ...newWorkout, id: 0 }, ...old];
       });
       return { previous };
     },

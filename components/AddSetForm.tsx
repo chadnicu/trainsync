@@ -68,7 +68,7 @@ export default function AddSetForm({
             ...newSet,
             workoutExerciseId,
             userId,
-            // title: "title",
+            title: `z-optimistic?id=${workoutExerciseId}`,
             // exerciseId: 0,
           },
         ];
