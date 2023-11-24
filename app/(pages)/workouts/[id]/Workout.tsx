@@ -309,6 +309,7 @@ Props) {
               <AddSetForm
                 workoutExerciseId={e.workoutExerciseId}
                 disabled={!started}
+                id={workout.id}
               />
             </div>
           ))}

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createSet } from "@/app/(pages)/actions";
+import { createSet, finishWorkout, startWorkout } from "@/app/(pages)/actions";
 import {
   Form,
   FormControl,
@@ -19,6 +19,8 @@ import { Input } from "./ui/input";
 import { useAuth } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useToast } from "./ui/use-toast";
+import { cn } from "@/lib/utils";
+import { ToastAction } from "./ui/toast";
 
 export const setSchema = z.object({
   reps: z.coerce.number().positive(),
@@ -28,9 +30,11 @@ export const setSchema = z.object({
 export default function AddSetForm({
   workoutExerciseId,
   disabled,
+  id,
 }: {
   workoutExerciseId: number;
   disabled?: boolean;
+  id: number;
 }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -160,16 +164,31 @@ export default function AddSetForm({
         <div className="flex items-center">
           <Button
             variant={"outline"}
-            className="w-24"
+            className={cn("w-24", { disabled: "opacity-70" })}
             onClick={() =>
               disabled
                 ? toast({
+                    title: "Workout hasn't started.",
                     description:
                       "You have to start the workout in order to add sets",
+                    action: (
+                      <ToastAction
+                        altText="Start workout now"
+                        onClick={async () => {
+                          const now = new Date().getTime();
+                          queryClient.setQueryData([`started-${id}`], now);
+                          queryClient.setQueryData([`finished-${id}`], null);
+                          await startWorkout(id, now);
+                          queryClient.invalidateQueries([`started-${id}`]);
+                          await finishWorkout(id, -1);
+                        }}
+                      >
+                        Start now
+                      </ToastAction>
+                    ),
                   })
                 : setOpen(true)
             }
-            // disabled={disabled}
           >
             Add set
           </Button>

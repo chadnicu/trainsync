@@ -6,6 +6,7 @@ import { getLogs, getTemplates, getWorkouts } from "./(pages)/actions";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Providers as ThemeAndQueryProvider } from "@/lib/providers";
 import { dark } from "@clerk/themes";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +47,10 @@ export default async function RootLayout({
                 initialWorkouts={workouts}
                 initialLogs={logs}
               />
-              <div>{children}</div>
+              <div>
+                {children}
+                <Toaster />
+              </div>
             </div>
           </ThemeAndQueryProvider>
         </body>
