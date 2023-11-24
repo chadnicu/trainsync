@@ -14,7 +14,7 @@ import { DeleteButton } from "@/components/DeleteButton";
 import EditSetForm from "@/components/EditSetForm";
 import WorkoutComboBox from "@/components/WorkoutComboBox";
 import { Icons } from "@/components/ui/icons";
-import { Exercise, Set, Workout } from "@/lib/types";
+import { Exercise, Set, Workout as WorkoutType } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { HoverExercise } from "../../templates/[id]/Template";
@@ -29,7 +29,7 @@ import { u } from "drizzle-orm/query-promise.d-d7b61248";
 import TimePassed from "./TimePassed";
 
 type Props = {
-  workout: Workout;
+  workout: WorkoutType;
   initialExercises: {
     workoutsExercises: (Exercise & { workoutExerciseId: number })[];
     otherExercises: Exercise[];
@@ -306,7 +306,10 @@ Props) {
                 </CardContent>
                 {/* </div> */}
               </Card>
-              <AddSetForm workoutExerciseId={e.workoutExerciseId} />
+              <AddSetForm
+                workoutExerciseId={e.workoutExerciseId}
+                disabled={!started}
+              />
             </div>
           ))}
         </div>

@@ -505,7 +505,7 @@ export async function getLogs() {
       // .sort((a, b) => a.title.localeCompare(b.title))
     );
 
-  console.log(logs[logs.length - 1]);
+  // console.log(logs[logs.length - 1]);
 
   return logs;
 }

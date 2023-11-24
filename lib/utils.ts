@@ -21,5 +21,5 @@ export function filterLogs(
     }
   }
 
-  return uniqueLogs.sort((a, b) => a.title.localeCompare(b.title));
+  return uniqueLogs.sort((a, b) => a.title?.localeCompare(b.title));
 }

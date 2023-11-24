@@ -67,7 +67,7 @@ export default function TemplateCard({ template }: { template: Template }) {
       await queryClient.cancelQueries({ queryKey: ["templates"] });
       const previous = queryClient.getQueryData(["templates"]);
       queryClient.setQueryData(["templates"], (old: any) => {
-        console.log(old, "old");
+        // console.log(old, "old");
         return old.map((e: Template) =>
           e.id === template.id ? { id: template.id, userId, ...values } : e
         );

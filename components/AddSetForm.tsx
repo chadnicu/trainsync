@@ -17,13 +17,8 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { useAuth } from "@clerk/nextjs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { useToast } from "./ui/use-toast";
 
 export const setSchema = z.object({
   reps: z.coerce.number().positive(),
@@ -32,8 +27,10 @@ export const setSchema = z.object({
 
 export default function AddSetForm({
   workoutExerciseId,
+  disabled,
 }: {
   workoutExerciseId: number;
+  disabled?: boolean;
 }) {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -81,6 +78,8 @@ export default function AddSetForm({
       queryClient.invalidateQueries({ queryKey: ["logs"] });
     },
   });
+
+  const { toast } = useToast();
 
   return (
     <>
@@ -162,7 +161,15 @@ export default function AddSetForm({
           <Button
             variant={"outline"}
             className="w-24"
-            onClick={() => setOpen(true)}
+            onClick={() =>
+              disabled
+                ? toast({
+                    description:
+                      "You have to start the workout in order to add sets",
+                  })
+                : setOpen(true)
+            }
+            // disabled={disabled}
           >
             Add set
           </Button>
