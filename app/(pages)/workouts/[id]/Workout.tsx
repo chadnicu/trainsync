@@ -163,10 +163,14 @@ Props) {
               onClick={async () => {
                 queryClient.setQueryData([`started-${workout.id}`], null);
                 queryClient.setQueryData([`finished-${workout.id}`], null);
-                await startWorkout(workout.id, -1);
-                await finishWorkout(workout.id, -1);
-                queryClient.invalidateQueries([`started-${workout.id}`]);
-                queryClient.invalidateQueries([`finished-${workout.id}`]);
+                await Promise.all([
+                  startWorkout(workout.id, -1),
+                  finishWorkout(workout.id, -1),
+                ]);
+                await Promise.all([
+                  queryClient.invalidateQueries([`started-${workout.id}`]),
+                  queryClient.invalidateQueries([`finished-${workout.id}`]),
+                ]);
               }}
               variant={"outline"}
             >
@@ -178,9 +182,15 @@ Props) {
               const now = new Date().getTime();
               queryClient.setQueryData([`started-${workout.id}`], now);
               queryClient.setQueryData([`finished-${workout.id}`], null);
-              await startWorkout(workout.id, now);
-              queryClient.invalidateQueries([`started-${workout.id}`]);
-              await finishWorkout(workout.id, -1);
+              await Promise.all([
+                startWorkout(workout.id, now),
+                finishWorkout(workout.id, -1),
+              ]);
+              await Promise.all([
+                queryClient.invalidateQueries([`started-${workout.id}`]),
+                // nush dc n aveam asta
+                queryClient.invalidateQueries([`finished-${workout.id}`]),
+              ]);
             }}
             variant={"outline"}
             className="w-full items-end"
@@ -191,7 +201,6 @@ Props) {
             <Button
               onClick={async () => {
                 const now = new Date().getTime();
-
                 queryClient.setQueryData([`finished-${workout.id}`], now);
                 await finishWorkout(workout.id, now);
                 queryClient.invalidateQueries([`finished-${workout.id}`]);

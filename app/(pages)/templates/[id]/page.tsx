@@ -46,10 +46,11 @@ export default function Page({ params }: { params: { id: string } }) {
 
 async function FetchTemplate({ id }: { id: string }) {
   const templateId = parseInt(id, 10);
-  const template = await getCurrentTemplate(templateId);
-  const { templatesExercises, otherExercises } = await getExercisesByTemplateId(
-    templateId
-  );
+
+  const [template, { templatesExercises, otherExercises }] = await Promise.all([
+    getCurrentTemplate(templateId),
+    getExercisesByTemplateId(templateId),
+  ]);
 
   return (
     <Template

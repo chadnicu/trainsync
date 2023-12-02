@@ -178,9 +178,15 @@ export default function AddSetForm({
                           const now = new Date().getTime();
                           queryClient.setQueryData([`started-${id}`], now);
                           queryClient.setQueryData([`finished-${id}`], null);
-                          await startWorkout(id, now);
-                          queryClient.invalidateQueries([`started-${id}`]);
-                          await finishWorkout(id, -1);
+                          await Promise.all([
+                            startWorkout(id, now),
+                            finishWorkout(id, -1),
+                          ]);
+                          await Promise.all([
+                            queryClient.invalidateQueries([`started-${id}`]),
+                            // nush dc n-aveam asta
+                            queryClient.invalidateQueries([`finished-${id}`]),
+                          ]);
                         }}
                       >
                         Start now

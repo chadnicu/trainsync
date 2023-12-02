@@ -48,8 +48,10 @@ export default function Page({ params }: { params: { id: string } }) {
 }
 
 async function FetchData({ workoutId }: { workoutId: number }) {
-  const currentWorkout = await getCurrentWorkout(workoutId);
-  const exercises = await getExercisesByWorkoutId(workoutId);
+  const [currentWorkout, exercises] = await Promise.all([
+    getCurrentWorkout(workoutId),
+    getExercisesByWorkoutId(workoutId),
+  ]);
 
   return <Workout workout={currentWorkout} initialExercises={exercises} />;
 }

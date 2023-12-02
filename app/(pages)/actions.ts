@@ -88,15 +88,6 @@ export async function editExercise(
     .where(eq(exercise.id, exerciseId))
     .returning()
     .get();
-
-  await db
-    .select()
-    .from(exercise_template)
-    .where(eq(exercise_template.exerciseId, exerciseId))
-    .all()
-    .then((data) =>
-      data.forEach(({ id }) => revalidatePath(`/templates/${id}`))
-    );
 }
 
 export async function editTemplate(
@@ -113,43 +104,45 @@ export async function editTemplate(
     .returning()
     .get();
 
-  revalidatePath(`/templates/${templateId}`);
+  // revalidatePath(`/templates/${templateId}`);
 }
 
 export async function deleteExercise(id: number) {
   const { userId } = auth();
   if (!userId) return;
 
-  // unlink it from all templates first
-  await db
-    .delete(exercise_template)
-    .where(eq(exercise_template.exerciseId, id))
-    .returning()
-    .get();
+  // unlink it from all templates and grab sets ids
+  const [_, setIds] = await Promise.all([
+    db
+      .delete(exercise_template)
+      .where(eq(exercise_template.exerciseId, id))
+      .returning()
+      .get(),
+    db
+      .select()
+      .from(sets)
+      .innerJoin(
+        workout_exercise,
+        eq(workout_exercise.id, sets.workoutExerciseId)
+      )
+      .where(eq(workout_exercise.exerciseId, id))
+      .all()
+      .then((data) => data.map(({ sets }) => sets.id)),
+  ]);
 
-  // and from sets
-  const setIds = await db
-    .select()
-    .from(sets)
-    .innerJoin(
-      workout_exercise,
-      eq(workout_exercise.id, sets.workoutExerciseId)
-    )
-    .where(eq(workout_exercise.exerciseId, id))
-    .all()
-    .then((data) => data.map(({ sets }) => sets.id));
+  // unlink from sets and workouts now too
+  await Promise.all([
+    setIds.length
+      ? db.delete(sets).where(inArray(sets.id, setIds)).returning().get()
+      : null,
+    db
+      .delete(workout_exercise)
+      .where(eq(workout_exercise.exerciseId, id))
+      .returning()
+      .get(),
+  ]);
 
-  if (setIds.length) {
-    await db.delete(sets).where(inArray(sets.id, setIds)).returning().get();
-  }
-
-  // and from workouts
-  await db
-    .delete(workout_exercise)
-    .where(eq(workout_exercise.exerciseId, id))
-    .returning()
-    .get();
-
+  // now delete the exercise
   await db.delete(exercise).where(eq(exercise.id, id)).returning().get();
 }
 
@@ -179,7 +172,7 @@ export async function addExerciseToTemplate(
     .returning()
     .get();
 
-  revalidatePath(`/templates/${templateId}`);
+  // revalidatePath(`/templates/${templateId}`);
 }
 
 export async function removeExerciseFromTemplate(
@@ -200,7 +193,7 @@ export async function removeExerciseFromTemplate(
     .returning()
     .get();
 
-  revalidatePath(`/templates/${templateId}`);
+  // revalidatePath(`/templates/${templateId}`);
 }
 
 export async function getCurrentTemplate(templateId: number) {
@@ -305,22 +298,14 @@ export async function editWorkout(
   const { userId } = auth();
   if (!userId) return;
 
-  // const title = data?.get("title")?.toString() || old.title,
-  //   description = data?.get("description")?.toString() || old.description,
-  //   date = data?.get("date")?.toString() || old.date,
-  //   started = data?.get("started")?.toString() || old.started,
-  //   finished = data?.get("finished")?.toString() || old.finished,
-  //   comment = data?.get("comment")?.toString() || old.comment;
-
-  const { title, date, description } = values;
   await db
     .update(workout)
-    .set({ userId, title, description, date: date.toString() })
+    .set({ ...values, date: values.date.toString() })
     .where(eq(workout.id, workoutId))
     .returning()
     .get();
 
-  revalidatePath(`/workouts/${workoutId}`);
+  // revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function deleteWorkout(workoutId: number) {
@@ -367,7 +352,7 @@ export async function addExerciseToWorkout(
     .returning()
     .get();
 
-  revalidatePath(`/workouts/${workoutId}`);
+  // revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function getCurrentWorkout(workoutId: number) {
@@ -421,7 +406,7 @@ export async function removeExerciseFromWorkout(
     .returning()
     .get();
 
-  revalidatePath(`/workouts/${workoutId}`);
+  // revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function getSets() {
