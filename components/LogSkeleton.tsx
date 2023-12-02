@@ -3,9 +3,9 @@ import { Skeleton } from "./ui/skeleton";
 
 export default function LogSkeleton() {
   return (
-    <Card className="w-full max-w-[300px]">
+    <Card className="float-left w-full sm:w-[49%] md:w-[32.3%] lg:w-[24%]">
       <CardHeader className="break-words">
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10"></Skeleton>
       </CardHeader>
     </Card>
   );

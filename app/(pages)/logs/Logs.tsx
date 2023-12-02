@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/hover-card";
 import { Card, CardHeader } from "@/components/ui/card";
 import { getLogs } from "../actions";
+import LogSkeleton from "@/components/LogSkeleton";
 
 export default function Logs({
   logs,

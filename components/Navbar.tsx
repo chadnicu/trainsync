@@ -52,8 +52,6 @@ export default function Navbar({
     initialData: initialLogs,
   });
 
-  console.log(templates, workouts);
-
   const filteredLogs = filterLogs(logs);
 
   const { theme } = useTheme();

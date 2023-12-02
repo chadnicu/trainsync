@@ -127,7 +127,6 @@ function EditFormButton({ exercise }: { exercise: Exercise }) {
       await queryClient.cancelQueries({ queryKey: ["exercises"] });
       const previous = queryClient.getQueryData(["exercises"]);
       queryClient.setQueryData(["exercises"], (old: any) => {
-        // console.log(old, "old");
         return old.map((e: Exercise) =>
           e.id === exercise.id ? { id: exercise.id, userId, ...values } : e
         );

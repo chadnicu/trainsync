@@ -474,23 +474,15 @@ export async function getLogs() {
     )
     .innerJoin(exercise, eq(exercise.id, workout_exercise.exerciseId))
     .all()
-    .then(
-      (data) =>
-        data.map(({ sets, exercise }) => {
-          return {
-            ...sets,
-            title: exercise.title,
-            exerciseId: exercise.id,
-          };
-        })
-      // .filter(
-      //   (item, i, arr) =>
-      //     arr.findIndex((each) => each.title === item.title) === i
-      // )
-      // .sort((a, b) => a.title.localeCompare(b.title))
+    .then((data) =>
+      data.map(({ sets, exercise }) => {
+        return {
+          ...sets,
+          title: exercise.title,
+          exerciseId: exercise.id,
+        };
+      })
     );
-
-  // console.log(logs[logs.length - 1]);
 
   return logs;
 }

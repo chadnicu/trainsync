@@ -75,7 +75,6 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
       await queryClient.cancelQueries({ queryKey: ["workouts"] });
       const previous = queryClient.getQueryData(["workouts"]);
       queryClient.setQueryData(["workouts"], (old: any) => {
-        // console.log(old, "old");
         return old.map((e: Workout) =>
           e.id === workout.id ? { id: workout.id, userId, ...values } : e
         );
