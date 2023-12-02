@@ -16,16 +16,10 @@ import WorkoutComboBox from "@/components/WorkoutComboBox";
 import { Icons } from "@/components/ui/icons";
 import { Exercise, Set, Workout as WorkoutType } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { HoverExercise } from "../../templates/[id]/Template";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { u } from "drizzle-orm/query-promise.d-d7b61248";
 import TimePassed from "./TimePassed";
 
 type Props = {

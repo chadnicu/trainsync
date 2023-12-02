@@ -96,9 +96,9 @@ export default function WorkoutCard({ workout }: { workout: Workout }) {
         {!workout.id && (
           <LoadingSpinner className="absolute right-[5px] top-[8px]" />
         )}
-        {/* <CardTitle> */}
-        <HoverWorkout workout={workout} />
-        {/* </CardTitle> */}
+        <CardTitle>
+          <HoverWorkout workout={workout} />
+        </CardTitle>
         <CardDescription>
           {workout.date.toString().slice(0, 15)}
         </CardDescription>

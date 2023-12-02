@@ -2,9 +2,16 @@ import { Suspense } from "react";
 import { getTemplates } from "../actions";
 import Templates from "./Templates";
 import TemplateForm from "@/components/TemplateForm";
+import TemplateSkeleton from "@/components/TemplateSkeleton";
 
 export default async function Page() {
-  const fallback = <p>ADD TEMPLATE SKELETON CARDS YOU DIPSHIT</p>;
+  const fallback = (
+    <div className="grid grid-cols-1 place-items-center items-start gap-10 lg:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 8 }, (_, i) => (
+        <TemplateSkeleton key={i} />
+      ))}
+    </div>
+  );
 
   return (
     <>

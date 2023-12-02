@@ -4,16 +4,23 @@ import Workouts from "./Workouts";
 import AddFromTemplateForm from "@/components/AddFromTemplateForm";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@nextui-org/react";
+import { Skeleton, button } from "@nextui-org/react";
+import WorkoutSkeleton from "@/components/WorkoutSkeleton";
 
 export default async function Page() {
   const buttonFallback = (
     <Button variant={"outline"} className="w-full overflow-hidden p-0">
-      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-10 w-full px-4">Add from template</Skeleton>
     </Button>
   );
 
-  const cardsFallback = <p>ADD WORKOUT SKELETON CARDS YOU DIPSHIT</p>;
+  const cardsFallback = (
+    <div className="grid grid-cols-1 place-items-center items-start gap-10 lg:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 8 }, (_, i) => (
+        <WorkoutSkeleton key={i} />
+      ))}
+    </div>
+  );
 
   return (
     <>

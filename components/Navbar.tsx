@@ -20,6 +20,7 @@ import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import { getLogs, getTemplates, getWorkouts } from "@/app/(pages)/actions";
 import { Set, Template, Workout } from "@/lib/types";
+import { HeartFilledIcon } from "@radix-ui/react-icons";
 
 export default function Navbar({
   initialTemplates,
@@ -89,18 +90,21 @@ export default function Navbar({
                 >
                   {"View all of your workouts"}
                 </ListItem>
-                {workouts?.map((workout) => (
-                  <ListItem
-                    key={workout.id}
-                    title={workout.title}
-                    href={`/workouts/${workout.id}`}
-                    aria-disabled={!workout.id}
-                    className={cn({ "opacity-50": !workout.id })}
-                  >
-                    {/* {workout.description} */}
-                    {workout.date?.toString().slice(0, 15)}
-                  </ListItem>
-                ))}
+                {workouts?.map((workout) =>
+                  workout.id ? (
+                    <ListItem
+                      key={workout.id}
+                      title={workout.title}
+                      href={`/workouts/${workout.id}`}
+                    >
+                      {workout.date?.toString().slice(0, 15)}
+                    </ListItem>
+                  ) : (
+                    <Unclickable key={workout.id} title={workout.title}>
+                      {workout.date?.toString().slice(0, 15)}
+                    </Unclickable>
+                  )
+                )}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -116,15 +120,21 @@ export default function Navbar({
                 >
                   {"View all of your templates"}
                 </ListItem>
-                {templates?.map((template) => (
-                  <ListItem
-                    key={template.id}
-                    title={template.title}
-                    href={`/templates/${template.id}`}
-                  >
-                    {template.description}
-                  </ListItem>
-                ))}
+                {templates?.map((template) =>
+                  template.id ? (
+                    <ListItem
+                      key={template.id}
+                      title={template.title}
+                      href={`/templates/${template.id}`}
+                    >
+                      {template.description}
+                    </ListItem>
+                  ) : (
+                    <Unclickable key={template.id} title={template.title}>
+                      {template.description}
+                    </Unclickable>
+                  )
+                )}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -136,15 +146,21 @@ export default function Navbar({
                 <ListItem key={"logs"} title={"All logs"} href={`/logs`}>
                   {"View all of your logs"}
                 </ListItem>
-                {filteredLogs.map((log) => (
-                  <ListItem
-                    key={log.id}
-                    title={log.title}
-                    href={`/logs/${log.exerciseId}`}
-                  >
-                    Logs for {log.title}
-                  </ListItem>
-                ))}
+                {filteredLogs.map((log) =>
+                  log.id ? (
+                    <ListItem
+                      key={log.id}
+                      title={log.title}
+                      href={`/logs/${log.exerciseId}`}
+                    >
+                      Logs for {log.title}
+                    </ListItem>
+                  ) : (
+                    <Unclickable key={log.id} title={log.title}>
+                      Logs for {log.title}
+                    </Unclickable>
+                  )
+                )}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -279,3 +295,26 @@ const ListItem = React.forwardRef<
   );
 });
 ListItem.displayName = "ListItem";
+
+const Unclickable = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <li>
+      <div
+        className={cn(
+          "block select-none space-y-1 rounded-md p-3 pt-4 leading-none no-underline opacity-50 outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+        )}
+      >
+        <div className="text-sm font-medium leading-none">{title}</div>
+        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+          {children}
+        </p>
+      </div>
+    </li>
+  );
+};
