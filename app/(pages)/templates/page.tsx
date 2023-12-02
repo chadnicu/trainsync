@@ -4,7 +4,7 @@ import Templates from "./Templates";
 import TemplateForm from "@/components/TemplateForm";
 
 export default async function Page() {
-  const fallback = <p>ADD TEMPLATE SKELETON CARDS</p>;
+  const fallback = <p>ADD TEMPLATE SKELETON CARDS YOU DIPSHIT</p>;
 
   return (
     <>

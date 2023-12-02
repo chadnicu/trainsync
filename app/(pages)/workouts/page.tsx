@@ -13,7 +13,7 @@ export default async function Page() {
     </Button>
   );
 
-  const cardsFallback = <p>ADD WORKOUT SKELETON CARDS..</p>;
+  const cardsFallback = <p>ADD WORKOUT SKELETON CARDS YOU DIPSHIT</p>;
 
   return (
     <>

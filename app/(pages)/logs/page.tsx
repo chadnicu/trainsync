@@ -3,7 +3,8 @@ import { getLogs } from "../actions";
 import Logs from "./Logs";
 
 export default async function Page() {
-  const fallback = <p>ADD SKELETON LOG CARDS</p>;
+  const fallback = <p>ADD LOG SKELETON CARDS YOU DIPSHIT</p>;
+
   return (
     <>
       <h1 className="text-center text-5xl font-bold">Logs</h1>
