@@ -1,22 +1,15 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Template } from "@/lib/types";
 import TemplateCard from "@/components/TemplateCard";
+import { getTemplates } from "../actions";
 
-export default function Templates() {
-  const queryClient = useQueryClient();
-
-  function queryTemplates() {
-    const data = queryClient.getQueryData(["templates"]);
-    if (!data) return [];
-    return data as Template[];
-  }
-
+export default function Templates({ templates }: { templates: Template[] }) {
   const { data } = useQuery({
     queryKey: ["templates"],
-    queryFn: queryTemplates,
-    initialData: () => queryTemplates(),
+    queryFn: async () => getTemplates(),
+    initialData: templates,
   });
 
   return (

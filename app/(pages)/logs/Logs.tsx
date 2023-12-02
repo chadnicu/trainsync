@@ -1,7 +1,7 @@
 "use client";
 
 import { Set } from "@/lib/types";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn, filterLogs } from "@/lib/utils";
@@ -11,43 +11,29 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Card, CardHeader } from "@/components/ui/card";
+import { getLogs } from "../actions";
 
-export default function Logs() {
-  const queryClient = useQueryClient();
-
-  function queryLogs() {
-    const data = queryClient.getQueryData(["logs"]);
-    if (!data) return [];
-    return data as (Set & {
-      title: string;
-      exerciseId: number;
-    })[];
-  }
-
-  const { data: logs } = useQuery({
+export default function Logs({
+  logs,
+}: {
+  logs: (Set & { title: string; exerciseId: number })[];
+}) {
+  const { data } = useQuery({
     queryKey: ["logs"],
-    queryFn: queryLogs,
-    initialData: () => queryLogs(),
+    queryFn: async () => getLogs(),
+    initialData: logs,
   });
-  const filteredLogs = filterLogs(logs);
+
+  const filteredLogs = filterLogs(data);
 
   return (
     <div className="grid h-full w-full grid-cols-1 place-items-center items-end gap-3 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {!logs.length && <p>you have no logs</p>}
+      {!data.length && <p>you have no logs</p>}
       {filteredLogs.map((e) => (
         <Card key={e.id} className="w-full max-w-[300px]">
           <CardHeader className="break-words">
             <HoverLog log={e} />
           </CardHeader>
-          {/* <Link
-              className={cn(
-                buttonVariants({ variant: "link" }),
-                "text-lg font-bold"
-              )}
-              href={`/logs/${e.exerciseId}`}
-            >
-              {e.title}
-            </Link> */}
         </Card>
       ))}
     </div>

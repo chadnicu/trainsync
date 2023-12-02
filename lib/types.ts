@@ -1,3 +1,5 @@
+import { getSets } from "@/app/(pages)/actions";
+
 export type Exercise = {
   id: number;
   title: string;

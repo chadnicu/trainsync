@@ -6,7 +6,7 @@ import Workout from "./Workout";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: { id: string } }) {
   const fallback = (
     <>
       <div className="grid place-items-center gap-2">

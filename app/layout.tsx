@@ -8,6 +8,8 @@ import { Providers as ThemeAndQueryProvider } from "@/lib/providers";
 import { dark } from "@clerk/themes";
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
+import { Suspense } from "react";
+import NavbarSkeleton from "@/components/NavbarSkeleton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,12 +23,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [templates, workouts, logs] = await Promise.all([
-    getTemplates(),
-    getWorkouts(),
-    getLogs(),
-  ]);
-
   return (
     <ClerkProvider
       appearance={{
@@ -37,11 +33,9 @@ export default async function RootLayout({
         <body className={cn(inter.className, "tracking-tight")}>
           <ThemeAndQueryProvider>
             <div className="grid min-h-screen items-start">
-              <Navbar
-                initialTemplates={templates}
-                initialWorkouts={workouts}
-                initialLogs={logs}
-              />
+              <Suspense fallback={<NavbarSkeleton />}>
+                <FetchNavbarData />
+              </Suspense>
               <div>
                 {children}
                 <Toaster />
@@ -52,5 +46,21 @@ export default async function RootLayout({
         </body>
       </html>
     </ClerkProvider>
+  );
+}
+
+async function FetchNavbarData() {
+  const [templates, workouts, logs] = await Promise.all([
+    getTemplates(),
+    getWorkouts(),
+    getLogs(),
+  ]);
+
+  return (
+    <Navbar
+      initialTemplates={templates}
+      initialWorkouts={workouts}
+      initialLogs={logs}
+    />
   );
 }

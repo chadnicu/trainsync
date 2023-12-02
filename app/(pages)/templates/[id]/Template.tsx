@@ -14,7 +14,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Exercise, Template } from "@/lib/types";
+import { Exercise, Template as TemplateType } from "@/lib/types";
 import { useState } from "react";
 import {
   FormControl,
@@ -49,7 +49,7 @@ import {
 } from "@/components/ui/card";
 
 type Props = {
-  template: Template;
+  template: TemplateType;
   templatesExercises: Exercise[];
   otherExercises: Exercise[];
 };

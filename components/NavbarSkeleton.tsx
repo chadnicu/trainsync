@@ -1,9 +1,6 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
-
-import { cn, filterLogs } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,51 +10,23 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { useQuery } from "@tanstack/react-query";
-import { UserButton, useAuth } from "@clerk/nextjs";
+import { Skeleton } from "./ui/skeleton";
 import { ThemeChanger } from "./ThemeChanger";
+import { UserButton, useAuth } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
-import { getLogs, getTemplates, getWorkouts } from "@/app/(pages)/actions";
-import { Set, Template, Workout } from "@/lib/types";
+import React from "react";
+import { cn } from "@/lib/utils";
 
-export default function Navbar({
-  initialTemplates,
-  initialWorkouts,
-  initialLogs,
-}: {
-  initialTemplates: Template[];
-  initialWorkouts: Workout[];
-  initialLogs: (Set & {
-    title: string;
-    exerciseId: number;
-  })[];
-}) {
-  const { data: templates } = useQuery({
-    queryKey: ["templates"],
-    queryFn: async () => getTemplates(),
-    initialData: initialTemplates,
-  });
-
-  const { data: workouts } = useQuery({
-    queryKey: ["workouts"],
-    queryFn: async () => getWorkouts(),
-    initialData: initialWorkouts,
-  });
-
-  const { data: logs } = useQuery({
-    queryKey: ["logs"],
-    queryFn: async () => getLogs(),
-    initialData: initialLogs,
-  });
-
-  console.log(templates, workouts);
-
-  const filteredLogs = filterLogs(logs);
-
-  const { theme } = useTheme();
+export default function NavbarSkeleton() {
+  const skeletonItems = new Array(5).fill(null).map((_, i) => (
+    <ListItem key={i} title={"Loading.."} aria-disabled>
+      <Skeleton className="mt-2 h-10 w-full" />
+    </ListItem>
+  ));
 
   const { userId } = useAuth();
+  const { theme } = useTheme();
 
   return (
     <>
@@ -89,18 +58,7 @@ export default function Navbar({
                 >
                   {"View all of your workouts"}
                 </ListItem>
-                {workouts?.map((workout) => (
-                  <ListItem
-                    key={workout.id}
-                    title={workout.title}
-                    href={`/workouts/${workout.id}`}
-                    aria-disabled={!workout.id}
-                    className={cn({ "opacity-50": !workout.id })}
-                  >
-                    {/* {workout.description} */}
-                    {workout.date?.toString().slice(0, 15)}
-                  </ListItem>
-                ))}
+                {skeletonItems}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -116,15 +74,7 @@ export default function Navbar({
                 >
                   {"View all of your templates"}
                 </ListItem>
-                {templates?.map((template) => (
-                  <ListItem
-                    key={template.id}
-                    title={template.title}
-                    href={`/templates/${template.id}`}
-                  >
-                    {template.description}
-                  </ListItem>
-                ))}
+                {skeletonItems}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -136,15 +86,7 @@ export default function Navbar({
                 <ListItem key={"logs"} title={"All logs"} href={`/logs`}>
                   {"View all of your logs"}
                 </ListItem>
-                {filteredLogs.map((log) => (
-                  <ListItem
-                    key={log.id}
-                    title={log.title}
-                    href={`/logs/${log.exerciseId}`}
-                  >
-                    Logs for {log.title}
-                  </ListItem>
-                ))}
+                {skeletonItems}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -160,7 +102,6 @@ export default function Navbar({
                 appearance={{
                   baseTheme: theme === "dark" ? dark : undefined,
                   elements: {
-                    // temporary fix for white mode user button
                     userButtonPopoverCard:
                       "bg-transparent backdrop-blur-xl border border-zinc-200 dark:border-zinc-700",
                     userPreview__userButton: "text-foreground",
@@ -198,9 +139,7 @@ export default function Navbar({
                 key={"exercises"}
                 title={"Exercises"}
                 href={`/exercises`}
-              >
-                {/* {"View all of your exercises"} */}
-              </ListItem>
+              ></ListItem>
               <ListItem
                 key={"workouts"}
                 title={"Workouts"}
@@ -225,7 +164,6 @@ export default function Navbar({
               appearance={{
                 baseTheme: theme === "dark" ? dark : undefined,
                 elements: {
-                  // temporary fix for white mode user button
                   userButtonPopoverCard:
                     "bg-transparent backdrop-blur-xl border border-zinc-200 dark:border-zinc-700",
                   userPreview__userButton: "text-foreground",
