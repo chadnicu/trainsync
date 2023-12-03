@@ -10,7 +10,7 @@ import {
 } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { and, desc, eq, inArray, notInArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs";
 import { z } from "zod";
 import { exerciseSchema } from "@/components/ExerciseForm";

@@ -4,7 +4,7 @@ import Workouts from "./Workouts";
 import AddFromTemplateForm from "@/components/AddFromTemplateForm";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { Skeleton, button } from "@nextui-org/react";
+import { Skeleton } from "@nextui-org/react";
 import WorkoutSkeleton from "@/components/WorkoutSkeleton";
 
 export default async function Page() {
