@@ -42,8 +42,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <Suspense fallback={fallback}>
-      {/* <FetchData workoutId={parseInt(params.id, 10)} /> */}
-      {fallback}
+      <FetchData workoutId={parseInt(params.id, 10)} />
     </Suspense>
   );
 }

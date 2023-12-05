@@ -39,8 +39,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Suspense fallback={fallback}>
-      {fallback}
-      {/* <FetchTemplate id={params.id} /> */}
+      <FetchTemplate id={params.id} />
     </Suspense>
   );
 }
