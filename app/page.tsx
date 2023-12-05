@@ -1,5 +1,5 @@
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function Page() {
   return (

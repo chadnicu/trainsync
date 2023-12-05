@@ -1,5 +1,5 @@
-import { Suspense } from "react";
 import Template from "./Template";
+import { Suspense } from "react";
 import {
   getCurrentTemplate,
   getExercisesByTemplateId,
@@ -39,7 +39,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Suspense fallback={fallback}>
-      {/* {fallback} */}
       <FetchTemplate id={params.id} />
     </Suspense>
   );

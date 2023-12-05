@@ -1,11 +1,11 @@
 import WorkoutForm from "@/components/WorkoutForm";
-import { getTemplates, getWorkouts } from "../actions";
 import Workouts from "./Workouts";
 import AddFromTemplateForm from "@/components/AddFromTemplateForm";
+import WorkoutSkeleton from "@/components/WorkoutSkeleton";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@nextui-org/react";
-import WorkoutSkeleton from "@/components/WorkoutSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getTemplates, getWorkouts } from "@/app/(pages)/actions";
 
 export default async function Page() {
   const buttonFallback = (

@@ -64,11 +64,6 @@ export default function AddFromTemplateForm({
     },
   });
 
-  // function onSubmit(data: z.infer<typeof fromTemplateSchema>) {
-  //   addTemplateToWorkout(data.templateId, { date: data.date });
-  //   queryClient.invalidateQueries(["workouts"]);
-  // }
-
   const { mutate: addOptimistically } = useMutation({
     mutationFn: async (data: z.infer<typeof fromTemplateSchema>) => {
       setOpen(false);
@@ -170,9 +165,6 @@ export default function AddFromTemplateForm({
                           </Command>
                         </PopoverContent>
                       </Popover>
-                      {/* <FormDescription>
-                        This is the template blabla.
-                      </FormDescription> */}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -257,9 +249,6 @@ function DatePicker({
           onSelect={(e) => {
             if (e) return field?.onChange(e);
           }}
-          // disabled={(date) =>
-          //   date > new Date() || date < new Date("1900-01-01")
-          // }
           initialFocus
         />
       </PopoverContent>

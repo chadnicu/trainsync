@@ -1,6 +1,6 @@
-import { getLogsByExerciseId } from "@/app/(pages)/actions";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getLogsByExerciseId } from "@/app/(pages)/actions";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const fallback = (

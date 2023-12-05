@@ -1,5 +1,17 @@
 "use client";
 
+import TimePassed from "./TimePassed";
+import AddSetForm from "@/components/AddSetForm";
+import EditSetForm from "@/components/EditSetForm";
+import WorkoutComboBox from "@/components/WorkoutComboBox";
+import { useState } from "react";
+import { Exercise, Set, Workout as WorkoutType } from "@/lib/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { DeleteButton } from "@/components/DeleteButton";
+import { Icons } from "@/components/ui/icons";
+import { HoverExercise } from "@/app/(pages)/templates/[id]/Template";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   deleteSet,
   finishWorkout,
@@ -9,35 +21,17 @@ import {
   removeExerciseFromWorkout,
   startWorkout,
 } from "@/app/(pages)/actions";
-import AddSetForm from "@/components/AddSetForm";
-import { DeleteButton } from "@/components/DeleteButton";
-import EditSetForm from "@/components/EditSetForm";
-import WorkoutComboBox from "@/components/WorkoutComboBox";
-import { Icons } from "@/components/ui/icons";
-import { Exercise, Set, Workout as WorkoutType } from "@/lib/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { HoverExercise } from "../../templates/[id]/Template";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import TimePassed from "./TimePassed";
 
-type Props = {
+export default function Workout({
+  workout,
+  initialExercises,
+}: {
   workout: WorkoutType;
   initialExercises: {
     workoutsExercises: (Exercise & { workoutExerciseId: number })[];
     otherExercises: Exercise[];
   };
-  // initialSets: Set[];
-  // lastSets: (Set & { exerciseId: number; workoutId: number })[];
-};
-
-export default function Workout({
-  workout,
-  initialExercises,
-}: // initialSets,
-// lastSets,
-Props) {
+}) {
   const queryClient = useQueryClient();
 
   const { data: exercises } = useQuery({
@@ -121,9 +115,6 @@ Props) {
       const data = await getTimeStarted(workout.id);
       if (!data) return null;
       return parseInt(data, 10);
-      // const diffInUnix = new Date().getTime() - parseInt(unixInDb ?? "0", 10);
-      // const date = new Date(diffInUnix);
-      // return { h: date.getHours(), m: date.getMinutes(), s: date.getSeconds() };
     },
     initialData: null,
   });
@@ -182,7 +173,6 @@ Props) {
               ]);
               await Promise.all([
                 queryClient.invalidateQueries([`started-${workout.id}`]),
-                // nush dc n aveam asta
                 queryClient.invalidateQueries([`finished-${workout.id}`]),
               ]);
             }}
@@ -261,7 +251,6 @@ Props) {
                     </div>
                   </div>
                 </CardHeader>
-                {/* <div className="mb-2 grid h-fit w-full items-center gap-5 border px-7 py-5 sm:mb-0 sm:mt-0 sm:flex"> */}
                 <CardContent className="m-0 flex h-full items-center justify-center px-0 pb-4 md:py-0">
                   <div className="py-0 md:py-4">
                     {sets.map((set) => {
@@ -307,7 +296,6 @@ Props) {
                     })}
                   </div>
                 </CardContent>
-                {/* </div> */}
               </Card>
               <AddSetForm
                 workoutExerciseId={e.workoutExerciseId}

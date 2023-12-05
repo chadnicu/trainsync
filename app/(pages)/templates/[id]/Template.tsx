@@ -1,11 +1,15 @@
 "use client";
 
-import {
-  addTemplateToWorkout,
-  getExercisesByTemplateId,
-  removeExerciseFromTemplate,
-} from "@/app/(pages)/actions";
 import TemplateComboBox from "@/components/TemplateComboBox";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
+import { Exercise, Template as TemplateType } from "@/lib/types";
+import { ControllerRenderProps, FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { DeleteButton } from "@/components/DeleteButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,9 +17,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Exercise, Template as TemplateType } from "@/lib/types";
-import { useState } from "react";
 import {
   FormControl,
   FormField,
@@ -23,23 +24,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import {
-  ControllerRenderProps,
-  Form,
-  FormProvider,
-  useForm,
-} from "react-hook-form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -47,6 +37,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  addTemplateToWorkout,
+  getExercisesByTemplateId,
+  removeExerciseFromTemplate,
+} from "@/app/(pages)/actions";
 
 type Props = {
   template: TemplateType;
@@ -176,9 +171,6 @@ export default function Template({
                       <FormItem className="flex flex-col">
                         <FormLabel>Date</FormLabel>
                         <DatePicker field={field} />
-                        {/* <FormDescription>
-                                Your date of birth is used to calculate your age.
-                              </FormDescription> */}
                         <FormMessage />
                       </FormItem>
                     )}
@@ -306,9 +298,6 @@ function DatePicker({
           onSelect={(e) => {
             if (e) return field?.onChange(e);
           }}
-          // disabled={(date) =>
-          //   date > new Date() || date < new Date("1900-01-01")
-          // }
           initialFocus
         />
       </PopoverContent>

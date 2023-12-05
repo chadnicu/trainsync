@@ -1,5 +1,7 @@
 "use server";
 
+import { and, desc, eq, inArray, notInArray } from "drizzle-orm";
+import { z } from "zod";
 import {
   exercise,
   exercise_template,
@@ -9,17 +11,12 @@ import {
   workout_exercise,
 } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { and, desc, eq, inArray, notInArray } from "drizzle-orm";
-// import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs";
-import { z } from "zod";
 import { exerciseSchema } from "@/components/ExerciseForm";
 import { templateSchema } from "@/components/TemplateForm";
-import { Exercise, Template, Workout } from "@/lib/types";
 import { workoutSchema } from "@/components/WorkoutForm";
 import { setSchema } from "@/components/AddSetForm";
-import { templateToWorkoutSchema } from "./templates/[id]/Template";
-import { NextResponse } from "next/server";
+import { templateToWorkoutSchema } from "@/app/(pages)/templates/[id]/Template";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -103,15 +100,12 @@ export async function editTemplate(
     .where(eq(template.id, templateId))
     .returning()
     .get();
-
-  // revalidatePath(`/templates/${templateId}`);
 }
 
 export async function deleteExercise(id: number) {
   const { userId } = auth();
   if (!userId) return;
 
-  // unlink it from all templates and grab sets ids
   const [_, setIds] = await Promise.all([
     db
       .delete(exercise_template)
@@ -130,7 +124,6 @@ export async function deleteExercise(id: number) {
       .then((data) => data.map(({ sets }) => sets.id)),
   ]);
 
-  // unlink from sets and workouts now too
   await Promise.all([
     setIds.length
       ? db.delete(sets).where(inArray(sets.id, setIds)).returning().get()
@@ -142,7 +135,6 @@ export async function deleteExercise(id: number) {
       .get(),
   ]);
 
-  // now delete the exercise
   await db.delete(exercise).where(eq(exercise.id, id)).returning().get();
 }
 
@@ -171,8 +163,6 @@ export async function addExerciseToTemplate(
     .values({ exerciseId, templateId })
     .returning()
     .get();
-
-  // revalidatePath(`/templates/${templateId}`);
 }
 
 export async function removeExerciseFromTemplate(
@@ -192,8 +182,6 @@ export async function removeExerciseFromTemplate(
     )
     .returning()
     .get();
-
-  // revalidatePath(`/templates/${templateId}`);
 }
 
 export async function getCurrentTemplate(templateId: number) {
@@ -304,8 +292,6 @@ export async function editWorkout(
     .where(eq(workout.id, workoutId))
     .returning()
     .get();
-
-  // revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function deleteWorkout(workoutId: number) {
@@ -351,8 +337,6 @@ export async function addExerciseToWorkout(
     .values({ exerciseId, workoutId })
     .returning()
     .get();
-
-  // revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function getCurrentWorkout(workoutId: number) {
@@ -405,15 +389,11 @@ export async function removeExerciseFromWorkout(
     )
     .returning()
     .get();
-
-  // revalidatePath(`/workouts/${workoutId}`);
 }
 
 export async function getSets() {
   const { userId } = auth();
   if (!userId) return [];
-
-  // treb cu workoutExerciseId nu workoutId
 
   const data = await db
     .select()
@@ -565,7 +545,6 @@ export async function getLastSets(workoutId: number) {
     .select()
     .from(workout_exercise)
     .where(eq(sets.userId, userId))
-    // .where(eq(workout_exercise.workoutId, workoutId))
     .innerJoin(sets, eq(sets.workoutExerciseId, workout_exercise.id))
     .all()
     .then((data) =>

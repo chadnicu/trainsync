@@ -70,7 +70,6 @@ export default function AddSetForm({
             workoutExerciseId,
             userId,
             title: `z-optimistic?id=${workoutExerciseId}`,
-            // exerciseId: 0,
           },
         ];
       });
@@ -184,7 +183,6 @@ export default function AddSetForm({
                           ]);
                           await Promise.all([
                             queryClient.invalidateQueries([`started-${id}`]),
-                            // nush dc n-aveam asta
                             queryClient.invalidateQueries([`finished-${id}`]),
                           ]);
                         }}

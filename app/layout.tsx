@@ -1,15 +1,15 @@
-import { cn } from "@/lib/utils";
 import "./globals.css";
-import { Inter } from "next/font/google";
 import Navbar from "@/components/Navbar";
-import { getLogs, getTemplates, getWorkouts } from "./(pages)/actions";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Providers as ThemeAndQueryProvider } from "@/lib/providers";
-import { dark } from "@clerk/themes";
-import { Toaster } from "@/components/ui/toaster";
-import { Analytics } from "@vercel/analytics/react";
-import { Suspense } from "react";
 import NavbarSkeleton from "@/components/NavbarSkeleton";
+import { Suspense } from "react";
+import { Inter } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+import { Analytics } from "@vercel/analytics/react";
+import { Providers } from "./providers";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toaster";
+import { getLogs, getTemplates, getWorkouts } from "@/app/(pages)/actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +31,7 @@ export default async function RootLayout({
     >
       <html lang="en">
         <body className={cn(inter.className, "tracking-tight")}>
-          <ThemeAndQueryProvider>
+          <Providers>
             <div className="grid min-h-screen items-start">
               <Suspense fallback={<NavbarSkeleton />}>
                 <FetchNavbarData />
@@ -42,7 +42,7 @@ export default async function RootLayout({
                 <Analytics />
               </div>
             </div>
-          </ThemeAndQueryProvider>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

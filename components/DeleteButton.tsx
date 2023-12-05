@@ -26,7 +26,6 @@ export function DeleteButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild className={cn("w-full", className)}>
-        {/* using default cus red seems more aggressive */}
         <Button variant="default" disabled={disabled ?? false}>
           Delete
         </Button>

@@ -46,9 +46,6 @@ export default function DatePicker({
           onSelect={(e) => {
             if (e) return field?.onChange(e);
           }}
-          // disabled={(date) =>
-          //   date > new Date() || date < new Date("1900-01-01")
-          // }
           initialFocus
         />
       </PopoverContent>

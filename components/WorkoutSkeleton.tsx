@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -10,7 +9,7 @@ import { Skeleton } from "./ui/skeleton";
 
 export default async function WorkoutSkeleton() {
   return (
-    <Card className={cn("h-fit w-fit")}>
+    <Card className="h-fit w-fit">
       <CardHeader className="relative">
         <CardTitle>
           <Skeleton className="h-10 w-full" />

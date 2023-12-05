@@ -1,9 +1,9 @@
 "use client";
 
+import TemplateCard from "@/components/TemplateCard";
 import { useQuery } from "@tanstack/react-query";
 import { Template } from "@/lib/types";
-import TemplateCard from "@/components/TemplateCard";
-import { getTemplates } from "../actions";
+import { getTemplates } from "@/app/(pages)/actions";
 
 export default function Templates({ templates }: { templates: Template[] }) {
   const { data } = useQuery({

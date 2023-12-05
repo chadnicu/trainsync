@@ -185,18 +185,6 @@ export default function ExerciseForm() {
               </div>
             </Form>
           </CardContent>
-          {/* <CardFooter className="flex justify-between gap-2">
-            <Button
-              variant={"outline"}
-              onClick={() => setOpen(false)}
-              className="w-full"
-            >
-              Close
-            </Button>
-            <Button variant={"default"} type="submit" className="w-full">
-              Create
-            </Button>
-          </CardFooter> */}
         </Card>
       ) : (
         <div className="flex justify-center">

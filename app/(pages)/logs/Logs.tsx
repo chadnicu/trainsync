@@ -1,18 +1,17 @@
 "use client";
 
-import { Set } from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
+import { Set } from "@/lib/types";
 import { cn, filterLogs } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Card, CardHeader } from "@/components/ui/card";
-import { getLogs } from "../actions";
-import LogSkeleton from "@/components/LogSkeleton";
+import { getLogs } from "@/app/(pages)/actions";
 
 export default function Logs({
   logs,
@@ -63,8 +62,7 @@ function HoverLog({
         </Link>
       </HoverCardTrigger>
       <HoverCardContent className="flex w-fit max-w-xs justify-between space-x-4 space-y-1">
-        {/* <p className="text-sm">{log?.description || "No description"}</p> */}
-        {/* aici o sa pun last sets sau c */}
+        {/* aici o sa pun last sets sau cv */}
       </HoverCardContent>
     </HoverCard>
   );

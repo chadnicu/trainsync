@@ -173,7 +173,6 @@ export default function Navbar({
                 appearance={{
                   baseTheme: theme === "dark" ? dark : undefined,
                   elements: {
-                    // temporary fix for white mode user button
                     userButtonPopoverCard:
                       "bg-transparent backdrop-blur-xl border border-zinc-200 dark:border-zinc-700",
                     userPreview__userButton: "text-foreground",
@@ -211,9 +210,7 @@ export default function Navbar({
                 key={"exercises"}
                 title={"Exercises"}
                 href={`/exercises`}
-              >
-                {/* {"View all of your exercises"} */}
-              </ListItem>
+              ></ListItem>
               <ListItem
                 key={"workouts"}
                 title={"Workouts"}
@@ -238,7 +235,6 @@ export default function Navbar({
               appearance={{
                 baseTheme: theme === "dark" ? dark : undefined,
                 elements: {
-                  // temporary fix for white mode user button
                   userButtonPopoverCard:
                     "bg-transparent backdrop-blur-xl border border-zinc-200 dark:border-zinc-700",
                   userPreview__userButton: "text-foreground",

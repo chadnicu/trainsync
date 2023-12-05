@@ -132,9 +132,6 @@ export default function WorkoutForm() {
                       <FormItem className="flex flex-col">
                         <FormLabel>Date</FormLabel>
                         <DatePicker field={field} />
-                        {/* <FormDescription>
-                          Your date of birth is used to calculate your age.
-                        </FormDescription> */}
                         <FormMessage />
                       </FormItem>
                     )}

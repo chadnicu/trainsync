@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import WorkoutCard from "@/components/WorkoutCard";
-import { getWorkouts } from "../actions";
+import { useQuery } from "@tanstack/react-query";
 import { Workout } from "@/lib/types";
+import { getWorkouts } from "@/app/(pages)/actions";
 
 export default function Workouts({ workouts }: { workouts: Workout[] }) {
   const { data } = useQuery({
