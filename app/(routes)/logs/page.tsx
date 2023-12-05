@@ -5,7 +5,7 @@ import { getLogs } from "@/app/actions";
 
 export default async function Page() {
   const fallback = (
-    <div className="flex h-full w-screen flex-wrap justify-center gap-[1%] gap-y-3 px-10">
+    <div className="flex h-full w-[95vw] flex-wrap justify-center gap-[1%] gap-y-3 px-10">
       {Array.from({ length: 16 }, (_, i) => (
         <LogSkeleton key={i} />
       ))}
