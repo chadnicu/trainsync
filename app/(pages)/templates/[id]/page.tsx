@@ -20,7 +20,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="flex flex-col items-center gap-5 px-5 md:justify-around">
         <div className="grid gap-2">
           {Array.from({ length: 10 }, (_, i) => (
-            <Card key={i} className="flex w-[90vw] justify-between md:w-[40vw]">
+            <Card key={i} className="flex w-[88vw] justify-between md:w-[40vw]">
               <CardHeader className="w-full pr-2">
                 <Skeleton className="h-10 w-full" />
               </CardHeader>
@@ -39,6 +39,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Suspense fallback={fallback}>
+      {/* {fallback} */}
       <FetchTemplate id={params.id} />
     </Suspense>
   );
