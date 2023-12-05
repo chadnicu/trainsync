@@ -6,7 +6,7 @@ import LogSkeleton from "@/components/LogSkeleton";
 export default async function Page() {
   const fallback = (
     <div className="flex h-full w-screen flex-wrap justify-center gap-[1%] gap-y-3 px-10">
-      {Array.from({ length: 8 }, (_, i) => (
+      {Array.from({ length: 16 }, (_, i) => (
         <LogSkeleton key={i} />
       ))}
     </div>

@@ -12,7 +12,7 @@ export default function Page() {
         by&nbsp;
         <Link
           href={"https://github.com/iusedebian/workout-tracker"}
-          className="flex items-center justify-center gap-1 hover:text-primary "
+          className="flex items-center justify-center gap-1 hover:text-primary"
           target="/blank"
         >
           iusedebian

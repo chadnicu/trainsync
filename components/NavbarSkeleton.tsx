@@ -19,7 +19,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export default function NavbarSkeleton() {
-  const skeletonItems = new Array(5).fill(null).map((_, i) => (
+  const skeletonItems = Array.from({ length: 5 }, (_, i) => (
     <ListItem key={i} title={"Loading.."} aria-disabled>
       <Skeleton className="mt-2 h-10 w-full" />
     </ListItem>

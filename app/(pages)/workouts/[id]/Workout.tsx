@@ -150,7 +150,7 @@ Props) {
       <div className="grid gap-2">
         <h3 className="text-sm">{workout.date.toString().slice(0, 15)}</h3>
         <h1 className="text-5xl font-bold">{workout.title}</h1>
-        <p className="text-sm">{workout.description}</p>
+        <p className="px-4 text-sm">{workout.description}</p>
         <div className="max-w-screen flex justify-center gap-2 overflow-hidden px-20 py-2">
           {(started || finished) && (
             <Button

@@ -19,12 +19,12 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
       <div className="flex flex-col items-center gap-5 px-5 md:justify-around">
         <div className="grid gap-2">
-          {new Array(10).fill(null).map((_, i) => (
-            <Card key={i} className="flex justify-between">
-              <CardHeader>
-                <Skeleton className="h-10 w-[300px]" />
+          {Array.from({ length: 10 }, (_, i) => (
+            <Card key={i} className="flex w-[90vw] justify-between md:w-[40vw]">
+              <CardHeader className="w-full pr-2">
+                <Skeleton className="h-10 w-full" />
               </CardHeader>
-              <CardContent className="flex items-center justify-center py-0">
+              <CardContent className="flex items-center justify-center py-0 pl-2">
                 <Skeleton className="h-10 w-[75px]" />
               </CardContent>
             </Card>
@@ -39,7 +39,8 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Suspense fallback={fallback}>
-      <FetchTemplate id={params.id} />
+      {fallback}
+      {/* <FetchTemplate id={params.id} /> */}
     </Suspense>
   );
 }

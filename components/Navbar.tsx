@@ -20,7 +20,6 @@ import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import { getLogs, getTemplates, getWorkouts } from "@/app/(pages)/actions";
 import { Set, Template, Workout } from "@/lib/types";
-import { HeartFilledIcon } from "@radix-ui/react-icons";
 
 export default function Navbar({
   initialTemplates,
