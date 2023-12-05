@@ -1,10 +1,7 @@
 import Workout from "./Workout";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  getCurrentWorkout,
-  getExercisesByWorkoutId,
-} from "@/app/(pages)/actions";
+import { getCurrentWorkout, getExercisesByWorkoutId } from "@/app/actions";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const fallback = (

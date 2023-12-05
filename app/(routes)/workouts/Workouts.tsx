@@ -3,7 +3,7 @@
 import WorkoutCard from "@/components/WorkoutCard";
 import { useQuery } from "@tanstack/react-query";
 import { Workout } from "@/lib/types";
-import { getWorkouts } from "@/app/(pages)/actions";
+import { getWorkouts } from "@/app/actions";
 
 export default function Workouts({ workouts }: { workouts: Workout[] }) {
   const { data } = useQuery({

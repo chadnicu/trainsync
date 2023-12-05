@@ -16,7 +16,7 @@ import { Button } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Textarea } from "./ui/textarea";
 import { useAuth } from "@clerk/nextjs";
-import { createTemplate } from "@/app/(pages)/actions";
+import { createTemplate } from "@/app/actions";
 import { useState } from "react";
 import {
   Card,

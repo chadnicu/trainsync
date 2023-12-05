@@ -1,9 +1,6 @@
 import Template from "./Template";
 import { Suspense } from "react";
-import {
-  getCurrentTemplate,
-  getExercisesByTemplateId,
-} from "@/app/(pages)/actions";
+import { getCurrentTemplate, getExercisesByTemplateId } from "@/app/actions";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 

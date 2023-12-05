@@ -9,7 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { Providers } from "./providers";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
-import { getLogs, getTemplates, getWorkouts } from "@/app/(pages)/actions";
+import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
 
 const inter = Inter({ subsets: ["latin"] });
 

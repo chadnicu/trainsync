@@ -3,7 +3,7 @@
 import ExerciseCard from "@/components/ExerciseCard";
 import { useQuery } from "@tanstack/react-query";
 import { Exercise } from "@/lib/types";
-import { getExercises } from "@/app/(pages)/actions";
+import { getExercises } from "@/app/actions";
 
 export default function Exercises({ exercises }: { exercises: Exercise[] }) {
   const { data } = useQuery({

@@ -2,7 +2,7 @@ import Templates from "./Templates";
 import TemplateForm from "@/components/TemplateForm";
 import TemplateSkeleton from "@/components/TemplateSkeleton";
 import { Suspense } from "react";
-import { getTemplates } from "@/app/(pages)/actions";
+import { getTemplates } from "@/app/actions";
 
 export default async function Page() {
   const fallback = (

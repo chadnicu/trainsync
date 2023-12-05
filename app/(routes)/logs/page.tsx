@@ -1,7 +1,7 @@
 import Logs from "./Logs";
 import LogSkeleton from "@/components/LogSkeleton";
 import { Suspense } from "react";
-import { getLogs } from "@/app/(pages)/actions";
+import { getLogs } from "@/app/actions";
 
 export default async function Page() {
   const fallback = (

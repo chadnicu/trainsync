@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createSet, finishWorkout, startWorkout } from "@/app/(pages)/actions";
+import { createSet, finishWorkout, startWorkout } from "@/app/actions";
 import {
   Form,
   FormControl,

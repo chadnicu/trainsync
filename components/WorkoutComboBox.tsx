@@ -17,7 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { addExerciseToWorkout } from "@/app/(pages)/actions";
+import { addExerciseToWorkout } from "@/app/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Exercise } from "@/lib/types";
 

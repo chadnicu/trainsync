@@ -3,7 +3,7 @@
 import TemplateCard from "@/components/TemplateCard";
 import { useQuery } from "@tanstack/react-query";
 import { Template } from "@/lib/types";
-import { getTemplates } from "@/app/(pages)/actions";
+import { getTemplates } from "@/app/actions";
 
 export default function Templates({ templates }: { templates: Template[] }) {
   const { data } = useQuery({

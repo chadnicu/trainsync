@@ -11,7 +11,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Card, CardHeader } from "@/components/ui/card";
-import { getLogs } from "@/app/(pages)/actions";
+import { getLogs } from "@/app/actions";
 
 export default function Logs({
   logs,

@@ -2,7 +2,7 @@ import Exercises from "./Exercises";
 import ExerciseForm from "@/components/ExerciseForm";
 import ExerciseSkeleton from "@/components/ExerciseSkeleton";
 import { Suspense } from "react";
-import { getExercises } from "@/app/(pages)/actions";
+import { getExercises } from "@/app/actions";
 
 export default async function Page() {
   const fallback = (

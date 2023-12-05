@@ -5,7 +5,7 @@ import WorkoutSkeleton from "@/components/WorkoutSkeleton";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getTemplates, getWorkouts } from "@/app/(pages)/actions";
+import { getTemplates, getWorkouts } from "@/app/actions";
 
 export default async function Page() {
   const buttonFallback = (

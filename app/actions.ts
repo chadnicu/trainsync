@@ -16,7 +16,7 @@ import { exerciseSchema } from "@/components/ExerciseForm";
 import { templateSchema } from "@/components/TemplateForm";
 import { workoutSchema } from "@/components/WorkoutForm";
 import { setSchema } from "@/components/AddSetForm";
-import { templateToWorkoutSchema } from "@/app/(pages)/templates/[id]/Template";
+import { templateToWorkoutSchema } from "@/app/(routes)/templates/[id]/Template";
 
 export async function getExercises() {
   const { userId } = auth();

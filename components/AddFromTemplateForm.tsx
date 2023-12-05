@@ -31,7 +31,7 @@ import {
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
-import { addTemplateToWorkout } from "@/app/(pages)/actions";
+import { addTemplateToWorkout } from "@/app/actions";
 import {
   Card,
   CardContent,

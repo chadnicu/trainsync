@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { DeleteButton } from "./DeleteButton";
-import { deleteTemplate, editTemplate } from "@/app/(pages)/actions";
+import { deleteTemplate, editTemplate } from "@/app/actions";
 import { FormProvider, useForm } from "react-hook-form";
 import { templateSchema } from "./TemplateForm";
 import { zodResolver } from "@hookform/resolvers/zod";

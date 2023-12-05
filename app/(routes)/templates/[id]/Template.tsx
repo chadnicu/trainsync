@@ -41,7 +41,7 @@ import {
   addTemplateToWorkout,
   getExercisesByTemplateId,
   removeExerciseFromTemplate,
-} from "@/app/(pages)/actions";
+} from "@/app/actions";
 
 type Props = {
   template: TemplateType;

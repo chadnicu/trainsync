@@ -3,7 +3,7 @@
 import React from "react";
 import { Exercise } from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteExercise, editExercise } from "@/app/(pages)/actions";
+import { deleteExercise, editExercise } from "@/app/actions";
 import { exerciseSchema } from "./ExerciseForm";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

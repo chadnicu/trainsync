@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { DeleteButton } from "./DeleteButton";
 import EditButton from "./EditButton";
-import { deleteWorkout, editWorkout } from "@/app/(pages)/actions";
+import { deleteWorkout, editWorkout } from "@/app/actions";
 import { FormProvider, useForm } from "react-hook-form";
 import { workoutSchema } from "./WorkoutForm";
 import { zodResolver } from "@hookform/resolvers/zod";
