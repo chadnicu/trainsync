@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.21.14",
+    "@clerk/nextjs": "^4.27.4",
     "@clerk/themes": "^1.7.5",
     "@hookform/resolvers": "^3.1.0",
     "@libsql/client": "^0.2.0",
@@ -41,7 +41,7 @@
     "eslint-config-next": "^12.0.4",
     "framer-motion": "^10.16.4",
     "lucide-react": "^0.241.0",
-    "next": "^14.0.3",
+    "next": "^14.0.4-canary.45",
     "next-themes": "^0.2.1",
     "postcss": "^8.4.31",
     "react": "^18.2.0",

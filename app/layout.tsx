@@ -25,10 +25,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const fallback = (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-900 ">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="mb-4 h-12 w-12 animate-spin">
         <svg
-          className="h-full w-full text-red-500"
+          className="h-full w-full text-primary"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
@@ -49,7 +49,7 @@ export default async function RootLayout({
           <line x1="16.24" x2="19.07" y1="7.76" y2="4.93" />
         </svg>
       </div>
-      <p className="text-lg font-medium text-zinc-500">
+      <p className="text-lg font-medium text-foreground">
         Loading, please wait...
       </p>
     </div>
