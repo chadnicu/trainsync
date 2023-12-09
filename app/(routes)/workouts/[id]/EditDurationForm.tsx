@@ -117,7 +117,7 @@ export default function EditDurationForm({
   return (
     <>
       {editable ? (
-        <Card className="mb-1 grid p-1">
+        <Card className="mx-auto mb-1 grid w-fit p-1">
           <CardHeader className="p-4 pb-0">
             <CardTitle className="text-lg">Edit session duration</CardTitle>
             {/* <CardDescription></CardDescription> */}

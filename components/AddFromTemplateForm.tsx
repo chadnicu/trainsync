@@ -139,8 +139,8 @@ export default function AddFromTemplateForm({
                         </PopoverTrigger>
                         <PopoverContent className="w-[240px] p-0">
                           <Command>
-                            <CommandInput placeholder="Search framework..." />
-                            <CommandEmpty>No framework found.</CommandEmpty>
+                            <CommandInput placeholder="Search template..." />
+                            <CommandEmpty>No template found.</CommandEmpty>
                             <CommandGroup>
                               {templates?.map((template) => (
                                 <CommandItem

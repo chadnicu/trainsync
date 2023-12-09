@@ -187,7 +187,7 @@ export default function Workout({
               ]);
             }}
             variant={"outline"}
-            className="w-full items-end"
+            className="w-fit items-end"
           >
             {started ? "Restart" : "Start"}
           </Button>
@@ -200,7 +200,7 @@ export default function Workout({
                 queryClient.invalidateQueries([`finished-${workout.id}`]);
               }}
               variant={"outline"}
-              className="w-full items-end"
+              className="w-fit items-end"
             >
               Finish
             </Button>
