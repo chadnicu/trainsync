@@ -21,16 +21,26 @@ import {
   removeExerciseFromWorkout,
   startWorkout,
 } from "@/app/actions";
+import EditDurationForm from "./EditDurationForm";
 
 export default function Workout({
   workout,
   initialExercises,
+  initialLogs,
+  initialStarted,
+  initialFinished,
 }: {
   workout: WorkoutType;
   initialExercises: {
     workoutsExercises: (Exercise & { workoutExerciseId: number })[];
     otherExercises: Exercise[];
   };
+  initialLogs: (Set & {
+    title: string;
+    exerciseId: number;
+  })[];
+  initialStarted: number | null;
+  initialFinished: number | null;
 }) {
   const queryClient = useQueryClient();
 
@@ -83,7 +93,7 @@ export default function Workout({
   const { data: sets } = useQuery({
     queryKey: ["logs"],
     queryFn: queryLogs,
-    initialData: () => queryLogs(),
+    initialData: initialLogs,
   });
 
   const { mutate: mutateSet } = useMutation({
@@ -116,7 +126,7 @@ export default function Workout({
       if (!data) return null;
       return parseInt(data, 10);
     },
-    initialData: null,
+    initialData: initialStarted,
   });
 
   const { data: finished } = useQuery({
@@ -126,7 +136,7 @@ export default function Workout({
       if (!data) return null;
       return parseInt(data, 10);
     },
-    initialData: null,
+    initialData: initialFinished,
   });
 
   const startedDate = started ? new Date(started) : null;
@@ -142,7 +152,7 @@ export default function Workout({
         <h3 className="text-sm">{workout.date.toString().slice(0, 15)}</h3>
         <h1 className="text-5xl font-bold">{workout.title}</h1>
         <p className="px-4 text-sm">{workout.description}</p>
-        <div className="max-w-screen flex justify-center gap-2 overflow-hidden px-20 py-2">
+        <div className="max-w-screen flex justify-center gap-2 overflow-hidden px-20 pt-2">
           {(started || finished) && (
             <Button
               onClick={async () => {
@@ -196,6 +206,13 @@ export default function Workout({
             </Button>
           )}
         </div>
+        {started && finished && (
+          <EditDurationForm
+            workoutId={workout.id}
+            started={started}
+            finished={finished}
+          />
+        )}
         {startedDate && (
           <p>
             Started at: {startedDate.getHours()}:{startedDate.getMinutes()}:
