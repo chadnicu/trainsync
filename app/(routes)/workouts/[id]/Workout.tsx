@@ -172,7 +172,7 @@ export default function Workout({
                   queryClient.invalidateQueries([`finished-${workout.id}`]),
                 ]);
               }}
-              variant={"outline"}
+              variant={"destructive"}
             >
               {!finished ? "Cancel" : "Delete"}
             </Button>
@@ -191,7 +191,7 @@ export default function Workout({
                 queryClient.invalidateQueries([`finished-${workout.id}`]),
               ]);
             }}
-            variant={"outline"}
+            variant={started && !finished ? "outline" : "default"}
             className="w-fit items-end"
           >
             {started ? "Restart" : "Start"}
@@ -204,7 +204,7 @@ export default function Workout({
                 await finishWorkout(workout.id, now);
                 queryClient.invalidateQueries([`finished-${workout.id}`]);
               }}
-              variant={"outline"}
+              variant={"default"}
               className="w-fit items-end"
             >
               Finish

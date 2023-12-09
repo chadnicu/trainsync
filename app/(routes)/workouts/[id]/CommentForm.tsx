@@ -121,8 +121,8 @@ export default function CommentForm({
     </Card>
   ) : (
     <Button
-      variant={"outline"}
-      className="mx-auto w-fit font-normal"
+      variant={"secondary"}
+      className="mx-auto w-fit rounded-2xl rounded-tl-none p-6 font-normal"
       onClick={() => setEditable(true)}
     >
       {data ? data : "Comment on this workout"}

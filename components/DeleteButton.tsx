@@ -26,7 +26,7 @@ export function DeleteButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild className={cn("w-full", className)}>
-        <Button variant="default" disabled={disabled ?? false}>
+        <Button variant="destructive" disabled={disabled ?? false}>
           Delete
         </Button>
       </AlertDialogTrigger>
@@ -43,7 +43,7 @@ export function DeleteButton({
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            className={buttonVariants({ variant: "default" })}
+            className={buttonVariants({ variant: "destructive" })}
             onClick={mutate}
           >
             Continue
