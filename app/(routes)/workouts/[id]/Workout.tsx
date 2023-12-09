@@ -215,21 +215,18 @@ export default function Workout({
         )}
         {startedDate && (
           <p>
-            Started at: {startedDate.getHours()}:{startedDate.getMinutes()}:
-            {startedDate.getSeconds()}
+            Started at: {startedDate.getHours()}:{startedDate.getMinutes()}
           </p>
         )}
         {finishedDate && (
           <p>
-            Ended at: {finishedDate.getHours()}:{finishedDate.getMinutes()}:
-            {finishedDate.getSeconds()}
+            Ended at: {finishedDate.getHours()}:{finishedDate.getMinutes()}
           </p>
         )}
         {started && !finished && <TimePassed since={started} />}
         {timeSpent && (
           <p>
-            Duration: {timeSpent.getHours() - 3}:{timeSpent.getMinutes()}:
-            {timeSpent.getSeconds()}
+            Duration: {timeSpent.getHours() - 3}:{timeSpent.getMinutes()}
           </p>
         )}
       </div>
