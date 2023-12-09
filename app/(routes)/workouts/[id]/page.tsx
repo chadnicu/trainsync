@@ -5,9 +5,18 @@ import {
   getCurrentWorkout,
   getExercisesByWorkoutId,
   getLogs,
-  getTimeFinished,
-  getTimeStarted,
 } from "@/app/actions";
+import { Metadata } from "next";
+
+type Props = {
+  params: { id: string };
+};
+
+export function generateMetadata({ params }: Props): Metadata {
+  return {
+    title: `Workout ${params.id}`,
+  };
+}
 
 export default async function Page({ params }: { params: { id: string } }) {
   const fallback = (

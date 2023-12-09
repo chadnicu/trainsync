@@ -3,8 +3,19 @@ import { Suspense } from "react";
 import { getCurrentTemplate, getExercisesByTemplateId } from "@/app/actions";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Metadata } from "next";
 
-export default function Page({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string };
+};
+
+export function generateMetadata({ params }: Props): Metadata {
+  return {
+    title: `Template ${params.id}`,
+  };
+}
+
+export default function Page({ params }: Props) {
   const fallback = (
     <>
       <div className="grid gap-2">

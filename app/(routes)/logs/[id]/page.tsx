@@ -1,8 +1,19 @@
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getLogsByExerciseId } from "@/app/actions";
+import { Metadata } from "next";
 
-export default async function Page({ params }: { params: { id: string } }) {
+type Props = {
+  params: { id: string };
+};
+
+export function generateMetadata({ params }: Props): Metadata {
+  return {
+    title: `Logs ${params.id}`,
+  };
+}
+
+export default async function Page({ params }: Props) {
   const fallback = (
     <div className="grid w-full place-items-center space-y-3 ">
       <Skeleton className="mb-7 h-12 w-[90vw] md:w-[40vw]" />

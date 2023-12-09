@@ -2,6 +2,11 @@ import Logs from "./Logs";
 import LogSkeleton from "@/components/LogSkeleton";
 import { Suspense } from "react";
 import { getLogs } from "@/app/actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Logs",
+};
 
 export default async function Page() {
   const fallback = (

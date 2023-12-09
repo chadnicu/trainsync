@@ -6,6 +6,11 @@ import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTemplates, getWorkouts } from "@/app/actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Workouts",
+};
 
 export default async function Page() {
   const buttonFallback = (

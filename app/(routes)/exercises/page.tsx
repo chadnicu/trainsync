@@ -3,6 +3,11 @@ import ExerciseForm from "@/components/ExerciseForm";
 import ExerciseSkeleton from "@/components/ExerciseSkeleton";
 import { Suspense } from "react";
 import { getExercises } from "@/app/actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Exercises",
+};
 
 export default async function Page() {
   const fallback = (

@@ -3,6 +3,11 @@ import TemplateForm from "@/components/TemplateForm";
 import TemplateSkeleton from "@/components/TemplateSkeleton";
 import { Suspense } from "react";
 import { getTemplates } from "@/app/actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Templates",
+};
 
 export default async function Page() {
   const fallback = (
