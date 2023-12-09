@@ -1,6 +1,6 @@
 "use client";
 
-import { commentWorkout } from "@/app/actions";
+import { commentWorkout, getWorkoutComment } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const commentSchema = z.object({
-  comment: z.string().min(1),
+  comment: z.string(),
 });
 
 export default function CommentForm({
@@ -29,6 +29,12 @@ export default function CommentForm({
 }) {
   const queryKey = `comment-workout-${workoutId}`;
 
+  const { data } = useQuery({
+    queryKey: [queryKey],
+    queryFn: async () => getWorkoutComment(workoutId),
+    initialData: comment,
+  });
+
   const queryClient = useQueryClient();
 
   const [editable, setEditable] = useState(false);
@@ -36,13 +42,12 @@ export default function CommentForm({
   const form = useForm<z.infer<typeof commentSchema>>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
-      comment: comment ? comment : undefined,
+      comment: data ?? "",
     },
   });
 
   async function onSubmit({ comment }: z.infer<typeof commentSchema>) {
     setEditable(false);
-    form.reset();
     await commentWorkout(workoutId, comment).then(() =>
       queryClient.invalidateQueries([queryKey])
     );
@@ -79,21 +84,23 @@ export default function CommentForm({
               <FormField
                 control={form.control}
                 name="comment"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center justify-between gap-2">
-                      <FormControl>
-                        <Input
-                          type="text"
-                          // placeholder={comment}
-                          className="w-full text-center"
-                          {...field}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <div className="flex items-center justify-between gap-2">
+                        <FormControl>
+                          <Input
+                            type="text"
+                            // placeholder={comment}
+                            className="w-full text-center"
+                            {...field}
+                          />
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
             <div className="flex justify-between gap-2">
@@ -115,10 +122,10 @@ export default function CommentForm({
   ) : (
     <Button
       variant={"outline"}
-      className="mx-auto w-fit"
+      className="mx-auto w-fit font-normal"
       onClick={() => setEditable(true)}
     >
-      Comment
+      {data ? data : "Comment on this workout"}
     </Button>
   );
 }

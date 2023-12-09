@@ -151,8 +151,6 @@ export default function Workout({
     initialData: workout.comment,
   });
 
-  console.log(comment);
-
   return (
     <>
       <div className="grid gap-2">
@@ -237,7 +235,6 @@ export default function Workout({
           </p>
         )}
         <CommentForm workoutId={workout.id} comment={comment} />
-        {comment && <p>Comment: {comment}</p>}
       </div>
       <div className="flex flex-col items-center gap-10 md:items-center md:justify-center md:gap-5">
         <div className="grid gap-5 px-5">

@@ -230,7 +230,7 @@ export async function getWorkouts() {
     .select()
     .from(workout)
     .where(eq(workout.userId, userId))
-    .orderBy(workout.started)
+    .orderBy(desc(workout.id))
     .all();
 
   return data;
@@ -614,13 +614,16 @@ export async function getTimeFinished(workoutId: number) {
   return res;
 }
 
-export async function commentWorkout(workoutId: number, comment: string) {
+export async function commentWorkout(
+  workoutId: number,
+  comment: string | null
+) {
   const { userId } = auth();
   if (!userId) return;
 
   await db
     .update(workout)
-    .set({ comment: comment })
+    .set({ comment })
     .where(eq(workout.id, workoutId))
     .returning()
     .get();

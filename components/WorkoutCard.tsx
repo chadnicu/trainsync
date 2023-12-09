@@ -165,12 +165,11 @@ function HoverWorkout({ workout }: { workout: Workout }) {
     <HoverCard>
       <HoverCardTrigger asChild>
         <Link
-          href={`/workouts/${workout.id}`}
+          href={workout.id ? `/workouts/${workout.id}` : ""}
           className={cn(
             buttonVariants({ variant: "link" }),
             "p-0 text-left text-2xl font-bold text-foreground"
           )}
-          aria-disabled={workout.id === -1}
         >
           {workout.title}
         </Link>

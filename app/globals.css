@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    --selection: 0 100% 50%;
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -47,12 +48,11 @@
     --input: 0 0% 14.9%;
     --ring: 0 72.2% 50.6%;
   }
-}
 
-@layer base {
   * {
-    @apply border-border selection:bg-[rgb(255,0,0)] selection:text-white;
+    @apply border-border selection:bg-[hsl(var(--selection))] selection:text-white;
   }
+
   body {
     @apply bg-background text-foreground;
   }

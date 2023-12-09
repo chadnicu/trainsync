@@ -67,7 +67,6 @@ export default function EditDurationForm({
 
   async function onSubmit(values: z.infer<typeof timeSchema>) {
     setEditable(false);
-    form.reset();
     const [started, finished] = HHMMToUnix(values.started, values.finished);
     console.log(values.started, values.finished, started, finished, "HEREE");
     await Promise.all([
