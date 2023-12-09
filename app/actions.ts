@@ -613,3 +613,29 @@ export async function getTimeFinished(workoutId: number) {
   if (!res || res === "-1") return null;
   return res;
 }
+
+export async function commentWorkout(workoutId: number, comment: string) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .update(workout)
+    .set({ comment: comment })
+    .where(eq(workout.id, workoutId))
+    .returning()
+    .get();
+}
+
+// skeptical of getStarted, getFinished, getComment, might have to switch to just returning the workout object and updating that
+export async function getWorkoutComment(workoutId: number) {
+  const { userId } = auth();
+  if (!userId) return null;
+
+  return await db
+    .select()
+    .from(workout)
+    .where(eq(workout.id, workoutId))
+    .limit(1)
+    .get()
+    .then((e) => e.comment);
+}

@@ -18,17 +18,18 @@ import {
   getExercisesByWorkoutId,
   getTimeFinished,
   getTimeStarted,
+  getWorkoutComment,
   removeExerciseFromWorkout,
   startWorkout,
 } from "@/app/actions";
 import EditDurationForm from "./EditDurationForm";
+import CommentForm from "./CommentForm";
+import { workout_exercise } from "@/lib/schema";
 
 export default function Workout({
   workout,
   initialExercises,
   initialLogs,
-  initialStarted,
-  initialFinished,
 }: {
   workout: WorkoutType;
   initialExercises: {
@@ -39,8 +40,6 @@ export default function Workout({
     title: string;
     exerciseId: number;
   })[];
-  initialStarted: number | null;
-  initialFinished: number | null;
 }) {
   const queryClient = useQueryClient();
 
@@ -126,7 +125,7 @@ export default function Workout({
       if (!data) return null;
       return parseInt(data, 10);
     },
-    initialData: initialStarted,
+    initialData: workout.started ? parseInt(workout.started, 10) : null,
   });
 
   const { data: finished } = useQuery({
@@ -136,7 +135,7 @@ export default function Workout({
       if (!data) return null;
       return parseInt(data, 10);
     },
-    initialData: initialFinished,
+    initialData: workout.finished ? parseInt(workout.finished, 10) : null,
   });
 
   const startedDate = started ? new Date(started) : null;
@@ -145,6 +144,14 @@ export default function Workout({
     finishedDate && startedDate
       ? new Date(finishedDate.getTime() - startedDate.getTime())
       : null;
+
+  const { data: comment } = useQuery({
+    queryKey: [`comment-workout-${workout.id}`],
+    queryFn: async () => getWorkoutComment(workout.id),
+    initialData: workout.comment,
+  });
+
+  console.log(comment);
 
   return (
     <>
@@ -229,6 +236,8 @@ export default function Workout({
             Duration: {timeSpent.getHours() - 3}:{timeSpent.getMinutes()}
           </p>
         )}
+        <CommentForm workoutId={workout.id} comment={comment} />
+        {comment && <p>Comment: {comment}</p>}
       </div>
       <div className="flex flex-col items-center gap-10 md:items-center md:justify-center md:gap-5">
         <div className="grid gap-5 px-5">
