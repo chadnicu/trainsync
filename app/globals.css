@@ -56,7 +56,19 @@
     @apply bg-background text-foreground
   }
 
-  .primary-text-gradient {
-    @apply bg-gradient-to-tr via-blue-500 from-purple-500 dark:via-lightAzure to-purple-500 dark:to-purple-500 bg-clip-text text-transparent
+  .primary-gradient {
+    @apply bg-gradient-to-tr via-blue-500 from-purple-500 to-purple-500 dark:to-purple-500 text-transparent
+  }
+
+  .text-primary-gradient {
+    @apply bg-clip-text primary-gradient;
+  }
+
+  .bg-primary-gradient {
+    @apply primary-gradient hover:via-blue-400 hover:to-purple-500;
+  }
+
+  .hover-text-primary-gradient {
+    @apply bg-clip-text bg-foreground duration-300 hover:text-primary-gradient
   }
 }
