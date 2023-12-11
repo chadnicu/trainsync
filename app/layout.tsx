@@ -11,15 +11,12 @@ import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "TrainSync - Best way to track your workouts",
+  title: "TrainSync - The best way to track your workouts",
   description:
     "TrainSync is a free and open source app for tracking your lifts, allowing you to train smarter and more efficiently.",
   applicationName: "TrainSync",
   authors: { name: "iusedebian", url: "https://twitter.com/iusedebian" },
   creator: "Onța Nicolae",
-  openGraph: {
-    images: "metadata-image.png",
-  },
 };
 
 const inter = Inter({ subsets: ["latin"] });
