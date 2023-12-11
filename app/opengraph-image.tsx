@@ -1,4 +1,3 @@
-import { Inter } from "next/font/google";
 import { ImageResponse } from "next/og";
 
 // Route segment config
@@ -15,9 +14,6 @@ export const contentType = "image/png";
 
 // Image generation
 export default async function Image() {
-  // Font
-  const interSemibold = Inter({ subsets: ["latin"], weight: "400" });
-
   return new ImageResponse(
     (
       // ImageResponse JSX element
@@ -31,7 +27,6 @@ export default async function Image() {
           alignItems: "center",
           justifyContent: "center",
         }}
-        className={interSemibold.className}
       >
         About Acme
       </div>
