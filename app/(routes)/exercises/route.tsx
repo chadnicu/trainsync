@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import Page from "./page";
+import Page from "../../page";
 
 export const runtime = "edge";
 
