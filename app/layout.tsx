@@ -18,9 +18,9 @@ export const metadata: Metadata = {
   applicationName: "TrainSync",
   authors: { name: "iusedebian", url: "https://twitter.com/iusedebian" },
   creator: "Onța Nicolae",
-  openGraph: {
-    images: "/api",
-  },
+  // openGraph: {
+  //   images: "/api",
+  // },
   // twitter: {
   //   images: "metadata-image-test.png",
   // },
