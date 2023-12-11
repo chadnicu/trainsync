@@ -19,10 +19,10 @@ export const metadata: Metadata = {
   authors: { name: "iusedebian", url: "https://twitter.com/iusedebian" },
   creator: "Onța Nicolae",
   openGraph: {
-    images: "/test.png",
+    images: "metadata-image-test.png",
   },
   twitter: {
-    images: "/test.png",
+    images: "metadata-image-test.png",
   },
 };
 
