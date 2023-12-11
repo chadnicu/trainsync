@@ -8,7 +8,7 @@ export default function Page() {
         Train
         <span className="text-primary-gradient">Sync</span>
       </h1>
-      <h2 className="text-2xl sm:text-3xl md:text-4xl">
+      <h2 className="mt-7 text-2xl sm:mt-0 sm:text-3xl md:text-4xl">
         Stop
         <span className="text-primary-gradient"> guessing</span>,{" "}
         <br className="sm:hidden" />

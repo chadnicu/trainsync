@@ -296,6 +296,7 @@ export default function Workout({
                 </CardContent>
               </Card>
               <AddSetForm
+                workout={workout}
                 workoutExerciseId={e.workoutExerciseId}
                 disabled={!workout.started}
                 id={initialWorkout.id}

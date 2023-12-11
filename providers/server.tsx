@@ -7,16 +7,14 @@ export function ClerkAsyncProvider({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="mb-4 h-12 w-12 animate-spin">
         <svg
-          className="h-full w-full text-primary"
+          className="h-full w-full"
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          stroke="#0070F3"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
           <line x1="12" x2="12" y1="2" y2="6" />
           <line x1="12" x2="12" y1="18" y2="22" />

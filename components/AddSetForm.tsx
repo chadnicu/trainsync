@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createSet, finishWorkout, startWorkout } from "@/app/actions";
+import { createSet, editWorkout } from "@/app/actions";
 import {
   Form,
   FormControl,
@@ -21,6 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { useToast } from "./ui/use-toast";
 import { cn } from "@/lib/utils";
 import { ToastAction } from "./ui/toast";
+import { Workout } from "@/lib/types";
 
 export const setSchema = z.object({
   reps: z.coerce.number().positive(),
@@ -28,15 +29,20 @@ export const setSchema = z.object({
 });
 
 export default function AddSetForm({
+  workout,
   workoutExerciseId,
   disabled,
   id,
 }: {
+  workout: Workout;
   workoutExerciseId: number;
   disabled?: boolean;
   id: number;
 }) {
+  const queryKey = [`workout-${workout.id}`];
+
   const queryClient = useQueryClient();
+
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof setSchema>>({
@@ -174,17 +180,15 @@ export default function AddSetForm({
                       <ToastAction
                         altText="Start workout now"
                         onClick={async () => {
-                          const now = new Date().getTime();
-                          queryClient.setQueryData([`started-${id}`], now);
-                          queryClient.setQueryData([`finished-${id}`], null);
-                          await Promise.all([
-                            startWorkout(id, now),
-                            finishWorkout(id, -1),
-                          ]);
-                          await Promise.all([
-                            queryClient.invalidateQueries([`started-${id}`]),
-                            queryClient.invalidateQueries([`finished-${id}`]),
-                          ]);
+                          const now = new Date().getTime().toString();
+                          const optimistic = {
+                            ...workout,
+                            started: now,
+                            finished: null,
+                          };
+                          queryClient.setQueryData(queryKey, optimistic);
+                          await editWorkout(workout.id, optimistic);
+                          await queryClient.invalidateQueries(queryKey);
                         }}
                       >
                         Start now

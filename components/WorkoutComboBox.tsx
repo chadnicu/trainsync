@@ -32,6 +32,7 @@ export default function WorkoutComboBox({
   }[];
   workoutId: number;
 }) {
+  const queryKey = [`exercises-workout-${workoutId}`];
   const queryClient = useQueryClient();
 
   const [open, setOpen] = React.useState(false);
@@ -41,15 +42,13 @@ export default function WorkoutComboBox({
     mutationFn: async (id: number) => {
       setOpen(false);
       await addExerciseToWorkout(id, workoutId).then(() => setValue(""));
-      queryClient.invalidateQueries([`workout-${workoutId}`]);
+      queryClient.invalidateQueries(queryKey);
       queryClient.invalidateQueries([`sets`]);
     },
     onMutate: async (id: number) => {
-      await queryClient.cancelQueries({
-        queryKey: [`workout-${workoutId}`],
-      });
-      const previous = queryClient.getQueryData([`workout-${workoutId}`]);
-      queryClient.setQueryData([`workout-${workoutId}`], (old: any) => ({
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: any) => ({
         workoutsExercises: old.workoutsExercises.concat(
           old.otherExercises.filter((e: Exercise) => e.id === id)
         ),
@@ -58,12 +57,10 @@ export default function WorkoutComboBox({
       return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData([`workout-${workoutId}`], context?.previous);
+      queryClient.setQueryData(queryKey, context?.previous);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`workout-${workoutId}`],
-      });
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 
