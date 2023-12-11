@@ -1,3 +1,4 @@
+import { Inter } from "next/font/google";
 import { ImageResponse } from "next/og";
 
 // Route segment config
@@ -15,9 +16,7 @@ export const contentType = "image/png";
 // Image generation
 export default async function Image() {
   // Font
-  const interSemiBold = fetch(
-    new URL("./Inter-SemiBold.ttf", import.meta.url)
-  ).then((res) => res.arrayBuffer());
+  const interSemibold = Inter({ subsets: ["latin"], weight: "400" });
 
   return new ImageResponse(
     (
@@ -32,6 +31,7 @@ export default async function Image() {
           alignItems: "center",
           justifyContent: "center",
         }}
+        className={interSemibold.className}
       >
         About Acme
       </div>
@@ -41,14 +41,6 @@ export default async function Image() {
       // For convenience, we can re-use the exported opengraph-image
       // size config to also set the ImageResponse's width and height.
       ...size,
-      fonts: [
-        {
-          name: "Inter",
-          data: await interSemiBold,
-          style: "normal",
-          weight: 400,
-        },
-      ],
     }
   );
 }
