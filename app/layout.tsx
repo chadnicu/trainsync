@@ -12,7 +12,6 @@ import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://trainsync.vercel.app/"),
   alternates: {
     canonical: "/",
     languages: {
@@ -20,19 +19,12 @@ export const metadata: Metadata = {
       "de-DE": "/de-DE",
     },
   },
-
   title: "TrainSync - The best way to track your workouts",
   description:
     "TrainSync is a free and open source app for tracking your lifts, allowing you to train smarter and more efficiently.",
   applicationName: "TrainSync",
   authors: { name: "iusedebian", url: "https://twitter.com/iusedebian" },
   creator: "Onța Nicolae",
-  openGraph: {
-    images: "/api",
-  },
-  twitter: {
-    images: "/api",
-  },
 };
 
 const inter = Inter({ subsets: ["latin"] });
