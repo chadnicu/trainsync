@@ -17,8 +17,6 @@ module.exports = {
     },
     extend: {
       colors: {
-        brandeisBlue: "#0070F3",
-        lightAzure: "#68B5FB",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -52,6 +50,9 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        cyan: {
+          DEFAULT: "hsl(var(--cyan))",
+        }
       },
       borderRadius: {
         lg: "var(--radius)",

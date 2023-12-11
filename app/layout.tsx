@@ -10,8 +10,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
 import { Metadata } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: "TrainSync - Best way to track your workouts",
   description:
@@ -23,6 +21,8 @@ export const metadata: Metadata = {
     images: "metadata-image.png",
   },
 };
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default async function RootLayout({
   children,
