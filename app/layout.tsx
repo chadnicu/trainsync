@@ -12,6 +12,7 @@ import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://trainsync.vercel.app"),
   alternates: {
     canonical: "/",
     languages: {
