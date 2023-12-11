@@ -5,6 +5,7 @@ import NavbarSkeleton from "@/components/NavbarSkeleton";
 import { ReactNode, Suspense } from "react";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
@@ -37,6 +38,7 @@ export default async function RootLayout({
             {children}
             <Toaster />
             <Analytics />
+            <SpeedInsights />
           </div>
         </Providers>
       </body>
