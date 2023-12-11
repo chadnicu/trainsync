@@ -1,12 +1,6 @@
 import Link from "next/link";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { ImageResponse } from "next/og";
-
-new ImageResponse(<Page />, {
-  width: 1200,
-  height: 630,
-});
 
 export default function Page() {
   return (
