@@ -14,24 +14,21 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   deleteSet,
-  finishWorkout,
+  editWorkout,
+  getCurrentWorkout,
   getExercisesByWorkoutId,
-  getTimeFinished,
-  getTimeStarted,
-  getWorkoutComment,
+  getLogs,
   removeExerciseFromWorkout,
-  startWorkout,
 } from "@/app/actions";
 import EditDurationForm from "./EditDurationForm";
 import CommentForm from "./CommentForm";
-import { workout_exercise } from "@/lib/schema";
 
 export default function Workout({
-  workout,
+  initialWorkout,
   initialExercises,
   initialLogs,
 }: {
-  workout: WorkoutType;
+  initialWorkout: WorkoutType;
   initialExercises: {
     workoutsExercises: (Exercise & { workoutExerciseId: number })[];
     otherExercises: Exercise[];
@@ -42,25 +39,35 @@ export default function Workout({
   })[];
 }) {
   const queryClient = useQueryClient();
+  const queryKeys = {
+    workout: [`workout-${initialWorkout.id}`],
+    exercises: [`exercises-workout-${initialWorkout.id}`],
+  };
+
+  const { data: workout } = useQuery({
+    queryKey: queryKeys.workout,
+    queryFn: async () => getCurrentWorkout(initialWorkout.id),
+    initialData: initialWorkout,
+  });
 
   const { data: exercises } = useQuery({
-    queryKey: [`workout-${workout.id}`],
-    queryFn: async () => getExercisesByWorkoutId(workout.id),
+    queryKey: queryKeys.exercises,
+    queryFn: async () => getExercisesByWorkoutId(initialWorkout.id),
     initialData: initialExercises,
   });
 
   const { mutate } = useMutation({
     mutationFn: async (id) => {
-      await removeExerciseFromWorkout(id, workout.id).then(() =>
-        queryClient.invalidateQueries([`workout-${workout.id}`])
+      await removeExerciseFromWorkout(id, initialWorkout.id).then(() =>
+        queryClient.invalidateQueries(queryKeys.exercises)
       );
     },
     onMutate: async (id: number) => {
       await queryClient.cancelQueries({
-        queryKey: [`workout-${workout.id}`],
+        queryKey: queryKeys.exercises,
       });
-      const previous = queryClient.getQueryData([`workout-${workout.id}`]);
-      queryClient.setQueryData([`workout-${workout.id}`], (old: any) => ({
+      const previous = queryClient.getQueryData(queryKeys.exercises);
+      queryClient.setQueryData(queryKeys.exercises, (old: any) => ({
         workoutsExercises: old.workoutsExercises.filter(
           (e: Exercise) => e.id !== id
         ),
@@ -71,27 +78,18 @@ export default function Workout({
       return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData([`workout-${workout.id}`], context?.previous);
+      queryClient.setQueryData(queryKeys.exercises, context?.previous);
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: [`workout-${workout.id}`],
+        queryKey: queryKeys.exercises,
       });
     },
   });
 
-  function queryLogs() {
-    const data = queryClient.getQueryData(["logs"]);
-    if (!data) return [];
-    return data as (Set & {
-      title: string;
-      exerciseId: number;
-    })[];
-  }
-
   const { data: sets } = useQuery({
     queryKey: ["logs"],
-    queryFn: queryLogs,
+    queryFn: async () => getLogs(),
     initialData: initialLogs,
   });
 
@@ -118,91 +116,73 @@ export default function Workout({
 
   const [editable, setEditable] = useState(0);
 
-  const { data: started } = useQuery({
-    queryKey: [`started-${workout.id}`],
-    queryFn: async () => {
-      const data = await getTimeStarted(workout.id);
-      if (!data) return null;
-      return parseInt(data, 10);
-    },
-    initialData: workout.started ? parseInt(workout.started, 10) : null,
-  });
-
-  const { data: finished } = useQuery({
-    queryKey: [`finished-${workout.id}`],
-    queryFn: async () => {
-      const data = await getTimeFinished(workout.id);
-      if (!data) return null;
-      return parseInt(data, 10);
-    },
-    initialData: workout.finished ? parseInt(workout.finished, 10) : null,
-  });
-
-  const startedDate = started ? new Date(started) : null;
-  const finishedDate = finished ? new Date(finished) : null;
+  const startedDate = workout.started
+    ? new Date(parseInt(workout.started, 10))
+    : null;
+  const finishedDate = workout.finished
+    ? new Date(parseInt(workout.finished, 10))
+    : null;
   const timeSpent =
     finishedDate && startedDate
       ? new Date(finishedDate.getTime() - startedDate.getTime())
       : null;
 
-  const { data: comment } = useQuery({
-    queryKey: [`comment-workout-${workout.id}`],
-    queryFn: async () => getWorkoutComment(workout.id),
-    initialData: workout.comment,
-  });
-
   return (
     <>
       <div className="grid gap-2">
-        <h3 className="text-sm">{workout.date.toString().slice(0, 15)}</h3>
+        <h3 className="text-sm">
+          {initialWorkout.date.toString().slice(0, 15)}
+        </h3>
         <h1 className="text-5xl font-bold">{workout.title}</h1>
         <p className="px-4 text-sm">{workout.description}</p>
         <div className="max-w-screen flex justify-center gap-2 overflow-hidden px-20 pt-2">
-          {(started || finished) && (
+          {(workout.started || workout.finished) && (
             <Button
               onClick={async () => {
-                queryClient.setQueryData([`started-${workout.id}`], null);
-                queryClient.setQueryData([`finished-${workout.id}`], null);
-                await Promise.all([
-                  startWorkout(workout.id, -1),
-                  finishWorkout(workout.id, -1),
-                ]);
-                await Promise.all([
-                  queryClient.invalidateQueries([`started-${workout.id}`]),
-                  queryClient.invalidateQueries([`finished-${workout.id}`]),
-                ]);
+                const optimistic = {
+                  ...workout,
+                  started: null,
+                  finished: null,
+                };
+                queryClient.setQueryData(queryKeys.workout, optimistic);
+                await editWorkout(initialWorkout.id, optimistic);
+                await queryClient.invalidateQueries(queryKeys.workout);
               }}
               variant={"destructive"}
             >
-              {!finished ? "Cancel" : "Delete"}
+              {!workout.finished ? "Cancel" : "Delete"}
             </Button>
           )}
           <Button
             onClick={async () => {
               const now = new Date().getTime();
-              queryClient.setQueryData([`started-${workout.id}`], now);
-              queryClient.setQueryData([`finished-${workout.id}`], null);
-              await Promise.all([
-                startWorkout(workout.id, now),
-                finishWorkout(workout.id, -1),
-              ]);
-              await Promise.all([
-                queryClient.invalidateQueries([`started-${workout.id}`]),
-                queryClient.invalidateQueries([`finished-${workout.id}`]),
-              ]);
+              const optimistic = {
+                ...workout,
+                started: now.toString(),
+                finished: null,
+              };
+              queryClient.setQueryData(queryKeys.workout, optimistic);
+              await editWorkout(initialWorkout.id, optimistic);
+              await queryClient.invalidateQueries(queryKeys.workout);
             }}
-            variant={started && !finished ? "outline" : "default"}
+            variant={
+              workout.started && !workout.finished ? "outline" : "default"
+            }
             className="w-fit items-end"
           >
-            {started ? "Restart" : "Start"}
+            {workout.started ? "Restart" : "Start"}
           </Button>
-          {started && !finished && (
+          {workout.started && !workout.finished && (
             <Button
               onClick={async () => {
                 const now = new Date().getTime();
-                queryClient.setQueryData([`finished-${workout.id}`], now);
-                await finishWorkout(workout.id, now);
-                queryClient.invalidateQueries([`finished-${workout.id}`]);
+                const optimistic = {
+                  ...workout,
+                  finished: now.toString(),
+                };
+                queryClient.setQueryData(queryKeys.workout, optimistic);
+                await editWorkout(initialWorkout.id, optimistic);
+                await queryClient.invalidateQueries(queryKeys.workout);
               }}
               variant={"default"}
               className="w-fit items-end"
@@ -211,12 +191,8 @@ export default function Workout({
             </Button>
           )}
         </div>
-        {started && finished && (
-          <EditDurationForm
-            workoutId={workout.id}
-            started={started}
-            finished={finished}
-          />
+        {workout.started && workout.finished && (
+          <EditDurationForm workout={workout} />
         )}
         {startedDate && (
           <p>
@@ -228,13 +204,15 @@ export default function Workout({
             Ended at: {finishedDate.getHours()}:{finishedDate.getMinutes()}
           </p>
         )}
-        {started && !finished && <TimePassed since={started} />}
+        {workout.started && !workout.finished && (
+          <TimePassed since={parseInt(workout.started, 10)} />
+        )}
         {timeSpent && (
           <p>
             Duration: {timeSpent.getHours() - 3}:{timeSpent.getMinutes()}
           </p>
         )}
-        <CommentForm workoutId={workout.id} comment={comment} />
+        <CommentForm workout={workout} />
       </div>
       <div className="flex flex-col items-center gap-10 md:items-center md:justify-center md:gap-5">
         <div className="grid gap-5 px-5">
@@ -319,8 +297,8 @@ export default function Workout({
               </Card>
               <AddSetForm
                 workoutExerciseId={e.workoutExerciseId}
-                disabled={!started}
-                id={workout.id}
+                disabled={!workout.started}
+                id={initialWorkout.id}
               />
             </div>
           ))}
@@ -332,7 +310,7 @@ export default function Workout({
             label: e.title,
             exerciseId: e.id,
           }))}
-          workoutId={workout.id}
+          workoutId={initialWorkout.id}
         />
       </div>
     </>

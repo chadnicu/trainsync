@@ -65,7 +65,7 @@
   }
 
   .bg-primary-gradient {
-    @apply primary-gradient hover:via-blue-400 hover:to-purple-500;
+    @apply primary-gradient hover:brightness-125
   }
 
   .hover-text-primary-gradient {

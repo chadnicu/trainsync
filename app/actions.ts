@@ -17,6 +17,7 @@ import { templateSchema } from "@/components/TemplateForm";
 import { workoutSchema } from "@/components/WorkoutForm";
 import { setSchema } from "@/components/AddSetForm";
 import { templateToWorkoutSchema } from "@/app/(routes)/templates/[id]/Template";
+import { Workout } from "@/lib/types";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -281,14 +282,18 @@ export async function getExercisesByWorkoutId(workoutId: number) {
 
 export async function editWorkout(
   workoutId: number,
-  values: z.infer<typeof workoutSchema>
+  values: z.infer<typeof workoutSchema> | Workout
 ) {
   const { userId } = auth();
   if (!userId) return;
 
   await db
     .update(workout)
-    .set({ ...values, date: values.date.toString() })
+    .set({
+      ...values,
+      date:
+        typeof values.date === "string" ? values.date : values.date.toString(),
+    })
     .where(eq(workout.id, workoutId))
     .returning()
     .get();
@@ -537,7 +542,7 @@ export async function addTemplateToWorkout(
     });
 }
 
-export async function getLastSets(workoutId: number) {
+export async function getLastSets(workoutId?: number) {
   const { userId } = auth();
   if (!userId) return [];
 
@@ -556,89 +561,4 @@ export async function getLastSets(workoutId: number) {
     );
 
   return data;
-}
-
-export async function startWorkout(workoutId: number, started: number) {
-  const { userId } = auth();
-  if (!userId) return;
-
-  await db
-    .update(workout)
-    .set({ started: started.toString() })
-    .where(eq(workout.id, workoutId))
-    .returning()
-    .get();
-}
-
-export async function getTimeStarted(workoutId: number) {
-  const { userId } = auth();
-  if (!userId) return null;
-
-  const res = await db
-    .select()
-    .from(workout)
-    .where(eq(workout.id, workoutId))
-    .limit(1)
-    .get()
-    .then((data) => data.started);
-
-  if (!res || res === "-1") return null;
-  return res;
-}
-
-export async function finishWorkout(workoutId: number, finished: number) {
-  const { userId } = auth();
-  if (!userId) return;
-
-  await db
-    .update(workout)
-    .set({ finished: finished.toString() })
-    .where(eq(workout.id, workoutId))
-    .returning()
-    .get();
-}
-
-export async function getTimeFinished(workoutId: number) {
-  const { userId } = auth();
-  if (!userId) return null;
-
-  const res = await db
-    .select()
-    .from(workout)
-    .where(eq(workout.id, workoutId))
-    .limit(1)
-    .get()
-    .then((data) => data.finished);
-
-  if (!res || res === "-1") return null;
-  return res;
-}
-
-export async function commentWorkout(
-  workoutId: number,
-  comment: string | null
-) {
-  const { userId } = auth();
-  if (!userId) return;
-
-  await db
-    .update(workout)
-    .set({ comment })
-    .where(eq(workout.id, workoutId))
-    .returning()
-    .get();
-}
-
-// skeptical of getStarted, getFinished, getComment, might have to switch to just returning the workout object and updating that
-export async function getWorkoutComment(workoutId: number) {
-  const { userId } = auth();
-  if (!userId) return null;
-
-  return await db
-    .select()
-    .from(workout)
-    .where(eq(workout.id, workoutId))
-    .limit(1)
-    .get()
-    .then((e) => e.comment);
 }

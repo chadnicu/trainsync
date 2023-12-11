@@ -66,11 +66,9 @@ async function FetchData({ workoutId }: { workoutId: number }) {
     getLogs(),
   ]);
 
-  console.log(currentWorkout.comment);
-
   return (
     <Workout
-      workout={currentWorkout}
+      initialWorkout={currentWorkout}
       initialExercises={exercises}
       initialLogs={logs}
     />

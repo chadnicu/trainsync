@@ -1,7 +1,6 @@
 "use client";
-// fix this pls im losing my mind
 
-import { finishWorkout, startWorkout } from "@/app/actions";
+import { editWorkout } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Workout } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -33,8 +33,10 @@ const timeSchema = z.object({
 });
 
 function HHMMToUnix(started: string, finished: string) {
-  const startedDate = new Date(`1970-01-01T${started}:00`).getTime();
-  const finishedDate = new Date(`1970-01-01T${finished}:00`).getTime();
+  const startedDate = new Date(`1970-01-01T${started}:00`).getTime().toString();
+  const finishedDate = new Date(`1970-01-01T${finished}:00`)
+    .getTime()
+    .toString();
 
   return [startedDate, finishedDate];
 }
@@ -44,15 +46,9 @@ function unixToHHMM(unixTimestamp: number) {
   return `${date.getHours()}:${date.getMinutes()}`;
 }
 
-export default function EditDurationForm({
-  workoutId,
-  started,
-  finished,
-}: {
-  workoutId: number;
-  started: number;
-  finished: number;
-}) {
+export default function EditDurationForm({ workout }: { workout: Workout }) {
+  const queryKey = [`workout-${workout.id}`];
+
   const [editable, setEditable] = useState(false);
 
   const queryClient = useQueryClient();
@@ -60,8 +56,8 @@ export default function EditDurationForm({
   const form = useForm<z.infer<typeof timeSchema>>({
     resolver: zodResolver(timeSchema),
     defaultValues: {
-      started: unixToHHMM(started),
-      finished: unixToHHMM(finished),
+      started: unixToHHMM(parseInt(workout.started ?? "", 10)),
+      finished: unixToHHMM(parseInt(workout.finished ?? "", 10)),
     },
   });
 
@@ -69,47 +65,25 @@ export default function EditDurationForm({
     setEditable(false);
     const [started, finished] = HHMMToUnix(values.started, values.finished);
     console.log(values.started, values.finished, started, finished, "HEREE");
-    await Promise.all([
-      startWorkout(workoutId, started).then(() =>
-        queryClient.invalidateQueries([`started-${workoutId}`])
-      ),
-      finishWorkout(workoutId, finished).then(() =>
-        queryClient.invalidateQueries([`finished-${workoutId}`])
-      ),
-    ]);
+    await editWorkout(workout.id, { ...workout, started, finished });
+    await queryClient.invalidateQueries(queryKey);
   }
 
   const { mutate } = useMutation({
     mutationFn: onSubmit,
     onMutate: async (values: z.infer<typeof timeSchema>) => {
       const [started, finished] = HHMMToUnix(values.started, values.finished);
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueriesData(queryKey, { ...workout, started, finished });
 
-      await Promise.all([
-        queryClient.cancelQueries({ queryKey: [`started-${workoutId}`] }),
-        queryClient.cancelQueries({
-          queryKey: [`finished-${workoutId}`],
-        }),
-      ]);
-      const [prevStarted, prevFinished] = await Promise.all([
-        queryClient.getQueryData([`started-${workoutId}`]),
-        queryClient.getQueryData([`started-${workoutId}`]),
-      ]);
-      queryClient.setQueryData([`started-${workoutId}`], started);
-      queryClient.setQueryData([`finished-${workoutId}`], finished);
-      return { prevStarted, prevFinished };
+      return { previous };
     },
     onError: (err, newExercise, context) => {
-      queryClient.setQueryData([`started-${workoutId}`], context?.prevStarted);
-      queryClient.setQueryData(
-        [`finished-${workoutId}`],
-        context?.prevFinished
-      );
+      queryClient.setQueryData(queryKey, context?.previous);
     },
     onSettled: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: [`started-${workoutId}`] }),
-        queryClient.invalidateQueries({ queryKey: [`finished-${workoutId}`] }),
-      ]);
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { commentWorkout, getWorkoutComment } from "@/app/actions";
+import { editWorkout, getCurrentWorkout } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Workout } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -20,19 +21,15 @@ const commentSchema = z.object({
   comment: z.string(),
 });
 
-export default function CommentForm({
-  workoutId,
-  comment,
-}: {
-  workoutId: number;
-  comment: string | null;
-}) {
-  const queryKey = `comment-workout-${workoutId}`;
+export default function CommentForm({ workout }: { workout: Workout }) {
+  const queryKey = [`workout-${workout.id}`];
 
-  const { data } = useQuery({
-    queryKey: [queryKey],
-    queryFn: async () => getWorkoutComment(workoutId),
-    initialData: comment,
+  const {
+    data: { comment },
+  } = useQuery({
+    queryKey: queryKey,
+    queryFn: async () => getCurrentWorkout(workout.id),
+    initialData: workout,
   });
 
   const queryClient = useQueryClient();
@@ -42,29 +39,28 @@ export default function CommentForm({
   const form = useForm<z.infer<typeof commentSchema>>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
-      comment: data ?? "",
+      comment: comment ?? "",
     },
   });
 
   async function onSubmit({ comment }: z.infer<typeof commentSchema>) {
     setEditable(false);
-    await commentWorkout(workoutId, comment).then(() =>
-      queryClient.invalidateQueries([queryKey])
-    );
+    await editWorkout(workout.id, { ...workout, comment });
+    queryClient.invalidateQueries(queryKey);
   }
 
   const { mutate } = useMutation({
     mutationFn: onSubmit,
     onMutate: async ({ comment }: z.infer<typeof commentSchema>) => {
-      await queryClient.cancelQueries({ queryKey: [queryKey] });
-      const previous = await queryClient.getQueryData([queryKey]);
-      queryClient.setQueryData([queryKey], comment);
+      await queryClient.cancelQueries({ queryKey });
+      const previous = await queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, { ...workout, comment });
       return { previous };
     },
     onError: (err, newExercise, context) =>
-      queryClient.setQueriesData([queryKey], context?.previous),
+      queryClient.setQueriesData(queryKey, context?.previous),
     onSettled: async () =>
-      queryClient.invalidateQueries({ queryKey: [queryKey] }),
+      queryClient.invalidateQueries({ queryKey: queryKey }),
   });
 
   return editable ? (
@@ -125,7 +121,7 @@ export default function CommentForm({
       className="mx-auto w-fit rounded-2xl rounded-tl-none p-6 font-normal"
       onClick={() => setEditable(true)}
     >
-      {data ? data : "Comment on this workout"}
+      {comment ? comment : "Leave a comment"}
     </Button>
   );
 }
