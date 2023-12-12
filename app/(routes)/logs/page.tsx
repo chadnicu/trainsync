@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  // will need to renew this cuz of new layout
   const fallback = (
     <div className="flex h-full w-[93vw] flex-wrap justify-center gap-[1%] gap-y-3 px-10">
       {Array.from({ length: 16 }, (_, i) => (

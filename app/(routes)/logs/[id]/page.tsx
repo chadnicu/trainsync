@@ -35,13 +35,13 @@ async function FetchLogs({ exerciseId }: { exerciseId: string }) {
   const logs = await getLogsByExerciseId(parseInt(exerciseId, 10));
 
   return (
-    <div className="grid place-items-center gap-10 lg:grid-cols-2">
+    <div className="flex flex-col items-center justify-center gap-10 px-5 lg:flex-row ">
       <div>
         <h1 className="mb-8 text-5xl font-bold">
           {logs[0]?.exerciseTitle ?? ""}
         </h1>
         {logs.map((e) => (
-          <div key={e.id} className="flex gap-5">
+          <div key={e.id} className="flex justify-center gap-5">
             <p className="font-semibold">{e.date.toString().slice(0, 15)}</p>
             <h1>
               {e.reps} x {e.weight}
