@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getLogsByExerciseId } from "@/app/actions";
 import { Metadata } from "next";
+import CardsMetric from "./CardsMetric";
 
 type Props = {
   params: { id: string };
@@ -34,9 +35,11 @@ async function FetchLogs({ exerciseId }: { exerciseId: string }) {
   const logs = await getLogsByExerciseId(parseInt(exerciseId, 10));
 
   return (
-    <div className="grid place-items-center gap-10">
-      <h1 className="text-5xl font-bold">{logs[0]?.exerciseTitle ?? ""}</h1>
+    <div className="grid place-items-center gap-10 lg:grid-cols-2">
       <div>
+        <h1 className="mb-8 text-5xl font-bold">
+          {logs[0]?.exerciseTitle ?? ""}
+        </h1>
         {logs.map((e) => (
           <div key={e.id} className="flex gap-5">
             <p className="font-semibold">{e.date.toString().slice(0, 15)}</p>
@@ -48,6 +51,7 @@ async function FetchLogs({ exerciseId }: { exerciseId: string }) {
           </div>
         ))}
       </div>
+      <CardsMetric logs={logs} />
     </div>
   );
 }

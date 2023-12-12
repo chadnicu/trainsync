@@ -118,7 +118,7 @@ export default function CommentForm({ workout }: { workout: Workout }) {
   ) : (
     <Button
       variant={"secondary"}
-      className="mx-auto w-fit rounded-2xl rounded-tl-none p-6 font-normal"
+      className="mx-auto w-fit max-w-[80%] h-full rounded-2xl rounded-tl-none p-4 font-normal"
       onClick={() => setEditable(true)}
     >
       {comment ? comment : "Leave a comment"}
