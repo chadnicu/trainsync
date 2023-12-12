@@ -38,6 +38,9 @@ export function HomePagePreview() {
         flexDirection: "column",
         fontWeight: "bold",
         fontFamily: '"Inter-Bold"',
+        backgroundImage:
+          "radial-gradient(circle at 25px 25px, #505050 3%, transparent 5%), radial-gradient(circle at 75px 75px, #505050 3%, transparent 5%)",
+        backgroundSize: "100px 100px",
       }}
     >
       <div
@@ -47,7 +50,7 @@ export function HomePagePreview() {
           width: "100%",
           alignItems: "flex-end",
           justifyContent: "center",
-          fontSize: 170,
+          fontSize: 180,
           letterSpacing: -3,
           fontWeight: 700,
           textAlign: "center",
@@ -58,7 +61,7 @@ export function HomePagePreview() {
         <div
           style={{
             backgroundImage:
-              "linear-gradient(90deg, rgb(0, 124, 240), rgb(0, 223, 216))",
+              "linear-gradient(to top right, rgb(0, 124, 240), rgb(0, 223, 216))",
             backgroundClip: "text",
             WebkitBackgroundClip: "text",
             color: "transparent",
@@ -74,7 +77,7 @@ export function HomePagePreview() {
           display: "flex",
           width: "100%",
           justifyContent: "center",
-          fontSize: 50,
+          fontSize: 60,
           gap: 7,
           fontWeight: 700,
           marginTop: -14,
@@ -84,7 +87,7 @@ export function HomePagePreview() {
         <div
           style={{
             backgroundImage:
-              "linear-gradient(90deg, rgb(0, 124, 240), rgb(0, 223, 216))",
+              "linear-gradient(to top right, rgb(0, 124, 240), rgb(0, 223, 216))",
             backgroundClip: "text",
             WebkitBackgroundClip: "text",
             color: "transparent",
