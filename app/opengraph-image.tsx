@@ -46,7 +46,7 @@ export function HomePagePreview() {
       <div
         style={{
           display: "flex",
-          height: "60%",
+          height: "61%",
           width: "100%",
           alignItems: "flex-end",
           justifyContent: "center",
