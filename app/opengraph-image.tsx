@@ -43,11 +43,11 @@ export function HomePagePreview() {
       <div
         style={{
           display: "flex",
-          height: "58.5%",
+          height: "59%",
           width: "100%",
           alignItems: "flex-end",
           justifyContent: "center",
-          fontSize: 100,
+          fontSize: 170,
           letterSpacing: -3,
           fontWeight: 700,
           textAlign: "center",
@@ -74,9 +74,10 @@ export function HomePagePreview() {
           display: "flex",
           width: "100%",
           justifyContent: "center",
-          fontSize: 30,
+          fontSize: 50,
           gap: 7,
           fontWeight: 700,
+          marginTop: -14,
         }}
       >
         <div style={{ color: "white", paddingLeft: "2" }}>Stop</div>
