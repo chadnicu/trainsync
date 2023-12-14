@@ -30,7 +30,10 @@ export default function Workout({
 }: {
   initialWorkout: WorkoutType;
   initialExercises: {
-    workoutsExercises: (Exercise & { workoutExerciseId: number ,todo:string})[];
+    workoutsExercises: (Exercise & {
+      workoutExerciseId: number;
+      todo: string | null;
+    })[];
     otherExercises: Exercise[];
   };
   initialLogs: (Set & {
