@@ -1,0 +1,1 @@
+ALTER TABLE exercise_template ADD `todo` text;

@@ -42,10 +42,11 @@ import {
   getExercisesByTemplateId,
   removeExerciseFromTemplate,
 } from "@/app/actions";
+import TodoForm from "./TodoForm";
 
 type Props = {
   template: TemplateType;
-  templatesExercises: Exercise[];
+  templatesExercises: (Exercise & { todo: string | null })[];
   otherExercises: Exercise[];
 };
 
@@ -64,10 +65,7 @@ export default function Template({
 
   const { data } = useQuery({
     queryKey: [`template-${template.id}`],
-    queryFn: async () => {
-      const data = await getExercisesByTemplateId(template.id);
-      return data;
-    },
+    queryFn: async () => getExercisesByTemplateId(template.id),
     initialData: { templatesExercises, otherExercises },
   });
 
@@ -210,12 +208,18 @@ export default function Template({
       <div className="flex flex-col items-center gap-5 px-5 md:justify-around">
         <div className="grid gap-2">
           {data.templatesExercises.map((e) => (
-            <Card key={e.id} className="flex justify-between">
+            <Card key={e?.id} className="flex justify-between">
               <CardHeader>
                 <HoverExercise data={e} />
+                <p>{e?.todo}</p>
               </CardHeader>
-              <CardContent className="flex items-center justify-center py-0">
-                <DeleteButton mutate={() => mutate(e.id)} className="w-fit" />
+              <CardContent className="flex items-center justify-center gap-2 py-0">
+                <TodoForm
+                  templateId={template.id}
+                  exerciseTemplateId={e?.id}
+                  exercises={{ templatesExercises, otherExercises }}
+                />
+                <DeleteButton mutate={() => mutate(e?.id)} className="w-fit" />
               </CardContent>
             </Card>
           ))}

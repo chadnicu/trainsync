@@ -30,7 +30,7 @@ export default function Workout({
 }: {
   initialWorkout: WorkoutType;
   initialExercises: {
-    workoutsExercises: (Exercise & { workoutExerciseId: number })[];
+    workoutsExercises: (Exercise & { workoutExerciseId: number ,todo:string})[];
     otherExercises: Exercise[];
   };
   initialLogs: (Set & {
@@ -243,6 +243,7 @@ export default function Workout({
                     </div>
                     <div className="h-full">
                       <HoverExercise data={e} />
+                      <p>{e?.todo}</p>
                     </div>
                     <div>
                       <DeleteButton mutate={() => mutate(e.id)} />

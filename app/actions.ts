@@ -206,7 +206,12 @@ export async function getExercisesByTemplateId(templateId: number) {
     .innerJoin(exercise, eq(exercise_template.exerciseId, exercise.id))
     .where(eq(exercise_template.templateId, templateId))
     .all()
-    .then((data) => data.map(({ exercise }) => exercise));
+    .then((data) =>
+      data.map(({ exercise, exercise_template }) => ({
+        ...exercise,
+        todo: exercise_template.todo,
+      }))
+    );
 
   const exerciseIds = templatesExercises.length
     ? templatesExercises.map((e) => e.id)
@@ -218,7 +223,14 @@ export async function getExercisesByTemplateId(templateId: number) {
     .where(
       and(eq(exercise.userId, userId), notInArray(exercise.id, exerciseIds))
     )
+    // .innerJoin(exercise_template, eq(exercise.id, exercise_template.exerciseId))
     .all();
+  // .then((data) =>
+  //   data.map(({ exercise, exercise_template }) => ({
+  //     ...exercise,
+  //     todo: exercise_template.todo,
+  //   }))
+  // );
 
   return { templatesExercises, otherExercises };
 }
@@ -262,6 +274,7 @@ export async function getExercisesByWorkoutId(workoutId: number) {
       data.map(({ exercise, workout_exercise }) => ({
         ...exercise,
         workoutExerciseId: workout_exercise.id,
+        todo: workout_exercise.todo,
       }))
     );
 
@@ -534,7 +547,11 @@ export async function addTemplateToWorkout(
       for (let i = 0; i < data.length; ) {
         await db
           .insert(workout_exercise)
-          .values({ workoutId, exerciseId: data[i].exerciseId })
+          .values({
+            workoutId,
+            exerciseId: data[i].exerciseId,
+            todo: data[i]?.todo,
+          })
           .returning()
           .get()
           .then(() => i++);
@@ -561,4 +578,19 @@ export async function getLastSets(workoutId?: number) {
     );
 
   return data;
+}
+
+export async function editTemplateExercise(
+  templateExerciseId: number,
+  todo: string
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .update(exercise_template)
+    .set({ todo })
+    .where(eq(exercise_template.exerciseId, templateExerciseId))
+    .returning()
+    .get();
 }

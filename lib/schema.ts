@@ -17,6 +17,7 @@ export const template = sqliteTable("template", {
 
 export const exercise_template = sqliteTable("exercise_template", {
   id: integer("id").primaryKey(),
+  todo: text("todo"),
   exerciseId: integer("exercise_id")
     .notNull()
     .references(() => exercise.id),
@@ -38,6 +39,7 @@ export const workout = sqliteTable("workout", {
 
 export const workout_exercise = sqliteTable("workout_exercise", {
   id: integer("id").primaryKey(),
+  todo: text("todo"),
   comment: text("comment"),
   workoutId: integer("workout_id")
     .notNull()
