@@ -22,6 +22,7 @@ import {
 } from "@/app/actions";
 import EditDurationForm from "./EditDurationForm";
 import CommentForm from "./CommentForm";
+import AddCommentForm from "./AddCommentForm";
 
 export default function Workout({
   initialWorkout,
@@ -33,6 +34,7 @@ export default function Workout({
     workoutsExercises: (Exercise & {
       workoutExerciseId: number;
       todo: string | null;
+      comment: string | null;
     })[];
     otherExercises: Exercise[];
   };
@@ -222,7 +224,7 @@ export default function Workout({
           {exercises.workoutsExercises.map((e) => (
             <div
               key={e.id}
-              className="grid place-items-center sm:flex sm:justify-between sm:gap-5"
+              className="grid place-items-center  sm:flex sm:justify-between sm:gap-5"
             >
               <Card className="mb-2 md:flex md:items-center">
                 <CardHeader>
@@ -246,7 +248,7 @@ export default function Workout({
                     </div>
                     <div className="h-full">
                       <HoverExercise data={e} />
-                      <p>{e?.todo}</p>
+                      <p className="text-sm italic">{e?.todo}</p>
                     </div>
                     <div>
                       <DeleteButton mutate={() => mutate(e.id)} />
@@ -304,6 +306,11 @@ export default function Workout({
                 workoutExerciseId={e.workoutExerciseId}
                 disabled={!workout.started}
                 id={initialWorkout.id}
+              />
+              <AddCommentForm
+                workoutId={initialWorkout.id}
+                workoutExerciseId={e.workoutExerciseId}
+                comment={e.comment}
               />
             </div>
           ))}

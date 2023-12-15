@@ -1,37 +1,34 @@
 "use client";
 
-import { editWorkout, getCurrentWorkout } from "@/app/actions";
-import { Button } from "@/components/ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { commentSchema } from "./CommentForm";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { editWorkoutExercise } from "@/app/actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Workout } from "@/lib/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
 
-export const commentSchema = z.object({
-  comment: z.string(),
-});
-
-export default function CommentForm({ workout }: { workout: Workout }) {
-  const queryKey = [`workout-${workout.id}`];
-
-  const {
-    data: { comment },
-  } = useQuery({
-    queryKey: queryKey,
-    queryFn: async () => getCurrentWorkout(workout.id),
-    initialData: workout,
-  });
-
+export default function AddCommentForm({
+  workoutId,
+  workoutExerciseId,
+  comment,
+}: {
+  workoutId: number;
+  workoutExerciseId: number;
+  comment: string | null;
+}) {
+  const queryKey = [`exercises-workout-${workoutId}`];
   const queryClient = useQueryClient();
 
   const [editable, setEditable] = useState(false);
@@ -39,41 +36,49 @@ export default function CommentForm({ workout }: { workout: Workout }) {
   const form = useForm<z.infer<typeof commentSchema>>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
-      comment: comment ?? "",
+      comment: comment ? comment : "",
     },
   });
 
   async function onSubmit({ comment }: z.infer<typeof commentSchema>) {
     setEditable(false);
-    await editWorkout(workout.id, { ...workout, comment });
+    await editWorkoutExercise(workoutExerciseId, comment);
     queryClient.invalidateQueries(queryKey);
   }
 
   const { mutate } = useMutation({
     mutationFn: onSubmit,
-    onMutate: async ({ comment }: z.infer<typeof commentSchema>) => {
+    onMutate: async ({ comment }) => {
       await queryClient.cancelQueries({ queryKey });
-      const previous = await queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, { ...workout, comment });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: any) => {
+        return {
+          otherExercises: old.otherExercises,
+          workoutsExercises: old.workoutsExercises.map((e: any) => ({
+            ...e,
+            comment:
+              e.workoutExerciseId === workoutExerciseId ? comment : e.comment,
+          })),
+        };
+      });
       return { previous };
     },
     onError: (err, newExercise, context) =>
-      queryClient.setQueriesData(queryKey, context?.previous),
-    onSettled: async () =>
-      queryClient.invalidateQueries({ queryKey: queryKey }),
+      queryClient.setQueryData(queryKey, context?.previous),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 
   return editable ? (
-    <Card className="mx-auto mb-1 grid w-fit p-1">
+    <Card className="mx-auto mt-2 grid w-fit p-1 sm:mt-0">
       <CardHeader className="p-4 pb-0">
-        <CardTitle className="text-lg">Comment on this workout</CardTitle>
+        <CardTitle className="text-lg">Comment on this exercise</CardTitle>
       </CardHeader>
       <CardContent className="p-4 pb-2">
         <FormProvider {...form}>
           <form
-            onSubmit={form.handleSubmit(
-              async (data: z.infer<typeof commentSchema>) => mutate(data)
-            )}
+            onSubmit={form.handleSubmit(async (data) => mutate(data))}
             className="grid gap-2 pb-2"
           >
             <div className="flex gap-2">
@@ -87,7 +92,7 @@ export default function CommentForm({ workout }: { workout: Workout }) {
                         <FormControl>
                           <Input
                             type="text"
-                            // placeholder={comment}
+                            placeholder={comment ? comment : ""}
                             className="w-full text-center"
                             {...field}
                           />
@@ -118,10 +123,10 @@ export default function CommentForm({ workout }: { workout: Workout }) {
   ) : (
     <Button
       variant={"secondary"}
-      className="mx-auto h-full w-fit max-w-[80%] rounded-2xl rounded-tl-none p-4 font-normal"
+      className="mx-auto mt-2 h-fit w-fit max-w-[80%] rounded-2xl rounded-tl-none p-4 font-normal sm:mt-0 sm:max-w-[300px]"
       onClick={() => setEditable(true)}
     >
-      {comment ? comment : "Leave a comment"}
+      {comment ? comment : "Add comment"}
     </Button>
   );
 }

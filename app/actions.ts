@@ -275,6 +275,7 @@ export async function getExercisesByWorkoutId(workoutId: number) {
         ...exercise,
         workoutExerciseId: workout_exercise.id,
         todo: workout_exercise.todo,
+        comment: workout_exercise.comment,
       }))
     );
 
@@ -591,6 +592,21 @@ export async function editTemplateExercise(
     .update(exercise_template)
     .set({ todo })
     .where(eq(exercise_template.exerciseId, templateExerciseId))
+    .returning()
+    .get();
+}
+
+export async function editWorkoutExercise(
+  workoutExerciseId: number,
+  comment: string
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .update(workout_exercise)
+    .set({ comment })
+    .where(eq(workout_exercise.id, workoutExerciseId))
     .returning()
     .get();
 }
