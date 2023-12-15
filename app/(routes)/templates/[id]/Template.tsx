@@ -254,6 +254,22 @@ export function HoverExercise({
     url: string | null;
   };
 }) {
+  const url = data.url ?? "";
+
+  const playbackId = url?.includes("/watch?v=")
+    ? url?.split("/watch?v=")[1]
+    : url?.includes(".be/")
+    ? url.split(".be/")[1]
+    : url?.includes("?feature=share")
+    ? url?.split("shorts/")[1].split("?feature=share")[0]
+    : url?.includes("shorts/")
+    ? url?.split("shorts/")[1]
+    : "";
+
+  const embedUrl = playbackId
+    ? "https://www.youtube.com/embed/" + playbackId
+    : url;
+
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -264,8 +280,20 @@ export function HoverExercise({
           {data?.title}
         </Button>
       </HoverCardTrigger>
-      <HoverCardContent className="flex w-fit max-w-xs justify-between space-x-4 space-y-1">
-        <p className="text-sm">{data?.instructions || "No instructions"}</p>
+      <HoverCardContent className="grid w-fit max-w-xs place-items-center gap-2 space-x-4 space-y-1 p-2 pb-3">
+        <iframe
+          src={embedUrl}
+          width="299"
+          height="168"
+          title="YouTube video player"
+          frameBorder={0}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          className="rounded-md"
+        ></iframe>
+        <p className="w-full text-left text-sm">
+          {data?.instructions || "No instructions"}
+        </p>
       </HoverCardContent>
     </HoverCard>
   );

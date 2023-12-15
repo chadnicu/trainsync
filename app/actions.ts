@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, inArray, notInArray } from "drizzle-orm";
+import { and, desc, eq, inArray, not, notInArray } from "drizzle-orm";
 import { z } from "zod";
 import {
   exercise,
@@ -18,6 +18,7 @@ import { workoutSchema } from "@/components/WorkoutForm";
 import { setSchema } from "@/components/AddSetForm";
 import { templateToWorkoutSchema } from "@/app/(routes)/templates/[id]/Template";
 import { Workout } from "@/lib/types";
+import { notEqual } from "assert";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -610,4 +611,16 @@ export async function editWorkoutExercise(
     .where(eq(workout_exercise.id, workoutExerciseId))
     .returning()
     .get();
+}
+
+export async function getOtherComments(workoutExerciseId: number) {
+  const { userId } = auth();
+  if (!userId) return [];
+
+  return await db
+    .select()
+    .from(workout_exercise)
+    .where(not(eq(workout_exercise.workoutId, workoutExerciseId)))
+    .orderBy(desc(workout_exercise.id))
+    .all();
 }

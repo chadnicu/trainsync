@@ -29,6 +29,8 @@ export default function AddCommentForm({
   comment: string | null;
 }) {
   const queryKey = [`exercises-workout-${workoutId}`];
+  const commentKey = [`last-comment-${workoutId}`];
+
   const queryClient = useQueryClient();
 
   const [editable, setEditable] = useState(false);
@@ -44,6 +46,7 @@ export default function AddCommentForm({
     setEditable(false);
     await editWorkoutExercise(workoutExerciseId, comment);
     queryClient.invalidateQueries(queryKey);
+    queryClient.invalidateQueries(commentKey);
   }
 
   const { mutate } = useMutation({
@@ -123,7 +126,7 @@ export default function AddCommentForm({
   ) : (
     <Button
       variant={"secondary"}
-      className="mx-auto mt-2 h-fit w-fit max-w-[80%] rounded-2xl rounded-tl-none p-4 font-normal sm:mt-0 sm:max-w-[300px]"
+      className="mx-auto mt-2 h-fit w-fit max-w-[80%] rounded-2xl rounded-tl-none p-4 text-left font-normal sm:mt-0 sm:max-w-[300px]"
       onClick={() => setEditable(true)}
     >
       {comment ? comment : "Add comment"}

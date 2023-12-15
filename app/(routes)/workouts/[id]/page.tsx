@@ -5,6 +5,7 @@ import {
   getCurrentWorkout,
   getExercisesByWorkoutId,
   getLogs,
+  getOtherComments,
 } from "@/app/actions";
 import { Metadata } from "next";
 
@@ -60,10 +61,11 @@ export default async function Page({ params }: { params: { id: string } }) {
 }
 
 async function FetchData({ workoutId }: { workoutId: number }) {
-  const [currentWorkout, exercises, logs] = await Promise.all([
+  const [currentWorkout, exercises, logs, otherComments] = await Promise.all([
     getCurrentWorkout(workoutId),
     getExercisesByWorkoutId(workoutId),
     getLogs(),
+    getOtherComments(workoutId),
   ]);
 
   return (
@@ -71,6 +73,7 @@ async function FetchData({ workoutId }: { workoutId: number }) {
       initialWorkout={currentWorkout}
       initialExercises={exercises}
       initialLogs={logs}
+      initialOtherComments={otherComments}
     />
   );
 }

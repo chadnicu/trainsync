@@ -17,17 +17,20 @@ import {
   editWorkout,
   getCurrentWorkout,
   getExercisesByWorkoutId,
+  getOtherComments,
   getLogs,
   removeExerciseFromWorkout,
 } from "@/app/actions";
 import EditDurationForm from "./EditDurationForm";
 import CommentForm from "./CommentForm";
 import AddCommentForm from "./AddCommentForm";
+import { cn } from "@/lib/utils";
 
 export default function Workout({
   initialWorkout,
   initialExercises,
   initialLogs,
+  initialOtherComments,
 }: {
   initialWorkout: WorkoutType;
   initialExercises: {
@@ -42,11 +45,19 @@ export default function Workout({
     title: string;
     exerciseId: number;
   })[];
+  initialOtherComments: {
+    workoutId: number;
+    id: number;
+    comment: string | null;
+    todo: string | null;
+    exerciseId: number;
+  }[];
 }) {
   const queryClient = useQueryClient();
   const queryKeys = {
     workout: [`workout-${initialWorkout.id}`],
     exercises: [`exercises-workout-${initialWorkout.id}`],
+    lastComment: [`last-comment-${initialWorkout.id}`],
   };
 
   const { data: workout } = useQuery({
@@ -131,6 +142,14 @@ export default function Workout({
     finishedDate && startedDate
       ? new Date(finishedDate.getTime() - startedDate.getTime())
       : null;
+
+  const { data: otherComments } = useQuery({
+    queryKey: queryKeys.lastComment,
+    queryFn: async () => getOtherComments(initialWorkout.id),
+    initialData: initialOtherComments,
+  });
+
+  console.log("other: ", otherComments);
 
   return (
     <>
@@ -246,6 +265,14 @@ export default function Workout({
                           </div>
                         ))}
                     </div>
+                    <p
+                      className={cn(
+                        "w-fit rounded-md rounded-tl-none bg-secondary p-2 text-left text-sm",
+                        { hidden: !getLastComment(otherComments, e.id) }
+                      )}
+                    >
+                      {getLastComment(otherComments, e.id)}
+                    </p>
                     <div className="flex h-full flex-col items-start gap-1">
                       <HoverExercise data={e} />
                       <p className="text-left text-sm italic">{e?.todo}</p>
@@ -360,4 +387,21 @@ function getLastSets(
   }
 
   return arr;
+}
+
+function getLastComment(
+  otherComments:
+    | {
+        id: number;
+        comment: string | null;
+        todo: string | null;
+        workoutId: number;
+        exerciseId: number;
+      }[]
+    | ""
+    | undefined,
+  exerciseId: number
+) {
+  if (!otherComments) return "";
+  return otherComments.find((e) => e.exerciseId === exerciseId)?.comment;
 }
