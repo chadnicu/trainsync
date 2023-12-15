@@ -246,9 +246,9 @@ export default function Workout({
                           </div>
                         ))}
                     </div>
-                    <div className="h-full">
+                    <div className="flex h-full flex-col items-start gap-1">
                       <HoverExercise data={e} />
-                      <p className="text-sm italic">{e?.todo}</p>
+                      <p className="text-left text-sm italic">{e?.todo}</p>
                     </div>
                     <div>
                       <DeleteButton mutate={() => mutate(e.id)} />

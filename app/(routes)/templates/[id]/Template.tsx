@@ -259,7 +259,7 @@ export function HoverExercise({
       <HoverCardTrigger asChild>
         <Button
           variant={"link"}
-          className="p-0 text-left text-xl font-bold text-foreground"
+          className="h-full p-0 text-left text-xl font-bold text-foreground"
         >
           {data?.title}
         </Button>
