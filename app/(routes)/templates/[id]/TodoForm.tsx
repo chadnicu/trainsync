@@ -30,7 +30,10 @@ export default function TodoForm({
   templateId: number;
   exerciseTemplateId: number;
   exercises: {
-    templatesExercises: (Exercise & { todo: string | null })[];
+    templatesExercises: (Exercise & {
+      todo: string | null;
+      exerciseTemplateId: number;
+    })[];
     otherExercises: Exercise[];
   };
 }) {
@@ -48,9 +51,10 @@ export default function TodoForm({
       const previous = queryClient.getQueryData(queryKey);
       queryClient.setQueryData(queryKey, (old: any) => ({
         ...exercises,
+        // ...old,
         templatesExercises: exercises.templatesExercises.map((e) => ({
           ...e,
-          todo: e.id === exerciseTemplateId ? todo : e.todo,
+          todo: e.exerciseTemplateId === exerciseTemplateId ? todo : e.todo,
         })),
       }));
       return { previous };
@@ -69,8 +73,9 @@ export default function TodoForm({
     resolver: zodResolver(todoSchema),
     defaultValues: {
       todo:
-        exercises.templatesExercises.find((e) => e.id === exerciseTemplateId)
-          ?.todo ?? "",
+        exercises.templatesExercises.find(
+          (e) => e.exerciseTemplateId === exerciseTemplateId
+        )?.todo ?? "",
     },
   });
 

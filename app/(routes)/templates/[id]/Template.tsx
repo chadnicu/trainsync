@@ -46,7 +46,10 @@ import TodoForm from "./TodoForm";
 
 type Props = {
   template: TemplateType;
-  templatesExercises: (Exercise & { todo: string | null })[];
+  templatesExercises: (Exercise & {
+    todo: string | null;
+    exerciseTemplateId: number;
+  })[];
   otherExercises: Exercise[];
 };
 
@@ -208,15 +211,18 @@ export default function Template({
       <div className="flex flex-col items-center gap-5 px-5 md:justify-around">
         <div className="grid gap-2">
           {data.templatesExercises.map((e) => (
-            <Card key={e?.id} className="flex justify-between">
-              <CardHeader>
+            <Card
+              key={e?.id}
+              className="flex items-center justify-between py-2"
+            >
+              <CardHeader className="flex items-start pr-1 sm:pr-2">
                 <HoverExercise data={e} />
-                <p>{e?.todo}</p>
+                <p className="text-left sm:max-w-[300px]">{e?.todo}</p>
               </CardHeader>
-              <CardContent className="flex items-center justify-center gap-2 py-0">
+              <CardContent className="flex flex-col items-center justify-center gap-2 py-1 pl-1 sm:flex-row sm:pl-2">
                 <TodoForm
                   templateId={template.id}
-                  exerciseTemplateId={e?.id}
+                  exerciseTemplateId={e?.exerciseTemplateId}
                   exercises={{ templatesExercises, otherExercises }}
                 />
                 <DeleteButton mutate={() => mutate(e?.id)} className="w-fit" />

@@ -210,6 +210,7 @@ export async function getExercisesByTemplateId(templateId: number) {
       data.map(({ exercise, exercise_template }) => ({
         ...exercise,
         todo: exercise_template.todo,
+        exerciseTemplateId: exercise_template.id,
       }))
     );
 
@@ -591,7 +592,7 @@ export async function editTemplateExercise(
   await db
     .update(exercise_template)
     .set({ todo })
-    .where(eq(exercise_template.exerciseId, templateExerciseId))
+    .where(eq(exercise_template.id, templateExerciseId))
     .returning()
     .get();
 }
