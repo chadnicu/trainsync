@@ -21,3 +21,4 @@ export default function Exercises({ exercises }: { exercises: Exercise[] }) {
     </div>
   );
 }
+
