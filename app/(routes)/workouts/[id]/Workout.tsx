@@ -25,6 +25,7 @@ import EditDurationForm from "./EditDurationForm";
 import CommentForm from "./CommentForm";
 import AddCommentForm from "./AddCommentForm";
 import { cn } from "@/lib/utils";
+import { ExerciseCarousel } from "@/components/Carousel";
 
 export default function Workout({
   initialWorkout,
@@ -239,13 +240,22 @@ export default function Workout({
         <CommentForm workout={workout} />
       </div>
       <div className="flex flex-col items-center gap-10 md:items-center md:justify-center md:gap-5">
-        <div className="grid gap-5 px-5">
+        <ExerciseCarousel
+          workoutsExercises={exercises.workoutsExercises}
+          sets={sets}
+          otherComments={otherComments}
+          mutate={(id: number) => mutate(id)}
+          setEditable={(id: number) => setEditable(id)}
+          editable={editable}
+          mutateSet={(id: number) => mutateSet(id)}
+        />
+        {/* <div className="grid gap-5 px-5">
           {exercises.workoutsExercises.map((e) => (
             <div
               key={e.id}
               className="grid place-items-center  sm:flex sm:justify-between sm:gap-5"
             >
-              <Card className="mb-2 md:flex md:items-center">
+              <Card className="mb-2 w-fit md:flex md:items-center">
                 <CardHeader>
                   <div className="grid h-full justify-between gap-2">
                     <div
@@ -267,7 +277,7 @@ export default function Workout({
                     </div>
                     <p
                       className={cn(
-                        "w-fit rounded-md rounded-tl-none bg-secondary p-2 text-left text-sm",
+                        "w-fit max-w-xs rounded-md rounded-tl-none bg-secondary p-2 text-left text-sm",
                         { hidden: !getLastComment(otherComments, e.id) }
                       )}
                     >
@@ -275,7 +285,9 @@ export default function Workout({
                     </p>
                     <div className="flex h-full flex-col items-start gap-1">
                       <HoverExercise data={e} />
-                      <p className="text-left text-sm italic">{e?.todo}</p>
+                      <p className="max-w-xs text-left text-sm italic">
+                        {e?.todo}
+                      </p>
                     </div>
                     <div>
                       <DeleteButton mutate={() => mutate(e.id)} />
@@ -341,7 +353,7 @@ export default function Workout({
               />
             </div>
           ))}
-        </div>
+        </div> */}
 
         <WorkoutComboBox
           exercises={exercises.otherExercises.map((e) => ({
