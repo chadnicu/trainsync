@@ -26,6 +26,7 @@ export const metadata: Metadata = {
   applicationName: "TrainSync",
   authors: { name: "iusedebian", url: "https://twitter.com/iusedebian" },
   creator: "Onța Nicolae",
+  verification: { google: "RyOELjHapTTX8egYZHTY5ZIdJO47EPgiddC4u4qVOq8" },
 };
 
 const inter = Inter({ subsets: ["latin"] });
