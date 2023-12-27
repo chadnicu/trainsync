@@ -17,7 +17,7 @@ import {
 } from "@/app/actions";
 import EditDurationForm from "./EditDurationForm";
 import CommentForm from "./CommentForm";
-import { ExerciseCarousel } from "@/components/Carousel";
+import { ExerciseCarousel } from "@/components/ExerciseCarousel";
 
 export default function Workout({
   initialWorkout,
