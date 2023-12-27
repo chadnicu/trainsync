@@ -1,16 +1,10 @@
 "use client";
 
 import TimePassed from "./TimePassed";
-import AddSetForm from "@/components/AddSetForm";
-import EditSetForm from "@/components/EditSetForm";
 import WorkoutComboBox from "@/components/WorkoutComboBox";
 import { useState } from "react";
 import { Exercise, Set, Workout as WorkoutType } from "@/lib/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { DeleteButton } from "@/components/DeleteButton";
-import { Icons } from "@/components/ui/icons";
-import { HoverExercise } from "@/app/(routes)/templates/[id]/Template";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   deleteSet,
@@ -23,8 +17,6 @@ import {
 } from "@/app/actions";
 import EditDurationForm from "./EditDurationForm";
 import CommentForm from "./CommentForm";
-import AddCommentForm from "./AddCommentForm";
-import { cn } from "@/lib/utils";
 import { ExerciseCarousel } from "@/components/Carousel";
 
 export default function Workout({

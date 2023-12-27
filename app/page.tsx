@@ -5,7 +5,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 export default function Page() {
   return (
     <div className="mb-20 break-words text-center font-bold sm:mb-10">
-      <h1 className="pl-2 text-6xl tracking-[-3px] sm:text-7xl xl:text-9xl md:text-8xl">
+      <h1 className="pl-2 text-6xl tracking-[-3px] sm:text-7xl md:text-8xl xl:text-9xl">
         Train
         <span className="text-primary-gradient pr-2">Sync</span>
       </h1>
