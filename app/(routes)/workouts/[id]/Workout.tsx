@@ -145,8 +145,8 @@ export default function Workout({
   console.log("other: ", otherComments);
 
   return (
-    <>
-      <div className="grid gap-2">
+    <div className="flex flex-col xl:flex-row xl:gap-20">
+      <div className="grid max-w-md gap-2">
         <h3 className="text-sm">
           {initialWorkout.date.toString().slice(0, 15)}
         </h3>
@@ -357,7 +357,7 @@ export default function Workout({
           workoutId={initialWorkout.id}
         />
       </div>
-    </>
+    </div>
   );
 }
 

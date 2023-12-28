@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/carousel";
 import { Exercise, Set, Workout } from "@/lib/types";
 import { cn } from "@/lib/utils";
-// import { HoverExercise } from "@/app/(routes)/templates/[id]/Template";
 import { DeleteButton } from "./DeleteButton";
 import { Icons } from "./ui/icons";
 import EditSetForm from "./EditSetForm";
