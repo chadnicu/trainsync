@@ -43,6 +43,7 @@ import {
   removeExerciseFromTemplate,
 } from "@/app/actions";
 import TodoForm from "./TodoForm";
+import { ExerciseDrawer } from "@/components/ExerciseDrawer";
 
 type Props = {
   template: TemplateType;
@@ -216,7 +217,8 @@ export default function Template({
               className="flex items-center justify-between py-2"
             >
               <CardHeader className="flex items-start pr-1 sm:pr-2">
-                <HoverExercise data={e} />
+                {/* <HoverExercise data={e} /> */}
+                <ExerciseDrawer data={e} />
                 <p className="text-left sm:max-w-[300px]">{e?.todo}</p>
               </CardHeader>
               <CardContent className="flex flex-col items-center justify-center gap-2 py-1 pl-1 sm:flex-row sm:pl-2">
@@ -244,60 +246,60 @@ export default function Template({
   );
 }
 
-export function HoverExercise({
-  data,
-}: {
-  data: {
-    id: number;
-    title: string;
-    instructions: string | null;
-    url: string | null;
-  };
-}) {
-  const url = data.url ?? "";
+// export function HoverExercise({
+//   data,
+// }: {
+//   data: {
+//     id: number;
+//     title: string;
+//     instructions: string | null;
+//     url: string | null;
+//   };
+// }) {
+//   const url = data.url ?? "";
 
-  const playbackId = url?.includes("/watch?v=")
-    ? url?.split("/watch?v=")[1]
-    : url?.includes(".be/")
-    ? url.split(".be/")[1]
-    : url?.includes("?feature=share")
-    ? url?.split("shorts/")[1].split("?feature=share")[0]
-    : url?.includes("shorts/")
-    ? url?.split("shorts/")[1]
-    : "";
+//   const playbackId = url?.includes("/watch?v=")
+//     ? url?.split("/watch?v=")[1]
+//     : url?.includes(".be/")
+//     ? url.split(".be/")[1]
+//     : url?.includes("?feature=share")
+//     ? url?.split("shorts/")[1].split("?feature=share")[0]
+//     : url?.includes("shorts/")
+//     ? url?.split("shorts/")[1]
+//     : "";
 
-  const embedUrl = playbackId
-    ? "https://www.youtube.com/embed/" + playbackId
-    : url;
+//   const embedUrl = playbackId
+//     ? "https://www.youtube.com/embed/" + playbackId
+//     : url;
 
-  return (
-    <HoverCard>
-      <HoverCardTrigger asChild>
-        <Button
-          variant={"link"}
-          className="h-full w-fit p-0 text-left text-xl font-bold text-foreground"
-        >
-          {data?.title}
-        </Button>
-      </HoverCardTrigger>
-      <HoverCardContent className="grid w-fit max-w-xs place-items-center gap-2 space-x-4 space-y-1 p-2 pb-3">
-        <iframe
-          src={embedUrl}
-          width="299"
-          height="168"
-          title="YouTube video player"
-          frameBorder={0}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          className="rounded-md"
-        ></iframe>
-        <p className="w-full text-left text-sm">
-          {data?.instructions || "No instructions"}
-        </p>
-      </HoverCardContent>
-    </HoverCard>
-  );
-}
+//   return (
+//     <HoverCard>
+//       <HoverCardTrigger asChild>
+//         <Button
+//           variant={"link"}
+//           className="h-full w-fit p-0 text-left text-xl font-bold text-foreground"
+//         >
+//           {data?.title}
+//         </Button>
+//       </HoverCardTrigger>
+//       <HoverCardContent className="grid w-fit max-w-xs place-items-center gap-2 space-x-4 space-y-1 p-2 pb-3">
+//         <iframe
+//           src={embedUrl}
+//           width="299"
+//           height="168"
+//           title="YouTube video player"
+//           frameBorder={0}
+//           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+//           allowFullScreen
+//           className="rounded-md"
+//         ></iframe>
+//         <p className="w-full text-left text-sm">
+//           {data?.instructions || "No instructions"}
+//         </p>
+//       </HoverCardContent>
+//     </HoverCard>
+//   );
+// }
 
 function DatePicker({
   field,

@@ -240,6 +240,7 @@ export default function Workout({
           setEditable={(id: number) => setEditable(id)}
           editable={editable}
           mutateSet={(id: number) => mutateSet(id)}
+          workout={workout}
         />
         {/* <div className="grid gap-5 px-5">
           {exercises.workoutsExercises.map((e) => (

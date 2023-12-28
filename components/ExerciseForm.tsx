@@ -110,7 +110,7 @@ export default function ExerciseForm() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <div className="flex justify-center lg:justify-end">
+              <div className="flex justify-center">
                 <form
                   onSubmit={form.handleSubmit(
                     async (data: z.infer<typeof exerciseSchema>) => mutate(data)

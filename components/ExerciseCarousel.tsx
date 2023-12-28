@@ -8,12 +8,15 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Exercise, Set } from "@/lib/types";
+import { Exercise, Set, Workout } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { HoverExercise } from "@/app/(routes)/templates/[id]/Template";
 import { DeleteButton } from "./DeleteButton";
 import { Icons } from "./ui/icons";
 import EditSetForm from "./EditSetForm";
+import AddSetForm from "./AddSetForm";
+import AddCommentForm from "@/app/(routes)/workouts/[id]/AddCommentForm";
+import { ExerciseDrawer } from "./ExerciseDrawer";
 
 export function ExerciseCarousel({
   workoutsExercises,
@@ -23,6 +26,7 @@ export function ExerciseCarousel({
   setEditable,
   editable,
   mutateSet,
+  workout,
 }: {
   workoutsExercises: (Exercise & {
     workoutExerciseId: number;
@@ -44,6 +48,7 @@ export function ExerciseCarousel({
   setEditable: (id: number) => void;
   editable: number;
   mutateSet: (id: number) => void;
+  workout: Workout;
 }) {
   return (
     <Carousel className="w-full max-w-[250px] sm:max-w-xs">
@@ -80,17 +85,18 @@ export function ExerciseCarousel({
                     {getLastComment(otherComments, e.id)}
                   </p>
                   <div className="flex h-full flex-col items-start gap-1">
-                    <HoverExercise data={e} />
-                    <p className="max-w-xs text-center text-sm italic">
+                    {/* <HoverExercise data={e} /> */}
+                    <ExerciseDrawer data={e} />
+                    <p className="max-w-xs text-left text-sm italic">
                       {e?.todo}
                     </p>
                   </div>
-                  <div>
+                  <div className="w-fit">
                     <DeleteButton mutate={() => mutate(e.id)} />
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="m-0 flex h-full items-center justify-center px-0 pb-4 md:py-0">
+              <CardContent className="m-0 mb-2 flex h-full flex-col items-center justify-center px-0 pb-4 md:py-0">
                 <div className="py-0 md:py-4">
                   {sets.map((set) => {
                     if (set.workoutExerciseId === e.workoutExerciseId)
@@ -131,6 +137,19 @@ export function ExerciseCarousel({
                         </div>
                       );
                   })}
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <AddSetForm
+                    workout={workout}
+                    workoutExerciseId={e.workoutExerciseId}
+                    disabled={!workout.started}
+                    id={workout.id}
+                  />
+                  <AddCommentForm
+                    workoutId={workout.id}
+                    workoutExerciseId={e.workoutExerciseId}
+                    comment={e.comment}
+                  />
                 </div>
               </CardContent>
             </Card>
