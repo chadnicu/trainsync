@@ -74,17 +74,17 @@ async function NavbarWithData() {
   const queryClient = getQueryClient();
   const prefetchFunctions = [
     (async () =>
-      queryClient.prefetchQuery({
+      await queryClient.prefetchQuery({
         queryKey: ["templates"],
         queryFn: getTemplates,
       }))(),
     (async () =>
-      queryClient.prefetchQuery({
+      await queryClient.prefetchQuery({
         queryKey: ["workouts"],
         queryFn: getWorkouts,
       }))(),
     (async () =>
-      queryClient.prefetchQuery({
+      await queryClient.prefetchQuery({
         queryKey: ["logs"],
         queryFn: getLogs,
       }))(),
