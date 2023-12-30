@@ -18,34 +18,24 @@ import { ThemeChanger } from "./ThemeChanger";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
-import { Set, Template, Workout } from "@/lib/types";
 
-type Props = {
-  workouts: Workout[];
-  templates: Template[];
-  logs: (Set & {
-    title: string;
-    exerciseId: number;
-  })[];
-};
-
-export default function Navbar({ initialData }: { initialData?: Props }) {
+export default function Navbar() {
   const { data: templates } = useQuery({
     queryKey: ["templates"],
     queryFn: async () => getTemplates(),
-    initialData: initialData?.templates ?? [],
+    initialData: [],
   });
 
   const { data: workouts } = useQuery({
     queryKey: ["workouts"],
     queryFn: async () => getWorkouts(),
-    initialData: initialData?.workouts ?? [],
+    initialData: [],
   });
 
   const { data: logs } = useQuery({
     queryKey: ["logs"],
     queryFn: async () => getLogs(),
-    initialData: initialData?.logs ?? [],
+    initialData: [],
   });
 
   const filteredLogs = filterLogs(logs);
