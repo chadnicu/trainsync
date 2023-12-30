@@ -1,6 +1,6 @@
 export default function LoadingPage({ text }: { text: string }) {
   return (
-    <div className="absolute inset-0 mx-auto flex h-screen w-screen flex-col items-center justify-center overflow-hidden bg-foreground dark:bg-background">
+    <div className="absolute inset-0 mx-auto flex h-screen w-screen flex-col items-center justify-center overflow-hidden bg-background">
       <div className="mb-4 h-12 w-12 animate-spin">
         <svg
           className="h-full w-full"
