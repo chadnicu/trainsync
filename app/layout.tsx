@@ -71,29 +71,10 @@ export default async function RootLayout({
 }
 
 async function NavbarWithData() {
-  const queryClient = getQueryClient();
-  const prefetchFunctions = [
-    (async () =>
-      await queryClient.prefetchQuery({
-        queryKey: ["logs"],
-        queryFn: getLogs,
-      }))(),
-    (async () =>
-      await queryClient.prefetchQuery({
-        queryKey: ["templates"],
-        queryFn: getTemplates,
-      }))(),
-    (async () =>
-      await queryClient.prefetchQuery({
-        queryKey: ["workouts"],
-        queryFn: getWorkouts,
-      }))(),
-  ];
-  await Promise.all(prefetchFunctions);
-  const dehydratedState = dehydrate(queryClient);
-  return (
-    <Hydrate state={dehydratedState}>
-      <Navbar />
-    </Hydrate>
-  );
+  const [workouts, templates, logs] = await Promise.all([
+    getWorkouts(),
+    getTemplates(),
+    getLogs(),
+  ]);
+  return <Navbar initialData={{ workouts, templates, logs }} />;
 }

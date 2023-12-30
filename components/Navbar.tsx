@@ -18,24 +18,34 @@ import { ThemeChanger } from "./ThemeChanger";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
+import { Set, Template, Workout } from "@/lib/types";
 
-export default function Navbar({ className }: { className?: string }) {
+type Props = {
+  workouts: Workout[];
+  templates: Template[];
+  logs: (Set & {
+    title: string;
+    exerciseId: number;
+  })[];
+};
+
+export default function Navbar({ initialData }: { initialData?: Props }) {
   const { data: templates } = useQuery({
     queryKey: ["templates"],
     queryFn: async () => getTemplates(),
-    initialData: [],
+    initialData: initialData?.templates ?? [],
   });
 
   const { data: workouts } = useQuery({
     queryKey: ["workouts"],
     queryFn: async () => getWorkouts(),
-    initialData: [],
+    initialData: initialData?.workouts ?? [],
   });
 
   const { data: logs } = useQuery({
     queryKey: ["logs"],
     queryFn: async () => getLogs(),
-    initialData: [],
+    initialData: initialData?.logs ?? [],
   });
 
   const filteredLogs = filterLogs(logs);
@@ -47,7 +57,7 @@ export default function Navbar({ className }: { className?: string }) {
   return (
     <>
       <NavigationMenu className="sticky top-0 hidden flex-none justify-between border-b bg-background p-3 sm:flex">
-        <NavigationMenuList className={className}>
+        <NavigationMenuList>
           <NavigationMenuItem>
             <Link href="/" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
