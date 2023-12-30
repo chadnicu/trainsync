@@ -12,13 +12,14 @@ export default function Exercises() {
     initialData: [],
   });
 
-  if (!isFetched) {
-    <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 xl:grid-cols-3">
-      {Array.from({ length: 10 }, (_, i) => (
-        <ExerciseSkeleton key={i} />
-      ))}
-    </div>;
-  }
+  if (!isFetched)
+    return (
+      <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 10 }, (_, i) => (
+          <ExerciseSkeleton key={i} />
+        ))}
+      </div>
+    );
 
   return (
     <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 xl:grid-cols-3">
