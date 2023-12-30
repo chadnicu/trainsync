@@ -18,10 +18,9 @@ export default function Logs() {
   const { data, isFetched } = useQuery({
     queryKey: ["logs"],
     queryFn: async () => getLogs(),
-    initialData: [],
   });
 
-  const filteredLogs = filterLogs(data);
+  const filteredLogs = data ? filterLogs(data) : data;
 
   if (!isFetched)
     // renew this for new layout
@@ -35,8 +34,8 @@ export default function Logs() {
 
   return (
     <div className="grid h-full w-full grid-cols-1 place-items-center items-end gap-3 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {!data.length && <p>you have no logs</p>}
-      {filteredLogs.map((e) => (
+      {!data?.length && <p>you have no logs</p>}
+      {filteredLogs?.map((e) => (
         <Card key={e.id} className="w-full max-w-[300px]">
           <CardHeader className="break-words">
             <HoverLog log={e} />

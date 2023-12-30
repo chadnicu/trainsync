@@ -9,7 +9,6 @@ export default function Exercises() {
   const { data, isFetched } = useQuery({
     queryKey: ["exercises"],
     queryFn: async () => getExercises(),
-    initialData: [],
   });
 
   if (!isFetched)

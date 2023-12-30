@@ -9,7 +9,6 @@ export default function Templates() {
   const { data, isFetched } = useQuery({
     queryKey: ["templates"],
     queryFn: async () => getTemplates(),
-    initialData: [],
   });
 
   if (!isFetched)
@@ -23,8 +22,8 @@ export default function Templates() {
 
   return (
     <div className="grid grid-cols-1 place-items-center items-start gap-10 lg:grid-cols-2 xl:grid-cols-3">
-      {!data.length && <p>you have no templates</p>}
-      {data.map((template) => (
+      {!data?.length && <p>you have no templates</p>}
+      {data?.map((template) => (
         <TemplateCard key={template.id} template={template} />
       ))}
     </div>

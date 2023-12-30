@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Workouts",
 };
 
-export default async function Page() {
+export default function Page() {
   return (
     <>
       <h1 className="text-center text-5xl font-bold">Workouts</h1>
