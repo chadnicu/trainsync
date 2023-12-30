@@ -19,7 +19,7 @@ import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
 
-export default function Navbar() {
+export default function Navbar({ className }: { className?: string }) {
   const { data: templates } = useQuery({
     queryKey: ["templates"],
     queryFn: async () => getTemplates(),
@@ -47,7 +47,7 @@ export default function Navbar() {
   return (
     <>
       <NavigationMenu className="sticky top-0 hidden flex-none justify-between border-b bg-background p-3 sm:flex">
-        <NavigationMenuList>
+        <NavigationMenuList className={className}>
           <NavigationMenuItem>
             <Link href="/" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>

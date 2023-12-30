@@ -93,7 +93,7 @@ async function NavbarWithData() {
   const dehydratedState = dehydrate(queryClient);
   return (
     <Hydrate state={dehydratedState}>
-      <Navbar />
+      <Navbar className="bg-red-500" />
     </Hydrate>
   );
 }
