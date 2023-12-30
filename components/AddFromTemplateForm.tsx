@@ -2,7 +2,7 @@
 
 import { Template } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ControllerRenderProps, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -31,7 +31,7 @@ import {
 import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
-import { addTemplateToWorkout } from "@/app/actions";
+import { addTemplateToWorkout, getTemplates } from "@/app/actions";
 import {
   Card,
   CardContent,
@@ -39,6 +39,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 const fromTemplateSchema = z.object({
   date: z.date({
@@ -47,14 +48,8 @@ const fromTemplateSchema = z.object({
   templateId: z.coerce.number().positive(),
 });
 
-export default function AddFromTemplateForm({
-  templates,
-}: {
-  templates: Template[];
-}) {
+export default function AddFromTemplateForm() {
   const [open, setOpen] = useState(false);
-
-  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof fromTemplateSchema>>({
     resolver: zodResolver(fromTemplateSchema),
@@ -62,6 +57,14 @@ export default function AddFromTemplateForm({
       date: new Date(),
       templateId: 0,
     },
+  });
+
+  const queryClient = useQueryClient();
+
+  const { data: templates, isFetched } = useQuery({
+    queryKey: ["templates"],
+    queryFn: async () => getTemplates(),
+    initialData: [],
   });
 
   const { mutate: addOptimistically } = useMutation({
@@ -93,6 +96,15 @@ export default function AddFromTemplateForm({
       queryClient.setQueryData(["workouts"], context?.previous),
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["workouts"] }),
   });
+
+  if (!isFetched)
+    return (
+      <Button variant={"outline"} className="w-full overflow-hidden p-0">
+        <Skeleton className="flex h-10 w-full items-center px-4">
+          Add from template
+        </Skeleton>
+      </Button>
+    );
 
   return (
     <>

@@ -12,19 +12,26 @@ import {
 } from "@/components/ui/hover-card";
 import { Card, CardHeader } from "@/components/ui/card";
 import { getLogs } from "@/app/actions";
+import LogSkeleton from "@/components/LogSkeleton";
 
-export default function Logs({
-  logs,
-}: {
-  logs: (Set & { title: string; exerciseId: number })[];
-}) {
-  const { data } = useQuery({
+export default function Logs() {
+  const { data, isFetched } = useQuery({
     queryKey: ["logs"],
     queryFn: async () => getLogs(),
-    initialData: logs,
+    initialData: [],
   });
 
   const filteredLogs = filterLogs(data);
+
+  if (!isFetched)
+    // renew this for new layout
+    return (
+      <div className="flex h-full w-[93vw] flex-wrap justify-center gap-[1%] gap-y-3 px-10">
+        {Array.from({ length: 16 }, (_, i) => (
+          <LogSkeleton key={i} />
+        ))}
+      </div>
+    );
 
   return (
     <div className="grid h-full w-full grid-cols-1 place-items-center items-end gap-3 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

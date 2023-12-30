@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
+export const dynamic = "force-static";
+
 export default function Page() {
   return (
     <div className="mb-20 break-words text-center font-bold sm:mb-10">

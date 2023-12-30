@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-
 import { cn, filterLogs } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -19,36 +18,24 @@ import { ThemeChanger } from "./ThemeChanger";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
-import { Set, Template, Workout } from "@/lib/types";
 
-export default function Navbar({
-  initialTemplates,
-  initialWorkouts,
-  initialLogs,
-}: {
-  initialTemplates: Template[];
-  initialWorkouts: Workout[];
-  initialLogs: (Set & {
-    title: string;
-    exerciseId: number;
-  })[];
-}) {
+export default function Navbar() {
   const { data: templates } = useQuery({
     queryKey: ["templates"],
     queryFn: async () => getTemplates(),
-    initialData: initialTemplates,
+    initialData: [],
   });
 
   const { data: workouts } = useQuery({
     queryKey: ["workouts"],
     queryFn: async () => getWorkouts(),
-    initialData: initialWorkouts,
+    initialData: [],
   });
 
   const { data: logs } = useQuery({
     queryKey: ["logs"],
     queryFn: async () => getLogs(),
-    initialData: initialLogs,
+    initialData: [],
   });
 
   const filteredLogs = filterLogs(logs);
@@ -143,7 +130,7 @@ export default function Navbar({
                 <ListItem key={"logs"} title={"All logs"} href={`/logs`}>
                   {"View all of your logs"}
                 </ListItem>
-                {filteredLogs.map((log) =>
+                {filteredLogs?.map((log) =>
                   log.id ? (
                     <ListItem
                       key={log.id}

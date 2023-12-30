@@ -61,6 +61,7 @@ async function FetchTemplate({ id }: { id: string }) {
   ]);
 
   return (
+    // schimba pe <Hydrate/> cand ai timp ca mai multe componente au nev
     <Template
       template={template}
       templatesExercises={templatesExercises}

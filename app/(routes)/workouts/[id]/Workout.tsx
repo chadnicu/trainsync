@@ -23,7 +23,7 @@ export default function Workout({
   initialWorkout,
   initialExercises,
   initialLogs,
-  initialOtherComments,
+  initialOtherComments
 }: {
   initialWorkout: WorkoutType;
   initialExercises: {

@@ -1,15 +1,22 @@
 import "./globals.css";
-import Providers from "../providers/providers";
 import Navbar from "@/components/Navbar";
-import NavbarSkeleton from "@/components/NavbarSkeleton";
 import { ReactNode, Suspense } from "react";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
-import { getLogs, getTemplates, getWorkouts } from "@/app/actions";
 import { Metadata } from "next";
+import { getLogs, getTemplates, getWorkouts } from "./actions";
+import { dark } from "@clerk/themes";
+import LoadingPage from "@/components/LoadingPage";
+import { ClerkProvider } from "@clerk/nextjs";
+import {
+  NextThemeProvider,
+  TanstackQueryProvider,
+} from "@/app/client-side-providers";
+import { Hydrate, dehydrate } from "@tanstack/react-query";
+import getQueryClient from "@/hooks/get-query-client";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://trainsync.vercel.app"),
@@ -39,34 +46,54 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className, "tracking-tight")}>
-        <Providers className="grid min-h-screen items-start ">
-          <Suspense fallback={<NavbarSkeleton />}>
-            <AsyncNavbar />
-          </Suspense>
-          <div>
-            {children}
-            <Toaster />
-            <Analytics />
-            <SpeedInsights />
-          </div>
-        </Providers>
+        <Suspense fallback={<LoadingPage text="Clerk.." />}>
+          <ClerkProvider appearance={{ baseTheme: dark }}>
+            <TanstackQueryProvider>
+              <NextThemeProvider>
+                <div className="grid min-h-screen items-start">
+                  <Suspense fallback={<Navbar />}>
+                    <NavbarWithData />
+                  </Suspense>
+                  <div>
+                    {children}
+                    <Toaster />
+                    <Analytics />
+                    <SpeedInsights />
+                  </div>
+                </div>
+              </NextThemeProvider>
+            </TanstackQueryProvider>
+          </ClerkProvider>
+        </Suspense>
       </body>
     </html>
   );
 }
 
-async function AsyncNavbar() {
-  const [templates, workouts, logs] = await Promise.all([
-    getTemplates(),
-    getWorkouts(),
-    getLogs(),
-  ]);
-
+async function NavbarWithData() {
+  const queryClient = getQueryClient();
+  const prefetchFunctions = [
+    (async () =>
+      queryClient.prefetchQuery({
+        queryKey: ["templates"],
+        queryFn: getTemplates,
+      }))(),
+    (async () =>
+      queryClient.prefetchQuery({
+        queryKey: ["workouts"],
+        queryFn: getWorkouts,
+      }))(),
+    (async () =>
+      queryClient.prefetchQuery({
+        queryKey: ["logs"],
+        queryFn: getLogs,
+      }))(),
+  ];
+  await Promise.all(prefetchFunctions);
+  const dehydratedState = dehydrate(queryClient);
   return (
-    <Navbar
-      initialTemplates={templates}
-      initialWorkouts={workouts}
-      initialLogs={logs}
-    />
+    <Hydrate state={dehydratedState}>
+      <Navbar />
+    </Hydrate>
   );
 }

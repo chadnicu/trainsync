@@ -1,10 +1,6 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-import { ReactNode, Suspense } from "react";
-
-export function ClerkAsyncProvider({ children }: { children: ReactNode }) {
-  const fallback = (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background">
+export default function LoadingPage({ text }: { text: string }) {
+  return (
+    <div className="absolute inset-0 mx-auto flex h-screen w-screen flex-col items-center justify-center overflow-hidden bg-background">
       <div className="mb-4 h-12 w-12 animate-spin">
         <svg
           className="h-full w-full"
@@ -26,21 +22,7 @@ export function ClerkAsyncProvider({ children }: { children: ReactNode }) {
           <line x1="16.24" x2="19.07" y1="7.76" y2="4.93" />
         </svg>
       </div>
-      <p className="text-lg font-medium text-foreground">
-        Loading, please wait...
-      </p>
+      <p className="text-lg font-medium text-foreground">Loading {text}</p>
     </div>
-  );
-
-  return (
-    <Suspense fallback={fallback}>
-      <ClerkProvider
-        appearance={{
-          baseTheme: dark,
-        }}
-      >
-        {children}
-      </ClerkProvider>
-    </Suspense>
   );
 }

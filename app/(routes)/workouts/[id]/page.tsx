@@ -69,6 +69,8 @@ async function FetchData({ workoutId }: { workoutId: number }) {
   ]);
 
   return (
+    // numa logs as putea scoate
+    // schimba pe <Hydrate/> cand ai timp ca multe componente au nev
     <Workout
       initialWorkout={currentWorkout}
       initialExercises={exercises}
