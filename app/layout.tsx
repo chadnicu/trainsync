@@ -75,6 +75,11 @@ async function NavbarWithData() {
   const prefetchFunctions = [
     (async () =>
       await queryClient.prefetchQuery({
+        queryKey: ["logs"],
+        queryFn: getLogs,
+      }))(),
+    (async () =>
+      await queryClient.prefetchQuery({
         queryKey: ["templates"],
         queryFn: getTemplates,
       }))(),
@@ -83,17 +88,12 @@ async function NavbarWithData() {
         queryKey: ["workouts"],
         queryFn: getWorkouts,
       }))(),
-    (async () =>
-      await queryClient.prefetchQuery({
-        queryKey: ["logs"],
-        queryFn: getLogs,
-      }))(),
   ];
   await Promise.all(prefetchFunctions);
   const dehydratedState = dehydrate(queryClient);
   return (
     <Hydrate state={dehydratedState}>
-      <Navbar className="bg-red-500" />
+      <Navbar />
     </Hydrate>
   );
 }
