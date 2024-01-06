@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 
 export default function MainFooter() {
   const className = cn(
-    buttonVariants({ variant: "link", fontSize: "md" }),
+    buttonVariants({ variant: "link", fontSize: "sm" }),
     "-ml-3 -mr-4"
   );
 
   return (
-    <footer className="p-5 sm:text-center border-t">
+    <footer className="p-2 text-sm sm:text-center border-t">
       <h3 className="tracking-tight">
         Made by
         <Link href="https://twitter.com/iusedebian" className={className}>

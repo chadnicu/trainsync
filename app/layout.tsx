@@ -5,6 +5,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { GeistSans } from "geist/font/sans";
 import MainNavbar from "@/components/main-nav";
 import MainFooter from "@/components/main-footer";
+import ClerkProvider from "@/components/clerk-provider";
+import { dark } from "@clerk/themes";
+import { TanstackQueryProvider } from "@/components/query-provider";
 
 // remove if no need for inter
 // import { Inter as FontSans } from "next/font/google";
@@ -25,22 +28,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          GeistSans.className,
-          "min-h-screen flex flex-col justify-between bg-background antialiased leading-tight lg:leading-[1.1] gap-10"
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+      <body className={GeistSans.className}>
+        <ClerkProvider
+          appearance={{ baseTheme: dark }}
+          className="min-h-screen flex flex-col justify-between bg-background antialiased leading-tight lg:leading-[1.1] gap-10"
         >
-          <MainNavbar />
-          <main className="container h-full">{children}</main>
-          <MainFooter/>
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TanstackQueryProvider>
+              <MainNavbar />
+              <main className="container">{children}</main>
+              <MainFooter />
+            </TanstackQueryProvider>
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
