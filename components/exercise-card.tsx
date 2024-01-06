@@ -1,4 +1,4 @@
-import { getExercises } from "@/server/actions";
+import { deleteExercise, getExercises } from "@/server/actions";
 import {
   Card,
   CardContent,
@@ -7,23 +7,40 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { Button } from "./ui/button";
 import EditExerciseForm from "./edit-exercise-form";
-import { createContext } from "react";
+import DeleteDialog from "./delete-dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ResponsiveFormDialog from "./responsive-form-dialog";
+import { Button } from "./ui/button";
+import { useContext } from "react";
+import { ExerciseContext } from "@/app/exercises/page";
+import { cn } from "@/lib/utils";
+import LoadingSpinner from "./loading-spinner";
 
-export const ExerciseContext = createContext({
-  id: 0,
-  title: "",
-  instructions: "",
-  url: "",
-});
+export default function ExerciseCard({ disabled }: { disabled?: boolean }) {
+  const queryClient = useQueryClient();
 
-export default function ExerciseCard({
-  exercise,
-}: {
-  exercise: Awaited<ReturnType<typeof getExercises>>[0];
-}) {
-  const { title, instructions, url } = exercise;
+  const { mutate: deleteOptimistically } = useMutation({
+    mutationFn: async (exerciseId) => deleteExercise(exerciseId),
+    onMutate: async (exerciseId: number) => {
+      await queryClient.getQueryData(["exercises"]);
+      const previous = queryClient.getQueryData(["exercises"]);
+      queryClient.setQueryData(
+        ["exercises"],
+        (old: Awaited<ReturnType<typeof getExercises>>) =>
+          old.filter((e) => e.id !== exerciseId)
+      );
+      return { previous };
+    },
+    onError: (err, values, context) => {
+      queryClient.setQueryData(["exercises"], context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+    },
+  });
+
+  const { id, title, instructions, url } = useContext(ExerciseContext);
 
   const playbackId = url?.includes("/watch?v=")
     ? url?.split("/watch?v=")[1]
@@ -40,10 +57,13 @@ export default function ExerciseCard({
     : url;
 
   return (
-    <Card className="w-[348px]">
+    <Card className={cn("w-[348px]", { "opacity-50 relative": disabled })}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {instructions && <CardDescription>{instructions}</CardDescription>}
+        {disabled && (
+          <LoadingSpinner className="absolute right-4 top-4 h-4 w-4" />
+        )}
       </CardHeader>
       {embedUrl && (
         <CardContent>
@@ -59,16 +79,14 @@ export default function ExerciseCard({
         </CardContent>
       )}
       <CardFooter className="flex justify-between">
-        <ExerciseContext.Provider
-          value={{
-            ...exercise,
-            instructions: instructions ?? "",
-            url: url ?? "",
-          }}
+        <ResponsiveFormDialog
+          trigger={<Button variant={"outline"}>Edit</Button>}
+          title="Edit exercise"
+          description="Make changes to your exercise here. Click save when you're done."
         >
           <EditExerciseForm />
-        </ExerciseContext.Provider>
-        <Button variant={"destructive"}>Delete</Button>
+        </ResponsiveFormDialog>
+        <DeleteDialog action={() => deleteOptimistically(id)} />
       </CardFooter>
     </Card>
   );

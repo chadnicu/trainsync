@@ -4,7 +4,7 @@ import { exerciseSchema } from "@/components/edit-exercise-form";
 import { exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { auth, redirectToSignIn } from "@clerk/nextjs";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 // const getErrorMessage = (error: unknown) =>
@@ -38,6 +38,7 @@ export async function getExercises() {
     .select({ id, title, instructions, url })
     .from(exercise)
     .where(eq(exercise.userId, userId))
+    .orderBy(desc(exercise.id))
     .all();
 }
 
@@ -45,10 +46,26 @@ export async function editExercise(
   values: z.infer<typeof exerciseSchema> & { id: number }
 ) {
   const { userId } = auth();
-  if (!userId) return [];
+  if (!userId) return;
 
-  return await db
+  await db
     .update(exercise)
     .set(values)
     .where(and(eq(exercise.id, values.id), eq(exercise.userId, userId)));
+}
+
+export async function deleteExercise(id: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .delete(exercise)
+    .where(and(eq(exercise.id, id), eq(exercise.userId, userId)));
+}
+
+export async function addExercise(values: z.infer<typeof exerciseSchema>) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db.insert(exercise).values({ ...values, userId });
 }

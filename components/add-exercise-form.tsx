@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,27 +13,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
-import { editExercise, getExercises } from "@/server/actions";
+import { addExercise, getExercises } from "@/server/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { exerciseSchema } from "./edit-exercise-form";
 import { ExerciseContext } from "@/app/exercises/page";
+import { useContext } from "react";
 
-export const exerciseSchema = z.object({
-  title: z.string().min(1).max(80),
-  instructions: z.string().min(0).max(255).optional(),
-  url: z
-    .string()
-    .url()
-    .refine((url) =>
-      /^(https?:\/\/)?(www\.)?(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/shorts\/)?([a-zA-Z0-9_-]{11})/.test(
-        url
-      )
-    )
-    .optional()
-    .or(z.literal("")),
-});
-
-export default function EditExerciseForm() {
-  const { id, ...defaultValues } = React.useContext(ExerciseContext);
+export default function AddExerciseForm() {
+  const { id, ...defaultValues } = useContext(ExerciseContext);
 
   const form = useForm<z.infer<typeof exerciseSchema>>({
     resolver: zodResolver(exerciseSchema),
@@ -45,20 +30,21 @@ export default function EditExerciseForm() {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: async (values: z.infer<typeof exerciseSchema>) => {
-      if (id !== 0) return await editExercise({ id, ...values });
-    },
+    mutationFn: async (values: z.infer<typeof exerciseSchema>) =>
+      await addExercise(values),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey: ["exercises"] });
       const previous = queryClient.getQueryData(["exercises"]);
       queryClient.setQueryData(
         ["exercises"],
-        (old: Awaited<ReturnType<typeof getExercises>>) =>
-          old.map((e) => (e.id === id ? values : e))
+        (old: Awaited<ReturnType<typeof getExercises>>) => [
+          { ...values, id: 0 },
+          ...old,
+        ]
       );
-      return { previous, values };
+      return { previous };
     },
-    onError: (err, values, context) => {
+    onError: (err, newTodo, context) => {
       queryClient.setQueryData(["exercises"], context?.previous);
     },
     onSettled: () => {
