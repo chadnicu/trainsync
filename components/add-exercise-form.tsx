@@ -20,7 +20,7 @@ import { useContext } from "react";
 import { ExerciseContext } from "@/app/exercises/context";
 
 export default function AddExerciseForm() {
-  const { id, title, instructions, url } = useContext(ExerciseContext);
+  const { title, instructions, url } = useContext(ExerciseContext);
 
   const form = useForm<z.infer<typeof exerciseSchema>>({
     resolver: zodResolver(exerciseSchema),
