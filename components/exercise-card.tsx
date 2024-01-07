@@ -13,9 +13,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ResponsiveFormDialog from "./responsive-form-dialog";
 import { Button } from "./ui/button";
 import { useContext } from "react";
-import { ExerciseContext } from "@/app/exercises/page";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "./loading-spinner";
+import { ExerciseContext } from "@/app/exercises/context";
 
 export default function ExerciseCard() {
   const queryClient = useQueryClient();

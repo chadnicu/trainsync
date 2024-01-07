@@ -7,16 +7,7 @@ import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
 import { getExercises } from "@/server/actions";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createContext } from "react";
-
-export const ExerciseContext = createContext<
-  Awaited<ReturnType<typeof getExercises>>[0]
->({
-  id: 0,
-  title: "",
-  instructions: "",
-  url: "",
-});
+import { ExerciseContext } from "./context";
 
 export default function Exercises() {
   const { data, isLoading, isFetching, isSuccess, isError } = useQuery({

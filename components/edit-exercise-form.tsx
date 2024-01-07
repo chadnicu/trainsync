@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { editExercise, getExercises } from "@/server/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ExerciseContext } from "@/app/exercises/page";
+import { ExerciseContext } from "@/app/exercises/context";
 
 export const exerciseSchema = z.object({
   title: z.string().min(1).max(80),
