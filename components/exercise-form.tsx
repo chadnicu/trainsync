@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,48 +15,58 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
-import { addExercise, getExercises } from "@/server/actions";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { exerciseSchema } from "./edit-exercise-form";
-import { useContext } from "react";
 import { ExerciseContext } from "@/app/exercises/context";
 
-export default function AddExerciseForm() {
-  const { title, instructions, url } = useContext(ExerciseContext);
+export const exerciseSchema = z.object({
+  title: z.string().min(1).max(80),
+  instructions: z.string().min(0).max(255).optional(),
+  url: z
+    .string()
+    .url()
+    .refine((url) =>
+      /^(https?:\/\/)?(www\.)?(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/shorts\/)?([a-zA-Z0-9_-]{11})/.test(
+        url
+      )
+    )
+    .optional()
+    .or(z.literal("")),
+});
+
+export default function ExerciseForm({
+  mutate,
+}: {
+  mutate: (values: z.infer<typeof exerciseSchema>) => void;
+}) {
+  const { id, title, instructions, url } = React.useContext(ExerciseContext);
 
   const form = useForm<z.infer<typeof exerciseSchema>>({
     resolver: zodResolver(exerciseSchema),
-    defaultValues: {
-      title,
-      instructions: instructions ?? "",
-      url: url ?? "",
-    },
+    defaultValues: { title, instructions: instructions ?? "", url: url ?? "" },
   });
 
-  const queryClient = useQueryClient();
+  //   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: async (values: z.infer<typeof exerciseSchema>) =>
-      await addExercise(values),
-    onMutate: async (values) => {
-      await queryClient.cancelQueries({ queryKey: ["exercises"] });
-      const previous = queryClient.getQueryData(["exercises"]);
-      queryClient.setQueryData(
-        ["exercises"],
-        (old: Awaited<ReturnType<typeof getExercises>>) => [
-          { ...values, id: 0 },
-          ...old,
-        ]
-      );
-      return { previous };
-    },
-    onError: (err, newTodo, context) => {
-      queryClient.setQueryData(["exercises"], context?.previous);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-    },
-  });
+  //   const { mutate } = useMutation({
+  //     mutationFn: async (values: z.infer<typeof exerciseSchema>) => {
+  //       if (id !== 0) return await editExercise({ id, ...values });
+  //     },
+  //     onMutate: async (values) => {
+  //       await queryClient.cancelQueries({ queryKey: ["exercises"] });
+  //       const previous = queryClient.getQueryData(["exercises"]);
+  //       queryClient.setQueryData(
+  //         ["exercises"],
+  //         (old: Awaited<ReturnType<typeof getExercises>>) =>
+  //           old.map((e) => (e.id === id ? { ...values, id } : e))
+  //       );
+  //       return { previous, values };
+  //     },
+  //     onError: (err, values, context) => {
+  //       queryClient.setQueryData(["exercises"], context?.previous);
+  //     },
+  //     onSettled: () => {
+  //       queryClient.invalidateQueries({ queryKey: ["exercises"] });
+  //     },
+  //   });
 
   return (
     <Form {...form}>
@@ -117,7 +129,7 @@ export default function AddExerciseForm() {
           )}
         />
         <Button type="submit" className="float-right">
-          Create
+          Edit
         </Button>
       </form>
     </Form>

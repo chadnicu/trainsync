@@ -22,7 +22,7 @@ export default function ExerciseSkeleton() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Skeleton className="w-[299px] h-[168px] rounded-md" />
+        <Skeleton className="w-[283.5px] h-[159.3px] sm:w-[299px] sm:h-[168px] rounded-md" />
       </CardContent>
       <CardFooter className="flex justify-between">
         <Skeleton className="py-2 px-4">Edit</Skeleton>

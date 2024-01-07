@@ -1,4 +1,4 @@
-import { deleteExercise, getExercises } from "@/server/actions";
+import { deleteExercise, editExercise, getExercises } from "@/server/actions";
 import {
   Card,
   CardContent,
@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import EditExerciseForm from "./edit-exercise-form";
 import DeleteDialog from "./delete-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ResponsiveFormDialog from "./responsive-form-dialog";
@@ -16,6 +15,8 @@ import { useContext } from "react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "./loading-spinner";
 import { ExerciseContext } from "@/app/exercises/context";
+import { z } from "zod";
+import ExerciseForm, { exerciseSchema } from "./exercise-form";
 
 export default function ExerciseCard() {
   const queryClient = useQueryClient();
@@ -31,6 +32,28 @@ export default function ExerciseCard() {
           old.filter((e) => e.id !== exerciseId)
       );
       return { previous };
+    },
+    onError: (err, values, context) => {
+      queryClient.setQueryData(["exercises"], context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["exercises"] });
+    },
+  });
+
+  const { mutate: editOptimistically } = useMutation({
+    mutationFn: async (values: z.infer<typeof exerciseSchema>) => {
+      if (id !== 0) return await editExercise({ id, ...values });
+    },
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey: ["exercises"] });
+      const previous = queryClient.getQueryData(["exercises"]);
+      queryClient.setQueryData(
+        ["exercises"],
+        (old: Awaited<ReturnType<typeof getExercises>>) =>
+          old.map((e) => (e.id === id ? { ...values, id } : e))
+      );
+      return { previous, values };
     },
     onError: (err, values, context) => {
       queryClient.setQueryData(["exercises"], context?.previous);
@@ -88,7 +111,7 @@ export default function ExerciseCard() {
           title="Edit exercise"
           description="Make changes to your exercise here. Click save when you're done."
         >
-          <EditExerciseForm />
+          <ExerciseForm mutate={editOptimistically} />
         </ResponsiveFormDialog>
         <DeleteDialog action={() => deleteOptimistically(id)} />
       </CardFooter>

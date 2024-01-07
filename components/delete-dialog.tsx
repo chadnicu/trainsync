@@ -14,8 +14,10 @@ import { Button, buttonVariants } from "./ui/button";
 export default function DeleteDialog({ action }: { action: () => void }) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <Button variant={"destructive"}>Delete</Button>
+      <AlertDialogTrigger
+        className={buttonVariants({ variant: "destructive" })}
+      >
+        Delete
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-[90vw] rounded-lg sm:max-w-lg">
         <AlertDialogHeader>
