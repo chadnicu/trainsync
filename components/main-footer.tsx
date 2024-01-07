@@ -9,8 +9,8 @@ export default function MainFooter() {
   );
 
   return (
-    <footer className="p-2 text-sm sm:text-center border-t">
-      <h3 className="tracking-tight">
+    <footer className="py-2 px-4 text-sm sm:text-center border-t">
+      <h3 className="tracking-tight -space-y-2">
         Made by
         <Link href="https://twitter.com/iusedebian" className={className}>
           iusedebian
