@@ -16,8 +16,8 @@ import { Textarea } from "./ui/textarea";
 import { addExercise, getExercises } from "@/server/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { exerciseSchema } from "./edit-exercise-form";
-import { ExerciseContext } from "@/app/exercises/page";
 import { useContext } from "react";
+import { ExerciseContext } from "@/app/exercises/context";
 
 export default function AddExerciseForm() {
   const { id, title, instructions, url } = useContext(ExerciseContext);
