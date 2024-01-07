@@ -79,7 +79,14 @@ export default function Exercises() {
         title="Add exercise"
         description="Instructions and URL are not mandatory."
       >
-        <ExerciseForm mutate={addOptimistically} />
+        <ExerciseForm
+          mutate={addOptimistically}
+          submitButton={
+            <Button type="submit" className="float-right">
+              Create
+            </Button>
+          }
+        />
       </ResponsiveFormDialog>
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
         {(isFetching || isLoading) && !data.length && <Skeletons />}

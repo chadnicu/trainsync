@@ -34,39 +34,17 @@ export const exerciseSchema = z.object({
 
 export default function ExerciseForm({
   mutate,
+  submitButton,
 }: {
   mutate: (values: z.infer<typeof exerciseSchema>) => void;
+  submitButton?: React.ReactNode;
 }) {
-  const { id, title, instructions, url } = React.useContext(ExerciseContext);
+  const { title, instructions, url } = React.useContext(ExerciseContext);
 
   const form = useForm<z.infer<typeof exerciseSchema>>({
     resolver: zodResolver(exerciseSchema),
     defaultValues: { title, instructions: instructions ?? "", url: url ?? "" },
   });
-
-  //   const queryClient = useQueryClient();
-
-  //   const { mutate } = useMutation({
-  //     mutationFn: async (values: z.infer<typeof exerciseSchema>) => {
-  //       if (id !== 0) return await editExercise({ id, ...values });
-  //     },
-  //     onMutate: async (values) => {
-  //       await queryClient.cancelQueries({ queryKey: ["exercises"] });
-  //       const previous = queryClient.getQueryData(["exercises"]);
-  //       queryClient.setQueryData(
-  //         ["exercises"],
-  //         (old: Awaited<ReturnType<typeof getExercises>>) =>
-  //           old.map((e) => (e.id === id ? { ...values, id } : e))
-  //       );
-  //       return { previous, values };
-  //     },
-  //     onError: (err, values, context) => {
-  //       queryClient.setQueryData(["exercises"], context?.previous);
-  //     },
-  //     onSettled: () => {
-  //       queryClient.invalidateQueries({ queryKey: ["exercises"] });
-  //     },
-  //   });
 
   return (
     <Form {...form}>
@@ -128,9 +106,13 @@ export default function ExerciseForm({
             </FormItem>
           )}
         />
-        <Button type="submit" className="float-right">
-          Edit
-        </Button>
+        {submitButton !== undefined ? (
+          submitButton
+        ) : (
+          <Button type="submit" className="float-right">
+            Submit
+          </Button>
+        )}
       </form>
     </Form>
   );

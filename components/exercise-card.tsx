@@ -111,7 +111,14 @@ export default function ExerciseCard() {
           title="Edit exercise"
           description="Make changes to your exercise here. Click save when you're done."
         >
-          <ExerciseForm mutate={editOptimistically} />
+          <ExerciseForm
+            mutate={editOptimistically}
+            submitButton={
+              <Button type="submit" className="float-right">
+                Edit
+              </Button>
+            }
+          />
         </ResponsiveFormDialog>
         <DeleteDialog action={() => deleteOptimistically(id)} />
       </CardFooter>
