@@ -41,7 +41,7 @@ export default function RootLayout({
           >
             <TanstackQueryProvider>
               <MainNavbar />
-              <main className="container">{children}</main>
+              <main className="sm:container px-[0.9rem]">{children}</main>
               <MainFooter />
             </TanstackQueryProvider>
           </ThemeProvider>

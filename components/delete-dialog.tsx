@@ -17,7 +17,7 @@ export default function DeleteDialog({ action }: { action: () => void }) {
       <AlertDialogTrigger>
         <Button variant={"destructive"}>Delete</Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-w-[90vw] rounded-lg sm:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>

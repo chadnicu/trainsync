@@ -20,11 +20,15 @@ import { ExerciseContext } from "@/app/exercises/page";
 import { useContext } from "react";
 
 export default function AddExerciseForm() {
-  const { id, ...defaultValues } = useContext(ExerciseContext);
+  const { id, title, instructions, url } = useContext(ExerciseContext);
 
   const form = useForm<z.infer<typeof exerciseSchema>>({
     resolver: zodResolver(exerciseSchema),
-    defaultValues,
+    defaultValues: {
+      title,
+      instructions: instructions ?? "",
+      url: url ?? "",
+    },
   });
 
   const queryClient = useQueryClient();
@@ -113,7 +117,7 @@ export default function AddExerciseForm() {
           )}
         />
         <Button type="submit" className="float-right">
-          Submit
+          Create
         </Button>
       </form>
     </Form>

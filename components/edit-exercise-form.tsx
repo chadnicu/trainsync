@@ -35,11 +35,11 @@ export const exerciseSchema = z.object({
 });
 
 export default function EditExerciseForm() {
-  const { id, ...defaultValues } = React.useContext(ExerciseContext);
+  const { id, title, instructions, url } = React.useContext(ExerciseContext);
 
   const form = useForm<z.infer<typeof exerciseSchema>>({
     resolver: zodResolver(exerciseSchema),
-    defaultValues,
+    defaultValues: { title, instructions: instructions ?? "", url: url ?? "" },
   });
 
   const queryClient = useQueryClient();
@@ -127,7 +127,7 @@ export default function EditExerciseForm() {
           )}
         />
         <Button type="submit" className="float-right">
-          Submit
+          Edit
         </Button>
       </form>
     </Form>

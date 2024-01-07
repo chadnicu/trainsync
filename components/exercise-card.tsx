@@ -17,7 +17,7 @@ import { ExerciseContext } from "@/app/exercises/page";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "./loading-spinner";
 
-export default function ExerciseCard({ disabled }: { disabled?: boolean }) {
+export default function ExerciseCard() {
   const queryClient = useQueryClient();
 
   const { mutate: deleteOptimistically } = useMutation({
@@ -57,11 +57,15 @@ export default function ExerciseCard({ disabled }: { disabled?: boolean }) {
     : url;
 
   return (
-    <Card className={cn("w-[348px]", { "opacity-50 relative": disabled })}>
+    <Card
+      className={cn("w-[330px] sm:w-[348px]", {
+        "opacity-50 relative": id === 0,
+      })}
+    >
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {instructions && <CardDescription>{instructions}</CardDescription>}
-        {disabled && (
+        {id === 0 && (
           <LoadingSpinner className="absolute right-4 top-4 h-4 w-4" />
         )}
       </CardHeader>
@@ -69,12 +73,12 @@ export default function ExerciseCard({ disabled }: { disabled?: boolean }) {
         <CardContent>
           <iframe
             src={embedUrl}
-            width="299"
-            height="168"
+            width="283.5"
+            height="159.3"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-            className="rounded-md"
+            className="rounded-md sm:w-[299px] sm:h-[168px]"
           />
         </CardContent>
       )}
