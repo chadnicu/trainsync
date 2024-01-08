@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { ExerciseContext } from "@/app/exercises/context";
 import LoadingSpinner from "./loading-spinner";
+import { DialogContext } from "./responsive-form-dialog";
 
 export const exerciseSchema = z.object({
   title: z.string().min(1).max(80),
@@ -48,6 +49,8 @@ export default function ExerciseForm({
     resolver: zodResolver(exerciseSchema),
     defaultValues: { title, instructions: instructions ?? "", url: url ?? "" },
   });
+
+  const setOpen = React.useContext(DialogContext);
 
   return (
     <Form {...form}>
@@ -112,6 +115,7 @@ export default function ExerciseForm({
         <Button
           type="submit"
           className="float-right flex justify-center items-center"
+          onClick={() => setOpen(false)}
         >
           {submitButtonText ?? "Submit"}
           {isSubmitting && (

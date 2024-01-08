@@ -1,5 +1,11 @@
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ReactNode, useState } from "react";
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  createContext,
+  useState,
+} from "react";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +25,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "./ui/button";
+
+export const DialogContext = createContext<Dispatch<SetStateAction<boolean>>>(
+  () => {}
+);
 
 export default function ResponsiveFormDialog({
   trigger,
@@ -43,7 +53,9 @@ export default function ResponsiveFormDialog({
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          {children}
+          <DialogContext.Provider value={setOpen}>
+            {children}
+          </DialogContext.Provider>
         </DialogContent>
       </Dialog>
     );
@@ -57,7 +69,11 @@ export default function ResponsiveFormDialog({
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <div className="px-6">{children}</div>
+        <div className="px-6">
+          <DialogContext.Provider value={setOpen}>
+            {children}
+          </DialogContext.Provider>
+        </div>
         <DrawerFooter className="pt-2 px-6">
           <DrawerClose asChild>
             <Button variant="outline" className="w-fit -mt-11">

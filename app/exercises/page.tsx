@@ -10,12 +10,15 @@ import { ExerciseContext } from "./context";
 import ExerciseForm, { exerciseSchema } from "@/components/exercise-form";
 import { z } from "zod";
 
-export default function Exercises() {
-  const { data, isLoading, isFetching, isSuccess, isError } = useQuery({
+const useExercises = () =>
+  useQuery({
     queryKey: ["exercises"],
     queryFn: async () => getExercises(),
     initialData: [],
   });
+
+export default function Exercises() {
+  const { data, isLoading, isFetching, isSuccess, isError } = useExercises();
 
   const queryClient = useQueryClient();
 
