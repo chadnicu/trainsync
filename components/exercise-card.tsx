@@ -1,4 +1,3 @@
-import { deleteExercise, editExercise, getExercises } from "@/server/actions";
 import {
   Card,
   CardContent,
@@ -8,72 +7,29 @@ import {
   CardTitle,
 } from "./ui/card";
 import DeleteDialog from "./delete-dialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import ResponsiveFormDialog from "./responsive-form-dialog";
 import { Button } from "./ui/button";
 import { useContext } from "react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "./loading-spinner";
 import { ExerciseContext } from "@/app/exercises/context";
-import { z } from "zod";
-import ExerciseForm, { exerciseSchema } from "./exercise-form";
+import ExerciseForm from "./exercise-form";
+import {
+  useDeleteExerciseMutation,
+  useEditExerciseMutation,
+} from "@/hooks/tanstack-query";
 
 export default function ExerciseCard() {
   const queryClient = useQueryClient();
 
-  const { mutate: deleteOptimistically } = useMutation({
-    mutationFn: async (exerciseId) => deleteExercise(exerciseId),
-    onMutate: async (exerciseId: number) => {
-      await queryClient.getQueryData(["exercises"]);
-      const previous = queryClient.getQueryData(["exercises"]);
-      queryClient.setQueryData(
-        ["exercises"],
-        (old: Awaited<ReturnType<typeof getExercises>>) =>
-          old.filter((e) => e.id !== exerciseId)
-      );
-      return { previous };
-    },
-    onError: (err, values, context) => {
-      queryClient.setQueryData(["exercises"], context?.previous);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-    },
-  });
-
-  const { mutate: editOptimistically, isPending: isEditing } = useMutation({
-    mutationFn: async (values: z.infer<typeof exerciseSchema>) => {
-      if (id !== 0) return await editExercise({ id, ...values });
-    },
-    onMutate: async (values) => {
-      await queryClient.cancelQueries({ queryKey: ["exercises"] });
-      const previous = queryClient.getQueryData(["exercises"]);
-      queryClient.setQueryData(
-        ["exercises"],
-        (old: Awaited<ReturnType<typeof getExercises>>) => {
-          const index = old.findIndex((e) => e.id === id);
-          if (index === -1) return old;
-          const copy = structuredClone(old);
-          copy[index] = {
-            id,
-            title: values.title,
-            instructions: values.instructions ?? null,
-            url: values.url ?? null,
-          };
-          return copy;
-        }
-      );
-      return { previous, values };
-    },
-    onError: (err, values, context) => {
-      queryClient.setQueryData(["exercises"], context?.previous);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-    },
-  });
+  const { mutate: deleteOptimistically } =
+    useDeleteExerciseMutation(queryClient);
 
   const { id, title, instructions, url } = useContext(ExerciseContext);
+
+  const { mutate: editOptimistically, isPending: isEditing } =
+    useEditExerciseMutation(queryClient, id);
 
   const playbackId = url?.includes("/watch?v=")
     ? url?.split("/watch?v=")[1]

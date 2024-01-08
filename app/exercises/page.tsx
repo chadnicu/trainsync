@@ -4,11 +4,11 @@ import ExerciseCard from "@/components/exercise-card";
 import ExerciseSkeleton from "@/components/exercise-skeleton";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
-import { addExercise, getExercises } from "@/server/actions";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getExercises } from "@/server/actions";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ExerciseContext } from "./context";
-import ExerciseForm, { exerciseSchema } from "@/components/exercise-form";
-import { z } from "zod";
+import ExerciseForm from "@/components/exercise-form";
+import { useAddExerciseMutation } from "@/hooks/tanstack-query";
 
 const useExercises = () =>
   useQuery({
@@ -22,28 +22,8 @@ export default function Exercises() {
 
   const queryClient = useQueryClient();
 
-  const { mutate: addOptimistically, isPending: isAdding } = useMutation({
-    mutationFn: async (values: z.infer<typeof exerciseSchema>) =>
-      await addExercise(values),
-    onMutate: async (values) => {
-      await queryClient.cancelQueries({ queryKey: ["exercises"] });
-      const previous = queryClient.getQueryData(["exercises"]);
-      queryClient.setQueryData(
-        ["exercises"],
-        (old: Awaited<ReturnType<typeof getExercises>>) => [
-          { ...values, id: 0 },
-          ...old,
-        ]
-      );
-      return { previous };
-    },
-    onError: (err, newTodo, context) => {
-      queryClient.setQueryData(["exercises"], context?.previous);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-    },
-  });
+  const { mutate: addOptimistically, isPending: isAdding } =
+    useAddExerciseMutation(queryClient);
 
   const Error = () => (
     <p className="grid place-items-center gap-3">

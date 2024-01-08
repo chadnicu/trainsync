@@ -21,7 +21,8 @@ export async function getExercises() {
 }
 
 export async function editExercise(
-  values: z.infer<typeof exerciseSchema> & { id: number }
+  exerciseId: number,
+  values: z.infer<typeof exerciseSchema>
 ) {
   const { userId } = auth();
   if (!userId) return;
@@ -29,7 +30,7 @@ export async function editExercise(
   await db
     .update(exercise)
     .set(values)
-    .where(and(eq(exercise.id, values.id), eq(exercise.userId, userId)));
+    .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)));
 }
 
 export async function deleteExercise(id: number) {
