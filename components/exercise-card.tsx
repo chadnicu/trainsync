@@ -41,7 +41,7 @@ export default function ExerciseCard() {
     },
   });
 
-  const { mutate: editOptimistically } = useMutation({
+  const { mutate: editOptimistically, isPending: isEditing } = useMutation({
     mutationFn: async (values: z.infer<typeof exerciseSchema>) => {
       if (id !== 0) return await editExercise({ id, ...values });
     },
@@ -133,6 +133,7 @@ export default function ExerciseCard() {
               <ExerciseForm
                 mutate={editOptimistically}
                 submitButtonText="Edit"
+                isSubmitting={isEditing}
               />
             </ResponsiveFormDialog>
             <DeleteDialog action={() => deleteOptimistically(id)} />
