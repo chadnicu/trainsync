@@ -50,8 +50,18 @@ export default function ExerciseCard() {
       const previous = queryClient.getQueryData(["exercises"]);
       queryClient.setQueryData(
         ["exercises"],
-        (old: Awaited<ReturnType<typeof getExercises>>) =>
-          old.map((e) => (e.id === id ? { ...values, id } : e))
+        (old: Awaited<ReturnType<typeof getExercises>>) => {
+          const index = old.findIndex((e) => e.id === id);
+          if (index === -1) return old;
+          const copy = structuredClone(old);
+          copy[index] = {
+            id,
+            title: values.title,
+            instructions: values.instructions ?? null,
+            url: values.url ?? null,
+          };
+          return copy;
+        }
       );
       return { previous, values };
     },
@@ -79,17 +89,19 @@ export default function ExerciseCard() {
     ? "https://www.youtube.com/embed/" + playbackId
     : url;
 
+  const optimistic = id === 0;
+
   return (
     <Card
       className={cn("w-[330px] sm:w-[348px]", {
-        "opacity-50 relative": id === 0,
+        "opacity-50 relative": optimistic,
       })}
     >
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {instructions && <CardDescription>{instructions}</CardDescription>}
-        {id === 0 && (
-          <LoadingSpinner className="absolute right-4 top-4 h-4 w-4" />
+        {optimistic && (
+          <LoadingSpinner className="absolute right-[12px] top-[6px] h-4 w-4" />
         )}
       </CardHeader>
       {embedUrl && (
@@ -106,21 +118,26 @@ export default function ExerciseCard() {
         </CardContent>
       )}
       <CardFooter className="flex justify-between">
-        <ResponsiveFormDialog
-          trigger={<Button variant={"outline"}>Edit</Button>}
-          title="Edit exercise"
-          description="Make changes to your exercise here. Click save when you're done."
-        >
-          <ExerciseForm
-            mutate={editOptimistically}
-            submitButton={
-              <Button type="submit" className="float-right">
-                Edit
-              </Button>
-            }
-          />
-        </ResponsiveFormDialog>
-        <DeleteDialog action={() => deleteOptimistically(id)} />
+        {optimistic ? (
+          <>
+            <Button variant={"outline"}>Edit</Button>
+            <Button variant={"destructive"}>Delete</Button>
+          </>
+        ) : (
+          <>
+            <ResponsiveFormDialog
+              trigger={<Button variant={"outline"}>Edit</Button>}
+              title="Edit exercise"
+              description="Make changes to your exercise here. Click save when you're done."
+            >
+              <ExerciseForm
+                mutate={editOptimistically}
+                submitButtonText="Edit"
+              />
+            </ResponsiveFormDialog>
+            <DeleteDialog action={() => deleteOptimistically(id)} />
+          </>
+        )}
       </CardFooter>
     </Card>
   );

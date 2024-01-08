@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { ExerciseContext } from "@/app/exercises/context";
+import LoadingSpinner from "./loading-spinner";
 
 export const exerciseSchema = z.object({
   title: z.string().min(1).max(80),
@@ -34,10 +35,12 @@ export const exerciseSchema = z.object({
 
 export default function ExerciseForm({
   mutate,
-  submitButton,
+  isSubmitting,
+  submitButtonText,
 }: {
   mutate: (values: z.infer<typeof exerciseSchema>) => void;
-  submitButton?: React.ReactNode;
+  isSubmitting?: boolean;
+  submitButtonText?: React.ReactNode;
 }) {
   const { title, instructions, url } = React.useContext(ExerciseContext);
 
@@ -106,13 +109,15 @@ export default function ExerciseForm({
             </FormItem>
           )}
         />
-        {submitButton !== undefined ? (
-          submitButton
-        ) : (
-          <Button type="submit" className="float-right">
-            Submit
-          </Button>
-        )}
+        <Button
+          type="submit"
+          className="float-right flex justify-center items-center"
+        >
+          {submitButtonText ?? "Submit"}
+          {isSubmitting && (
+            <LoadingSpinner className="ml-1 w-4 h-4 text-background/80 fill-background/80" />
+          )}
+        </Button>
       </form>
     </Form>
   );

@@ -19,7 +19,7 @@ export default function Exercises() {
 
   const queryClient = useQueryClient();
 
-  const { mutate: addOptimistically } = useMutation({
+  const { mutate: addOptimistically, isPending: isAdding } = useMutation({
     mutationFn: async (values: z.infer<typeof exerciseSchema>) =>
       await addExercise(values),
     onMutate: async (values) => {
@@ -81,11 +81,8 @@ export default function Exercises() {
       >
         <ExerciseForm
           mutate={addOptimistically}
-          submitButton={
-            <Button type="submit" className="float-right">
-              Create
-            </Button>
-          }
+          isSubmitting={isAdding}
+          submitButtonText="Create"
         />
       </ResponsiveFormDialog>
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
