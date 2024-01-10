@@ -13,10 +13,12 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
+  useEffect,
   useState,
 } from "react";
 import { buttonVariants } from "./ui/button";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { usePathname } from "next/navigation";
 
 export const ToggleMobileMenu = createContext<
   Dispatch<SetStateAction<boolean>>
@@ -24,6 +26,12 @@ export const ToggleMobileMenu = createContext<
 
 export default function MobileNavMenu({ children }: { children?: ReactNode }) {
   const [open, setOpen] = useState(false);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
