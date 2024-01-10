@@ -11,7 +11,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import WorkoutCard from "@/components/workout-card";
 import WorkoutSkeleton from "@/components/workout-skeleton";
-import WorkoutForm from "@/components/workout-form";
+import WorkoutForm from "@/components/add-workout-form";
 
 export default function Workouts() {
   const queryClient = useQueryClient();

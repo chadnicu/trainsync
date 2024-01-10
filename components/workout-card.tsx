@@ -18,7 +18,7 @@ import {
   useEditWorkoutMutation,
 } from "@/app/workouts/helpers";
 import { useQueryClient } from "@tanstack/react-query";
-import WorkoutForm from "./workout-form";
+import EditWorkoutForm from "./edit-workout-form";
 
 export default function WorkoutCard() {
   const queryClient = useQueryClient();
@@ -28,8 +28,6 @@ export default function WorkoutCard() {
 
   const { id, title, description, date, started, finished, comment } =
     useContext(WorkoutContext);
-
-  console.log(date);
 
   const { mutate: editOptimistically, isPending: isEditing } =
     useEditWorkoutMutation(queryClient, id);
@@ -68,11 +66,10 @@ export default function WorkoutCard() {
               title="Edit workout"
               description="Make changes to your workout here. Click save when you're done."
             >
-              <WorkoutForm
+              <EditWorkoutForm
                 mutate={editOptimistically}
                 submitButtonText="Edit"
                 isSubmitting={isEditing}
-                variant="edit"
               />
             </ResponsiveFormDialog>
             <DeleteDialog action={() => deleteOptimistically(id)} />

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
+import { ControllerRenderProps, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -15,35 +15,31 @@ import { Textarea } from "./ui/textarea";
 import LoadingSpinner from "./loading-spinner";
 import { ToggleDialogFunction } from "./responsive-form-dialog";
 import { ReactNode, useContext } from "react";
-import { WorkoutFormData, workoutSchema } from "@/app/workouts/helpers";
+import { AddWorkoutFormData, AddWorkoutSchema } from "@/app/workouts/helpers";
 import { WorkoutContext } from "@/app/workouts/helpers";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { Calendar } from "./ui/calendar";
 
 export default function WorkoutForm({
   mutate,
   isSubmitting,
   submitButtonText,
-  variant,
 }: {
-  mutate: (values: WorkoutFormData) => void;
+  mutate: (values: AddWorkoutFormData) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
-  variant?: "edit";
 }) {
-  const { title, description, date, started, finished, comment } =
-    useContext(WorkoutContext);
+  const { title, description, date } = useContext(WorkoutContext);
 
-  // continue with editform
-  const isEditForm = variant === "edit";
-
-  const form = useForm<WorkoutFormData>({
-    resolver: zodResolver(workoutSchema),
+  const form = useForm<AddWorkoutFormData>({
+    resolver: zodResolver(AddWorkoutSchema),
     defaultValues: {
       title,
       description: description ?? "",
       date: date ? new Date(date) : new Date(),
-      // started: started ?? "",
-      // finished: finished ?? "",
-      // comment: comment ?? "",
     },
   });
 
@@ -53,8 +49,7 @@ export default function WorkoutForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          console.log(values);
-          mutate({ ...values, date: values.date });
+          mutate(values);
           setOpen(false);
         })}
         className="space-y-4"
@@ -98,12 +93,9 @@ export default function WorkoutForm({
           control={form.control}
           name="date"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Date</FormLabel>
-              <FormControl>
-                {/* @ts-ignore */}
-                <Input type="date" {...field} />
-              </FormControl>
+              <CalendarPopover field={field} />
               <FormDescription>
                 This is the date of your workout.
               </FormDescription>
@@ -111,26 +103,6 @@ export default function WorkoutForm({
             </FormItem>
           )}
         />
-        {isEditForm && (
-          <>
-            {/* <FormField
-              control={form.control}
-              name="started"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Started</FormLabel>
-                  <FormControl>
-                    <Input type="time" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is the timee you started your workout.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
-          </>
-        )}
         <Button
           type="submit"
           className="float-right flex justify-center items-center"
@@ -142,5 +114,52 @@ export default function WorkoutForm({
         </Button>
       </form>
     </Form>
+  );
+}
+
+function CalendarPopover({
+  field,
+}: {
+  field: ControllerRenderProps<
+    {
+      title: string;
+      date: Date;
+      description?: string | undefined;
+    },
+    "date"
+  >;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <FormControl>
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-[240px] pl-3 text-left font-normal",
+              !field.value && "text-muted-foreground"
+            )}
+          >
+            {field.value ? (
+              format(field.value, "PPP")
+            ) : (
+              <span>Pick a date</span>
+            )}
+            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+          </Button>
+        </FormControl>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={field.value}
+          onSelect={field.onChange}
+          // disabled={(date) =>
+          //   date > new Date() || date < new Date("1900-01-01")
+          // }
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

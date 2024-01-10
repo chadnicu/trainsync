@@ -20,7 +20,7 @@ export const useWorkouts = () =>
 
 export const useAddWorkoutMutation = (queryClient: QueryClient) =>
   useMutation({
-    mutationFn: async (values: WorkoutFormData) => await addWorkout(values),
+    mutationFn: async (values: AddWorkoutFormData) => await addWorkout(values),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
@@ -58,7 +58,7 @@ export const useEditWorkoutMutation = (
   workoutId: number
 ) =>
   useMutation({
-    mutationFn: async (values: WorkoutFormData) =>
+    mutationFn: async (values: AddWorkoutFormData) =>
       await editWorkout(workoutId, values),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
@@ -97,16 +97,37 @@ export const WorkoutContext = createContext<Workout>({
   started: null,
 });
 
-// form schema
-export const workoutSchema = z.object({
+// form schemas
+export const AddWorkoutSchema = z.object({
   title: z.string().min(1).max(80),
   description: z.string().min(0).max(255).optional(),
-  date: z.coerce.date(),
-  started: z.string().datetime().optional(),
-  finished: z.string().datetime().optional(),
+  date: z.date({
+    required_error: "Date of workout is required.",
+  }),
+});
+
+export const EditWorkoutSchema = z.object({
+  title: z.string().min(1).max(80),
+  description: z.string().min(0).max(255).optional(),
+  date: z.date({
+    required_error: "Date of workout is required.",
+  }),
+  started: z
+    .string()
+    .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
+      message: "Invalid time format. Expected HH:MM",
+    })
+    .optional(),
+  finished: z
+    .string()
+    .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
+      message: "Invalid time format. Expected HH:MM",
+    })
+    .optional(),
   comment: z.string().min(0).max(255).optional(),
 });
 
 // types
-export type WorkoutFormData = z.infer<typeof workoutSchema>;
+export type AddWorkoutFormData = z.infer<typeof AddWorkoutSchema>;
+export type EditWorkoutFormData = z.infer<typeof EditWorkoutSchema>;
 export type Workout = Awaited<ReturnType<typeof getWorkouts>>[0];
