@@ -12,38 +12,27 @@ import { Button } from "./ui/button";
 import { useContext } from "react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "./loading-spinner";
-import { ExerciseContext } from "@/app/exercises/helpers";
-import ExerciseForm from "./exercise-form";
 import {
-  useDeleteExerciseMutation,
-  useEditExerciseMutation,
-} from "@/app/exercises/helpers";
+  WorkoutContext,
+  useDeleteWorkoutMutation,
+  useEditWorkoutMutation,
+} from "@/app/workouts/helpers";
 import { useQueryClient } from "@tanstack/react-query";
+import WorkoutForm from "./workout-form";
 
-export default function ExerciseCard() {
+export default function WorkoutCard() {
   const queryClient = useQueryClient();
 
   const { mutate: deleteOptimistically } =
-    useDeleteExerciseMutation(queryClient);
+    useDeleteWorkoutMutation(queryClient);
 
-  const { id, title, instructions, url } = useContext(ExerciseContext);
+  const { id, title, description, date, started, finished, comment } =
+    useContext(WorkoutContext);
+
+  console.log(date);
 
   const { mutate: editOptimistically, isPending: isEditing } =
-    useEditExerciseMutation(queryClient, id);
-
-  const playbackId = url?.includes("/watch?v=")
-    ? url?.split("/watch?v=")[1]
-    : url?.includes(".be/")
-    ? url.split(".be/")[1]
-    : url?.includes("?feature=share")
-    ? url?.split("shorts/")[1].split("?feature=share")[0]
-    : url?.includes("shorts/")
-    ? url?.split("shorts/")[1]
-    : "";
-
-  const embedUrl = playbackId
-    ? "https://www.youtube.com/embed/" + playbackId
-    : url;
+    useEditWorkoutMutation(queryClient, id);
 
   const isOptimistic = id === 0;
 
@@ -54,25 +43,18 @@ export default function ExerciseCard() {
       })}
     >
       <CardHeader>
+        {/* add a popover for description maybe */}
         <CardTitle>{title}</CardTitle>
-        {instructions && <CardDescription>{instructions}</CardDescription>}
+        <CardDescription>{date}</CardDescription>
         {isOptimistic && (
           <LoadingSpinner className="absolute right-[12px] top-[6px] h-4 w-4" />
         )}
       </CardHeader>
-      {embedUrl && (
-        <CardContent>
-          <iframe
-            src={embedUrl}
-            width="283.5"
-            height="159.3"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="rounded-md sm:w-[299px] sm:h-[168px]"
-          />
-        </CardContent>
-      )}
+      <CardContent>
+        {started && <p>started: {started}</p>}
+        {finished && <p>finished: {finished}</p>}
+        {comment && <p>comment: {comment}</p>}
+      </CardContent>
       <CardFooter className="flex justify-between">
         {isOptimistic ? (
           <>
@@ -83,13 +65,14 @@ export default function ExerciseCard() {
           <>
             <ResponsiveFormDialog
               trigger={<Button variant={"outline"}>Edit</Button>}
-              title="Edit exercise"
-              description="Make changes to your exercise here. Click save when you're done."
+              title="Edit workout"
+              description="Make changes to your workout here. Click save when you're done."
             >
-              <ExerciseForm
+              <WorkoutForm
                 mutate={editOptimistically}
                 submitButtonText="Edit"
                 isSubmitting={isEditing}
+                variant="edit"
               />
             </ResponsiveFormDialog>
             <DeleteDialog action={() => deleteOptimistically(id)} />

@@ -26,9 +26,9 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "./ui/button";
 
-export const DialogContext = createContext<Dispatch<SetStateAction<boolean>>>(
-  () => {}
-);
+export const ToggleDialogFunction = createContext<
+  Dispatch<SetStateAction<boolean>>
+>(() => {});
 
 export default function ResponsiveFormDialog({
   trigger,
@@ -53,9 +53,9 @@ export default function ResponsiveFormDialog({
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <DialogContext.Provider value={setOpen}>
+          <ToggleDialogFunction.Provider value={setOpen}>
             {children}
-          </DialogContext.Provider>
+          </ToggleDialogFunction.Provider>
         </DialogContent>
       </Dialog>
     );
@@ -70,9 +70,9 @@ export default function ResponsiveFormDialog({
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
         <div className="px-6">
-          <DialogContext.Provider value={setOpen}>
+          <ToggleDialogFunction.Provider value={setOpen}>
             {children}
-          </DialogContext.Provider>
+          </ToggleDialogFunction.Provider>
         </div>
         <DrawerFooter className="pt-2 px-6">
           <DrawerClose asChild>

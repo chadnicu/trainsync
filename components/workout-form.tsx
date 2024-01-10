@@ -12,26 +12,39 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
-import { ExerciseContext } from "@/app/exercises/helpers";
-import { ExerciseFormData, exerciseSchema } from "@/app/exercises/helpers";
 import LoadingSpinner from "./loading-spinner";
 import { ToggleDialogFunction } from "./responsive-form-dialog";
 import { ReactNode, useContext } from "react";
+import { WorkoutFormData, workoutSchema } from "@/app/workouts/helpers";
+import { WorkoutContext } from "@/app/workouts/helpers";
 
-export default function ExerciseForm({
+export default function WorkoutForm({
   mutate,
   isSubmitting,
   submitButtonText,
+  variant,
 }: {
-  mutate: (values: ExerciseFormData) => void;
+  mutate: (values: WorkoutFormData) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
+  variant?: "edit";
 }) {
-  const { title, instructions, url } = useContext(ExerciseContext);
+  const { title, description, date, started, finished, comment } =
+    useContext(WorkoutContext);
 
-  const form = useForm<ExerciseFormData>({
-    resolver: zodResolver(exerciseSchema),
-    defaultValues: { title, instructions: instructions ?? "", url: url ?? "" },
+  // continue with editform
+  const isEditForm = variant === "edit";
+
+  const form = useForm<WorkoutFormData>({
+    resolver: zodResolver(workoutSchema),
+    defaultValues: {
+      title,
+      description: description ?? "",
+      date: date ? new Date(date) : new Date(),
+      // started: started ?? "",
+      // finished: finished ?? "",
+      // comment: comment ?? "",
+    },
   });
 
   const setOpen = useContext(ToggleDialogFunction);
@@ -40,7 +53,8 @@ export default function ExerciseForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          mutate(values);
+          console.log(values);
+          mutate({ ...values, date: values.date });
           setOpen(false);
         })}
         className="space-y-4"
@@ -52,10 +66,10 @@ export default function ExerciseForm({
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Bench Press" {...field} />
+                <Input placeholder="Push A" {...field} />
               </FormControl>
               <FormDescription>
-                This is the title of your exercise.
+                This is the title of your workout.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -63,18 +77,18 @@ export default function ExerciseForm({
         />
         <FormField
           control={form.control}
-          name="instructions"
+          name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Instructions</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Retract your scapula, arch your back, lower slowly then press back up"
+                  placeholder="Chest, delts, triceps and abs."
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                These are the instructions for your exercise.
+                This is the description for your workout.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -82,23 +96,41 @@ export default function ExerciseForm({
         />
         <FormField
           control={form.control}
-          name="url"
+          name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>YouTube URL</FormLabel>
+              <FormLabel>Date</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                  {...field}
-                />
+                {/* @ts-ignore */}
+                <Input type="date" {...field} />
               </FormControl>
               <FormDescription>
-                This is the URL to your exercise&apos;s YouTube video.
+                This is the date of your workout.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        {isEditForm && (
+          <>
+            {/* <FormField
+              control={form.control}
+              name="started"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Started</FormLabel>
+                  <FormControl>
+                    <Input type="time" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the timee you started your workout.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            /> */}
+          </>
+        )}
         <Button
           type="submit"
           className="float-right flex justify-center items-center"

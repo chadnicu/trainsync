@@ -1,11 +1,10 @@
 "use server";
 
-import { exerciseSchema } from "@/components/exercise-form";
 import { exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq } from "drizzle-orm";
-import { z } from "zod";
+import { ExerciseFormData } from "./helpers";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -22,7 +21,7 @@ export async function getExercises() {
 
 export async function editExercise(
   exerciseId: number,
-  values: z.infer<typeof exerciseSchema>
+  values: ExerciseFormData
 ) {
   const { userId } = auth();
   if (!userId) return;
@@ -33,16 +32,16 @@ export async function editExercise(
     .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)));
 }
 
-export async function deleteExercise(id: number) {
+export async function deleteExercise(exerciseId: number) {
   const { userId } = auth();
   if (!userId) return;
 
   await db
     .delete(exercise)
-    .where(and(eq(exercise.id, id), eq(exercise.userId, userId)));
+    .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)));
 }
 
-export async function addExercise(values: z.infer<typeof exerciseSchema>) {
+export async function addExercise(values: ExerciseFormData) {
   const { userId } = auth();
   if (!userId) return;
 
