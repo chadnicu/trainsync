@@ -34,13 +34,15 @@ export default function WorkoutForm({
 }) {
   const { title, description, date } = useContext(WorkoutContext);
 
+  const defaultValues = {
+    title,
+    description: description ?? "",
+    date: date ? new Date(date) : new Date(),
+  };
+
   const form = useForm<AddWorkoutFormData>({
     resolver: zodResolver(AddWorkoutSchema),
-    defaultValues: {
-      title,
-      description: description ?? "",
-      date: date ? new Date(date) : new Date(),
-    },
+    defaultValues,
   });
 
   const setOpen = useContext(ToggleDialogFunction);
@@ -49,7 +51,9 @@ export default function WorkoutForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          mutate(values);
+          if (JSON.stringify(values) !== JSON.stringify(defaultValues)) {
+            mutate(values);
+          }
           setOpen(false);
         })}
         className="space-y-4"

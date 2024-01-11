@@ -29,9 +29,15 @@ export default function ExerciseForm({
 }) {
   const { title, instructions, url } = useContext(ExerciseContext);
 
+  const defaultValues = {
+    title,
+    instructions: instructions ?? "",
+    url: url ?? "",
+  };
+
   const form = useForm<ExerciseFormData>({
     resolver: zodResolver(exerciseSchema),
-    defaultValues: { title, instructions: instructions ?? "", url: url ?? "" },
+    defaultValues,
   });
 
   const setOpen = useContext(ToggleDialogFunction);
@@ -40,7 +46,9 @@ export default function ExerciseForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          mutate(values);
+          if (JSON.stringify(values) !== JSON.stringify(defaultValues)) {
+            mutate(values);
+          }
           setOpen(false);
         })}
         className="space-y-4"

@@ -35,16 +35,18 @@ export default function EditWorkoutForm({
   const { title, description, date, started, finished, comment } =
     useContext(WorkoutContext);
 
+  const defaultValues = {
+    title,
+    description: description ?? "",
+    date: date ? new Date(date) : new Date(),
+    started: started ?? undefined,
+    finished: finished ?? undefined,
+    comment: comment ?? "",
+  };
+
   const form = useForm<EditWorkoutFormData>({
     resolver: zodResolver(EditWorkoutSchema),
-    defaultValues: {
-      title,
-      description: description ?? "",
-      date: date ? new Date(date) : new Date(),
-      started: undefined,
-      finished: undefined,
-      comment: comment ?? "",
-    },
+    defaultValues,
   });
 
   const setOpen = useContext(ToggleDialogFunction);
@@ -53,7 +55,9 @@ export default function EditWorkoutForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          mutate(values);
+          if (JSON.stringify(values) !== JSON.stringify(defaultValues)) {
+            mutate(values);
+          }
           setOpen(false);
         })}
         className="space-y-4 max-h-[70vh] overflow-y-auto px-1"
