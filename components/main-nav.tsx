@@ -1,3 +1,5 @@
+"use client";
+
 import { ThemeToggler } from "@/components/theme-toggler";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
@@ -5,6 +7,7 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import MobileNavMenu from "./mobile-nav-menu";
+import ClerkUserButton from "./clerk-user-button";
 
 const paths = [
   { title: "Home", href: "/" },
@@ -59,7 +62,7 @@ export default function MainNavbar() {
       <SignedIn>
         <div className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}>
           <div className="scale-[.80]">
-            <UserButton afterSignOutUrl="/" />
+            <ClerkUserButton />
           </div>
         </div>
       </SignedIn>

@@ -1,12 +1,10 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
-import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GeistSans } from "geist/font/sans";
 import MainNavbar from "@/components/main-nav";
 import MainFooter from "@/components/main-footer";
 import ClerkProvider from "@/components/clerk-provider";
-import { dark } from "@clerk/themes";
 import { TanstackQueryProvider } from "@/components/query-provider";
 
 // remove if no need for inter
@@ -29,10 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={GeistSans.className}>
-        <ClerkProvider
-          appearance={{ baseTheme: dark }}
-          className="min-h-screen flex flex-col justify-between bg-background antialiased leading-tight lg:leading-[1.1] gap-10"
-        >
+        <ClerkProvider className="min-h-screen flex flex-col justify-between bg-background antialiased leading-tight lg:leading-[1.1] gap-10">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
