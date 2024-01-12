@@ -1,10 +1,10 @@
 "use client";
 
-import ExerciseCard from "@/components/exercise-card";
-import ExerciseSkeleton from "@/components/exercise-skeleton";
+import ExerciseCard from "./exercise-card";
+import ExerciseSkeleton from "./exercise-skeleton";
+import ExerciseForm from "./exercise-form";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
-import ExerciseForm from "@/components/exercise-form";
 import {
   useExercises,
   useAddExerciseMutation,

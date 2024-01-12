@@ -5,19 +5,16 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import DeleteDialog from "./delete-dialog";
-import ResponsiveFormDialog from "./responsive-form-dialog";
-import { Button } from "./ui/button";
+} from "@/components/ui/card";
+import DeleteDialog from "@/components/delete-dialog";
+import ResponsiveFormDialog from "@/components/responsive-form-dialog";
+import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { cn } from "@/lib/utils";
-import LoadingSpinner from "./loading-spinner";
-import { ExerciseContext } from "@/app/exercises/helpers";
+import LoadingSpinner from "@/components/loading-spinner";
+import { ExerciseContext } from "./helpers";
 import ExerciseForm from "./exercise-form";
-import {
-  useDeleteExerciseMutation,
-  useEditExerciseMutation,
-} from "@/app/exercises/helpers";
+import { useDeleteExerciseMutation, useEditExerciseMutation } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function ExerciseCard() {

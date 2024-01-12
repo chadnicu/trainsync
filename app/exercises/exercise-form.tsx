@@ -11,11 +11,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
-import { ExerciseContext } from "@/app/exercises/helpers";
-import { ExerciseFormData, exerciseSchema } from "@/app/exercises/helpers";
-import LoadingSpinner from "./loading-spinner";
-import { ToggleDialogFunction } from "./responsive-form-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { ExerciseContext, ExerciseFormData, exerciseSchema } from "./helpers";
+import LoadingSpinner from "@/components/loading-spinner";
+import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
 
 export default function ExerciseForm({

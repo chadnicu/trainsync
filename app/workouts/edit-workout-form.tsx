@@ -11,17 +11,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "./ui/textarea";
-import LoadingSpinner from "./loading-spinner";
-import { ToggleDialogFunction } from "./responsive-form-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import LoadingSpinner from "@/components/loading-spinner";
+import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
-import { EditWorkoutFormData, EditWorkoutSchema } from "@/app/workouts/helpers";
-import { WorkoutContext } from "@/app/workouts/helpers";
+import {
+  WorkoutContext,
+  EditWorkoutFormData,
+  EditWorkoutSchema,
+} from "./helpers";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Calendar } from "./ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 export default function EditWorkoutForm({
   mutate,

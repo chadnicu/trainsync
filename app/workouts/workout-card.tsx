@@ -5,18 +5,18 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
-import DeleteDialog from "./delete-dialog";
-import ResponsiveFormDialog from "./responsive-form-dialog";
-import { Button } from "./ui/button";
+} from "@/components/ui/card";
+import DeleteDialog from "@/components/delete-dialog";
+import ResponsiveFormDialog from "@/components/responsive-form-dialog";
+import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { cn } from "@/lib/utils";
-import LoadingSpinner from "./loading-spinner";
+import LoadingSpinner from "@/components/loading-spinner";
 import {
   WorkoutContext,
   useDeleteWorkoutMutation,
   useEditWorkoutMutation,
-} from "@/app/workouts/helpers";
+} from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import EditWorkoutForm from "./edit-workout-form";
 

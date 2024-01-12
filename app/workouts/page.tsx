@@ -9,9 +9,9 @@ import {
   useWorkouts,
 } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
-import WorkoutCard from "@/components/workout-card";
-import WorkoutSkeleton from "@/components/workout-skeleton";
-import WorkoutForm from "@/components/add-workout-form";
+import WorkoutCard from "./workout-card";
+import WorkoutSkeleton from "./workout-skeleton";
+import AddWorkoutForm from "./add-workout-form";
 
 export default function Workouts() {
   const queryClient = useQueryClient();
@@ -53,7 +53,7 @@ export default function Workouts() {
         title="Add workout"
         description="Idk for now, subject to change"
       >
-        <WorkoutForm
+        <AddWorkoutForm
           mutate={addOptimistically}
           isSubmitting={isAdding}
           submitButtonText="Create"
