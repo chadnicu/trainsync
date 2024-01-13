@@ -9,16 +9,26 @@ import {
 import DeleteDialog from "@/components/delete-dialog";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
 import {
   WorkoutContext,
+  getDiffInMinutes,
   useDeleteWorkoutMutation,
   useEditWorkoutMutation,
 } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import EditWorkoutForm from "./edit-workout-form";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import dayjs from "@/lib/dayjs";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ChatBubbleIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function WorkoutCard() {
   const queryClient = useQueryClient();
@@ -34,24 +44,62 @@ export default function WorkoutCard() {
 
   const isOptimistic = id === 0;
 
+  const dayJsDate = dayjs(date);
+  const duration = getDiffInMinutes(started, finished);
+
+  const formattedDate = dayJsDate.format("DD-MM-YYYY");
+  const relativeDay = dayJsDate.isToday()
+    ? "(today)"
+    : `(${dayjs()
+        .hour(Math.floor(duration / 60))
+        .to(dayJsDate)})`;
+  const formattedDuration =
+    duration === -1 ? "" : `(${duration} minute${duration !== 1 ? "s" : ""})`;
+  const formattedHours = `${started ? started : ""}${
+    finished ? `-${finished}` : ""
+  }`;
+
+  const DescriptionPopover = () => (
+    <Popover>
+      <PopoverTrigger className="absolute top-6 right-6 gap-1 flex justify-center items-center rounded-md">
+        <ChevronDownIcon className="hover:scale-125 hover:bg-secondary duration-300 rounded-full" />
+      </PopoverTrigger>
+      <PopoverContent className="mr-4">{description}</PopoverContent>
+    </Popover>
+  );
+
+  const Comment = ({ children }: { children: ReactNode }) => (
+    <Alert>
+      <ChatBubbleIcon className="h-4 w-4" />
+      <AlertTitle>Comment</AlertTitle>
+      <AlertDescription>{children}</AlertDescription>
+    </Alert>
+  );
+
   return (
     <Card
       className={cn("w-[330px] sm:w-[348px]", {
         "opacity-50 relative": isOptimistic,
       })}
     >
-      <CardHeader>
-        {/* add a popover for description maybe */}
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{date}</CardDescription>
+      <CardHeader className="relative">
+        <CardTitle className="break-words max-w-[90%]">
+          {title}
+          {description && <DescriptionPopover />}
+        </CardTitle>
+        <CardDescription>
+          {formattedDate}
+          <span className="float-right">{relativeDay}</span>
+          <br />
+          {formattedHours}
+          <span className="float-right">{formattedDuration}</span>
+        </CardDescription>
         {isOptimistic && (
           <LoadingSpinner className="absolute right-[12px] top-[6px] h-4 w-4" />
         )}
       </CardHeader>
-      <CardContent>
-        {started && <p>started: {started}</p>}
-        {finished && <p>finished: {finished}</p>}
-        {comment && <p>comment: {comment}</p>}
+      <CardContent className="-mt-1">
+        {comment && <Comment>{comment}</Comment>}
       </CardContent>
       <CardFooter className="flex justify-between">
         {isOptimistic ? (
@@ -66,11 +114,13 @@ export default function WorkoutCard() {
               title="Edit workout"
               description="Make changes to your workout here. Click save when you're done."
             >
-              <EditWorkoutForm
-                mutate={editOptimistically}
-                submitButtonText="Edit"
-                isSubmitting={isEditing}
-              />
+              <ScrollArea className="max-h-[70vh] overflow-y-auto">
+                <EditWorkoutForm
+                  mutate={editOptimistically}
+                  submitButtonText="Edit"
+                  isSubmitting={isEditing}
+                />
+              </ScrollArea>
             </ResponsiveFormDialog>
             <DeleteDialog action={() => deleteOptimistically(id)} />
           </>

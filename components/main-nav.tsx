@@ -14,6 +14,7 @@ const paths = [
   { title: "Exercises", href: "/exercises" },
   { title: "Workouts", href: "/workouts" },
   { title: "Templates", href: "/templates" },
+  { title: "Logs", href: "/logs" },
 ];
 
 export default function MainNavbar() {

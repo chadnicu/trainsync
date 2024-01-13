@@ -76,7 +76,7 @@ export default function ResponsiveFormDialog({
         </div>
         <DrawerFooter className="pt-2 px-6">
           <DrawerClose asChild>
-            <Button variant="outline" className="w-fit -mt-11">
+            <Button variant="outline" className="w-fit -mt-11 ml-1 z-10">
               Cancel
             </Button>
           </DrawerClose>

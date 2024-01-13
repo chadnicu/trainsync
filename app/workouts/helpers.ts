@@ -2,6 +2,7 @@ import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { createContext } from "react";
 import { z } from "zod";
 import { addWorkout, deleteWorkout, editWorkout, getWorkouts } from "./server";
+import dayjs from "@/lib/dayjs";
 
 // key
 const queryKey = ["workouts"];
@@ -58,7 +59,7 @@ export const useEditWorkoutMutation = (
   workoutId: number
 ) =>
   useMutation({
-    mutationFn: async (values: AddWorkoutFormData) =>
+    mutationFn: async (values: EditWorkoutFormData) =>
       await editWorkout(workoutId, values),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
@@ -72,9 +73,9 @@ export const useEditWorkoutMutation = (
           ...values,
           description: values.description ?? "",
           date: values.date.toDateString(),
-          started: null,
-          finished: null,
-          comment: null,
+          started: values.started ?? null,
+          finished: values.finished ?? null,
+          comment: values.comment ?? null,
         };
         return copy;
       });
@@ -131,3 +132,27 @@ export const EditWorkoutSchema = z.object({
 export type AddWorkoutFormData = z.infer<typeof AddWorkoutSchema>;
 export type EditWorkoutFormData = z.infer<typeof EditWorkoutSchema>;
 export type Workout = Awaited<ReturnType<typeof getWorkouts>>[0];
+
+// other
+export function getDiffInMinutes(
+  started: string | null,
+  finished: string | null
+) {
+  if (
+    !started ||
+    !finished ||
+    started.length !== 5 ||
+    finished.length !== 5 ||
+    started.indexOf(":") === -1 ||
+    finished.indexOf(":") === -1
+  )
+    return -1;
+
+  const [sHour, sMin] = started.split(":").map((e) => parseInt(e, 10));
+  const [fHour, fMin] = finished.split(":").map((e) => parseInt(e, 10));
+  const startTime = dayjs().hour(sHour).minute(sMin);
+  const finishTime = dayjs().hour(fHour).minute(fMin);
+  const duration = finishTime.diff(startTime, "minutes");
+
+  return duration;
+}

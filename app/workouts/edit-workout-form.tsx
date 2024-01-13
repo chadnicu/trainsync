@@ -67,7 +67,7 @@ export default function EditWorkoutForm({
           }
           setOpen(false);
         })}
-        className="space-y-4 max-h-[70vh] overflow-y-auto px-1"
+        className="space-y-4"
       >
         <FormField
           control={form.control}
