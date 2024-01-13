@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/popover";
 import { ChatBubbleIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from "next/link";
 
 export default function WorkoutCard() {
   const queryClient = useQueryClient();
@@ -84,7 +85,12 @@ export default function WorkoutCard() {
     >
       <CardHeader className="relative">
         <CardTitle className="break-words max-w-[90%]">
-          {title}
+          <Link
+            href={`/workouts/${id}`}
+            className="hover:underline underline-offset-2 focus:underline active:outline outline-selection"
+          >
+            {title}
+          </Link>
           {description && <DescriptionPopover />}
         </CardTitle>
         <CardDescription>

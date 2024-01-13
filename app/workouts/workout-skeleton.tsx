@@ -16,14 +16,14 @@ export default function WorkoutSkeleton() {
           <Skeleton className="w-full h-4" />
         </CardTitle>
         <CardDescription className="space-y-1">
-          <div className="flex gap-28">
+          <span className="flex gap-28">
             <Skeleton className="w-full h-4" />
             <Skeleton className="w-full h-4" />
-          </div>
-          <div className="flex gap-28">
+          </span>
+          <span className="flex gap-28">
             <Skeleton className="w-full h-4" />
             <Skeleton className="w-full h-4" />
-          </div>
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent>
