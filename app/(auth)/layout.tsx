@@ -3,5 +3,9 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <section className="w-fit mx-auto">{children}</section>;
+  return (
+    <section className="absolute grid place-items-center inset-0 m-auto">
+      {children}
+    </section>
+  );
 }
