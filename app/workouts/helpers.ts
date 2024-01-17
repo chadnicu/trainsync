@@ -126,6 +126,7 @@ export const EditWorkoutSchema = z.object({
     })
     .optional(),
   comment: z.string().min(0).max(255).optional(),
+  clearTime: z.boolean().default(false).optional(),
 });
 
 // types

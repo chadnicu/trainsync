@@ -29,6 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function EditWorkoutForm({
   mutate,
@@ -49,6 +50,7 @@ export default function EditWorkoutForm({
     started: started ?? undefined,
     finished: finished ?? undefined,
     comment: comment ?? "",
+    clearTime: false,
   };
 
   const form = useForm<EditWorkoutFormData>({
@@ -58,12 +60,19 @@ export default function EditWorkoutForm({
 
   const setOpen = useContext(ToggleDialogFunction);
 
+  const showTimes = !form.getValues("clearTime");
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
           if (JSON.stringify(values) !== JSON.stringify(defaultValues)) {
-            mutate(values);
+            const { clearTime, ...needed } = values;
+            mutate({
+              ...needed,
+              started: !!values.clearTime ? undefined : values.started,
+              finished: !!values.clearTime ? undefined : values.finished,
+            });
           }
           setOpen(false);
         })}
@@ -118,34 +127,56 @@ export default function EditWorkoutForm({
             </FormItem>
           )}
         />
+        {showTimes && (
+          <>
+            <FormField
+              control={form.control}
+              name="started"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Started at</FormLabel>
+                  <FormControl>
+                    <Input type="time" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the time your workout started.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="finished"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Finished at</FormLabel>
+                  <FormControl>
+                    <Input type="time" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is the time you finished your workout.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
         <FormField
           control={form.control}
-          name="started"
+          name="clearTime"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Started at</FormLabel>
-              <FormControl>
-                <Input type="time" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is the time your workout started.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="finished"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Finished at</FormLabel>
-              <FormControl>
-                <Input type="time" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is the time you finished your workout.
-              </FormDescription>
+              <div className="flex items-center gap-1">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel className="mt-[2px]">Clear times</FormLabel>
+              </div>
               <FormMessage />
             </FormItem>
           )}

@@ -4,7 +4,7 @@ import { workout } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq } from "drizzle-orm";
-import { AddWorkoutFormData } from "./helpers";
+import { AddWorkoutFormData, EditWorkoutFormData } from "./helpers";
 
 export async function getWorkouts() {
   const { userId } = auth();
@@ -21,14 +21,19 @@ export async function getWorkouts() {
 
 export async function editWorkout(
   workoutId: number,
-  values: AddWorkoutFormData
+  values: EditWorkoutFormData
 ) {
   const { userId } = auth();
   if (!userId) return;
 
   await db
     .update(workout)
-    .set({ ...values, date: values.date.toDateString() })
+    .set({
+      ...values,
+      date: values.date.toDateString(),
+      started: values.started ?? null,
+      finished: values.finished ?? null,
+    })
     .where(and(eq(workout.id, workoutId), eq(workout.userId, userId)));
 }
 
