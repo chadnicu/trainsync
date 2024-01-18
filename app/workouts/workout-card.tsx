@@ -56,8 +56,8 @@ export default function WorkoutCard() {
         .to(dayJsDate)})`;
   const formattedDuration =
     duration === -1 ? "" : `(${duration} minute${duration !== 1 ? "s" : ""})`;
-  const formattedHours = `${started ? started : ""}${
-    finished ? `-${finished}` : ""
+  const formattedHours = `${started ? started : finished ? "unknown" : ""}${
+    finished ? `-${finished}` : started ? "-unknown" : ""
   }`;
 
   const DescriptionPopover = () => (

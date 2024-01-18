@@ -71,27 +71,25 @@ export default function ExerciseCard() {
         </CardContent>
       )}
       <CardFooter className="flex justify-between">
-        {isOptimistic ? (
-          <>
-            <Button variant={"outline"}>Edit</Button>
-            <Button variant={"destructive"}>Delete</Button>
-          </>
-        ) : (
-          <>
-            <ResponsiveFormDialog
-              trigger={<Button variant={"outline"}>Edit</Button>}
-              title="Edit exercise"
-              description="Make changes to your exercise here. Click save when you're done."
-            >
-              <ExerciseForm
-                mutate={editOptimistically}
-                submitButtonText="Edit"
-                isSubmitting={isEditing}
-              />
-            </ResponsiveFormDialog>
-            <DeleteDialog action={() => deleteOptimistically(id)} />
-          </>
-        )}
+        <ResponsiveFormDialog
+          trigger={
+            <Button variant={"outline"} disabled={isOptimistic}>
+              Edit
+            </Button>
+          }
+          title="Edit exercise"
+          description="Make changes to your exercise here. Click save when you're done."
+        >
+          <ExerciseForm
+            mutate={editOptimistically}
+            submitButtonText="Edit"
+            isSubmitting={isEditing}
+          />
+        </ResponsiveFormDialog>
+        <DeleteDialog
+          action={() => deleteOptimistically(id)}
+          disabled={isOptimistic}
+        />
       </CardFooter>
     </Card>
   );

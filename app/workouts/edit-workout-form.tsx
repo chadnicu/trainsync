@@ -127,6 +127,25 @@ export default function EditWorkoutForm({
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="clearTime"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <div className="flex items-center gap-1">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className="border-border brightness-150"
+                  />
+                </FormControl>
+                <FormLabel className="mt-[2px]">Clear times</FormLabel>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {showTimes && (
           <>
             <FormField
@@ -163,24 +182,6 @@ export default function EditWorkoutForm({
             />
           </>
         )}
-        <FormField
-          control={form.control}
-          name="clearTime"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <div className="flex items-center gap-1">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <FormLabel className="mt-[2px]">Clear times</FormLabel>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="comment"

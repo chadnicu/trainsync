@@ -10,12 +10,19 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "./ui/button";
+import { ComponentPropsWithoutRef } from "react";
 
-export default function DeleteDialog({ action }: { action: () => void }) {
+export default function DeleteDialog({
+  action,
+  ...props
+}: {
+  action: () => void;
+} & ComponentPropsWithoutRef<"button">) {
   return (
     <AlertDialog>
       <AlertDialogTrigger
         className={buttonVariants({ variant: "destructive" })}
+        {...props}
       >
         Delete
       </AlertDialogTrigger>
