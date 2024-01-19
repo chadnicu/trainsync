@@ -35,7 +35,7 @@ export function ResponsiveComboBox({ data, placeholder, triggerText }: Props) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const DataCommand = () => (
-    <Command className="border-t md:border-t-0 mt-4 md:mt-0">
+    <Command className="p-4 md:p-0">
       <CommandInput placeholder={placeholder ?? "Search.."} />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>

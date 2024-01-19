@@ -117,7 +117,7 @@ export default function WorkoutCard() {
           title="Edit workout"
           description="Make changes to your workout here. Click save when you're done."
         >
-          <ScrollArea className="max-h-[70vh] overflow-y-hidden">
+          <ScrollArea className="h-screen max-h-[70vh] overflow-y-hidden">
             <EditWorkoutForm
               mutate={editOptimistically}
               submitButtonText="Edit"
