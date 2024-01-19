@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { P } from "./typography/p";
 
 export default function MainFooter() {
   const className = cn(
@@ -10,7 +11,7 @@ export default function MainFooter() {
 
   return (
     <footer className="py-2 px-4 text-sm sm:text-center border-t">
-      <h3 className="tracking-tight -space-y-2">
+      <P className="-space-y-2">
         Made by
         <Link href="https://twitter.com/iusedebian" className={className}>
           iusedebian
@@ -24,7 +25,7 @@ export default function MainFooter() {
           GitHub
         </Link>
         .
-      </h3>
+      </P>
     </footer>
   );
 }

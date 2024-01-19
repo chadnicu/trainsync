@@ -35,11 +35,13 @@ export default function ResponsiveFormDialog({
   title,
   description,
   children,
+  popoverContent,
 }: {
   trigger: ReactNode;
-  title: ReactNode;
-  description: ReactNode;
+  title?: ReactNode;
+  description?: ReactNode;
   children: ReactNode;
+  popoverContent?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -49,10 +51,14 @@ export default function ResponsiveFormDialog({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
-          </DialogHeader>
+          {(title || description) && (
+            <DialogHeader>
+              {title && <DialogTitle>{title}</DialogTitle>}
+              {description && (
+                <DialogDescription>{description}</DialogDescription>
+              )}
+            </DialogHeader>
+          )}
           <ToggleDialogFunction.Provider value={setOpen}>
             {children}
           </ToggleDialogFunction.Provider>
@@ -65,10 +71,14 @@ export default function ResponsiveFormDialog({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left px-6">
-          <DrawerTitle>{title}</DrawerTitle>
-          <DrawerDescription>{description}</DrawerDescription>
-        </DrawerHeader>
+        {(title || description) && (
+          <DrawerHeader className="text-left px-6">
+            {title && <DrawerTitle>{title}</DrawerTitle>}
+            {description && (
+              <DrawerDescription>{description}</DrawerDescription>
+            )}
+          </DrawerHeader>
+        )}
         <div className="px-6">
           <ToggleDialogFunction.Provider value={setOpen}>
             {children}

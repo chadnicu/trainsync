@@ -1,0 +1,91 @@
+"use client";
+
+import * as React from "react";
+
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollArea } from "./ui/scroll-area";
+
+type Data = { id: number; title: string };
+
+type Props = {
+  data: Data[];
+  placeholder?: string;
+  triggerText?: string;
+};
+
+export function ResponsiveComboBox({ data, placeholder, triggerText }: Props) {
+  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState<Data | null>(null);
+
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const DataCommand = () => (
+    <Command className="border-t md:border-t-0 mt-4 md:mt-0">
+      <CommandInput placeholder={placeholder ?? "Search.."} />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup className="overflow-hidden">
+          <ScrollArea className="h-72">
+            {data.map(({ id, title }) => (
+              <CommandItem
+                key={id}
+                value={title}
+                onSelect={(title) => {
+                  setSelected(
+                    data.find(
+                      (priority) => priority.title.toLocaleLowerCase() === title
+                    ) || null
+                  );
+                  setOpen(false);
+                }}
+              >
+                {title}
+              </CommandItem>
+            ))}
+          </ScrollArea>
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+
+  const trigger = (
+    <Button variant="outline">
+      {selected ? selected.title : triggerText ?? "Search"}
+    </Button>
+  );
+
+  if (isDesktop) {
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>{trigger}</PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0" align="start">
+          <DataCommand />
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerContent>
+        <DataCommand />
+      </DrawerContent>
+    </Drawer>
+  );
+}

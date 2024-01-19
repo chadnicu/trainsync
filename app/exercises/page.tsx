@@ -12,6 +12,8 @@ import {
   invalidateExercises,
 } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
+import { H1 } from "@/components/typography/h1";
+import { P } from "@/components/typography/p";
 
 export default function Exercises() {
   const { data, isLoading, isFetching, isSuccess, isError } = useExercises();
@@ -22,7 +24,7 @@ export default function Exercises() {
     useAddExerciseMutation(queryClient);
 
   const Error = () => (
-    <p className="grid place-items-center gap-3">
+    <P className="grid place-items-center gap-3">
       Something went wrong.
       <Button
         onClick={() => invalidateExercises(queryClient)}
@@ -30,7 +32,7 @@ export default function Exercises() {
       >
         Refresh
       </Button>
-    </p>
+    </P>
   );
 
   const Skeletons = () =>
@@ -45,9 +47,7 @@ export default function Exercises() {
 
   return (
     <section className="space-y-10">
-      <h1 className="text-center text-3xl font-bold  md:text-6xl tracking-tighter">
-        Your exercises
-      </h1>
+      <H1 className="text-center">Your exercises</H1>
       {isError && <Error />}
       <ResponsiveFormDialog
         trigger={

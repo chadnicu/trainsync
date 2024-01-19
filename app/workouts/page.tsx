@@ -12,6 +12,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import WorkoutCard from "./workout-card";
 import WorkoutSkeleton from "./workout-skeleton";
 import AddWorkoutForm from "./add-workout-form";
+import { H1 } from "@/components/typography/h1";
+import { P } from "@/components/typography/p";
 
 export default function Workouts() {
   const queryClient = useQueryClient();
@@ -22,12 +24,12 @@ export default function Workouts() {
     useAddWorkoutMutation(queryClient);
 
   const Error = () => (
-    <p className="grid place-items-center gap-3">
+    <P className="grid place-items-center gap-3">
       Something went wrong.
       <Button onClick={() => invalidateWorkouts(queryClient)} className="w-fit">
         Refresh
       </Button>
-    </p>
+    </P>
   );
 
   const Skeletons = () =>
@@ -42,9 +44,7 @@ export default function Workouts() {
 
   return (
     <section className="space-y-10">
-      <h1 className="text-center text-3xl font-bold  md:text-6xl tracking-tighter">
-        Your workouts
-      </h1>
+      <H1 className="text-center">Your workouts</H1>
       {isError && <Error />}
       <ResponsiveFormDialog
         trigger={

@@ -5,6 +5,7 @@ import type { PublishableKeyOrFrontendApi } from "@clerk/types";
 import React from "react";
 import { dark } from "@clerk/themes";
 import { buttonVariants } from "./ui/button";
+import { H1 } from "./typography/h1";
 
 type NextAppClerkProviderProps = React.PropsWithChildren<
   Omit<IsomorphicClerkOptions, keyof PublishableKeyOrFrontendApi> &
@@ -39,7 +40,7 @@ export default function ClerkProvider({
   ...props
 }: NextAppClerkProviderProps & { className: string }) {
   return (
-    <Suspense fallback={<p>Loading clerk..</p>}>
+    <Suspense fallback={<H1>Loading clerk..</H1>}>
       <AsyncClerkProvider
         appearance={{
           baseTheme: dark,
