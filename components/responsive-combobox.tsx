@@ -23,12 +23,18 @@ import { ScrollArea } from "./ui/scroll-area";
 type Data = { id: number; title: string };
 
 type Props = {
+  trigger: React.ReactNode;
   data: Data[];
   placeholder?: string;
-  triggerText?: string;
+  mutate: ({ exerciseId }: { exerciseId: number }) => void;
 };
 
-export function ResponsiveComboBox({ data, placeholder, triggerText }: Props) {
+export function ResponsiveComboBox({
+  trigger,
+  data,
+  placeholder,
+  mutate,
+}: Props) {
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState<Data | null>(null);
 
@@ -46,11 +52,7 @@ export function ResponsiveComboBox({ data, placeholder, triggerText }: Props) {
                 key={id}
                 value={title}
                 onSelect={(title) => {
-                  setSelected(
-                    data.find(
-                      (priority) => priority.title.toLocaleLowerCase() === title
-                    ) || null
-                  );
+                  mutate({ exerciseId: id });
                   setOpen(false);
                 }}
               >
@@ -61,12 +63,6 @@ export function ResponsiveComboBox({ data, placeholder, triggerText }: Props) {
         </CommandGroup>
       </CommandList>
     </Command>
-  );
-
-  const trigger = (
-    <Button variant="outline">
-      {selected ? selected.title : triggerText ?? "Search"}
-    </Button>
   );
 
   if (isDesktop) {

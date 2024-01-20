@@ -19,7 +19,7 @@ export const useWorkouts = () =>
     initialData: [],
   });
 
-export const useAddWorkoutMutation = (queryClient: QueryClient) =>
+export const useAddWorkout = (queryClient: QueryClient) =>
   useMutation({
     mutationFn: async (values: AddWorkoutFormData) => await addWorkout(values),
     onMutate: async (values) => {
@@ -37,7 +37,7 @@ export const useAddWorkoutMutation = (queryClient: QueryClient) =>
     onSettled: () => invalidateWorkouts(queryClient),
   });
 
-export const useDeleteWorkoutMutation = (queryClient: QueryClient) =>
+export const useDeleteWorkout = (queryClient: QueryClient) =>
   useMutation({
     mutationFn: async (workoutId) => deleteWorkout(workoutId),
     onMutate: async (workoutId: number) => {
@@ -54,10 +54,7 @@ export const useDeleteWorkoutMutation = (queryClient: QueryClient) =>
     onSettled: () => invalidateWorkouts(queryClient),
   });
 
-export const useEditWorkoutMutation = (
-  queryClient: QueryClient,
-  workoutId: number
-) =>
+export const useEditWorkout = (queryClient: QueryClient, workoutId: number) =>
   useMutation({
     mutationFn: async (values: EditWorkoutFormData) =>
       await editWorkout(workoutId, values),

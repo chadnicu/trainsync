@@ -15,8 +15,8 @@ import LoadingSpinner from "@/components/loading-spinner";
 import {
   WorkoutContext,
   getDiffInMinutes,
-  useDeleteWorkoutMutation,
-  useEditWorkoutMutation,
+  useDeleteWorkout,
+  useEditWorkout,
 } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import EditWorkoutForm from "./edit-workout-form";
@@ -34,14 +34,15 @@ import Link from "next/link";
 export default function WorkoutCard() {
   const queryClient = useQueryClient();
 
-  const { mutate: deleteOptimistically } =
-    useDeleteWorkoutMutation(queryClient);
+  const { mutate: deleteOptimistically } = useDeleteWorkout(queryClient);
 
   const { id, title, description, date, started, finished, comment } =
     useContext(WorkoutContext);
 
-  const { mutate: editOptimistically, isPending: isEditing } =
-    useEditWorkoutMutation(queryClient, id);
+  const { mutate: editOptimistically, isPending: isEditing } = useEditWorkout(
+    queryClient,
+    id
+  );
 
   const isOptimistic = id === 0;
 

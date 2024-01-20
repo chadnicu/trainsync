@@ -23,7 +23,7 @@ export const useExercises = () =>
     initialData: [],
   });
 
-export const useAddExerciseMutation = (queryClient: QueryClient) =>
+export const useAddExercise = (queryClient: QueryClient) =>
   useMutation({
     mutationFn: async (values: ExerciseFormData) => await addExercise(values),
     onMutate: async (values) => {
@@ -41,7 +41,7 @@ export const useAddExerciseMutation = (queryClient: QueryClient) =>
     onSettled: () => invalidateExercises(queryClient),
   });
 
-export const useDeleteExerciseMutation = (queryClient: QueryClient) =>
+export const useDeleteExercise = (queryClient: QueryClient) =>
   useMutation({
     mutationFn: async (exerciseId) => deleteExercise(exerciseId),
     onMutate: async (exerciseId: number) => {
@@ -58,10 +58,7 @@ export const useDeleteExerciseMutation = (queryClient: QueryClient) =>
     onSettled: () => invalidateExercises(queryClient),
   });
 
-export const useEditExerciseMutation = (
-  queryClient: QueryClient,
-  exerciseId: number
-) =>
+export const useEditExercise = (queryClient: QueryClient, exerciseId: number) =>
   useMutation({
     mutationFn: async (values: ExerciseFormData) =>
       await editExercise(exerciseId, values),

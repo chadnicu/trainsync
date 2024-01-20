@@ -6,6 +6,7 @@ import MainNavbar from "@/components/main-nav";
 import MainFooter from "@/components/main-footer";
 import ClerkProvider from "@/components/clerk-provider";
 import { TanstackQueryProvider } from "@/components/query-provider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 // remove if no need for inter
 // import { Inter as FontSans } from "next/font/google";
@@ -27,20 +28,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={GeistSans.className}>
-        <ClerkProvider className="min-h-screen flex flex-col justify-between bg-background antialiased leading-tight lg:leading-[1.1] gap-10">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <TanstackQueryProvider>
-              <MainNavbar />
-              <main className="sm:container px-[0.9rem]">{children}</main>
-              <MainFooter />
-            </TanstackQueryProvider>
-          </ThemeProvider>
-        </ClerkProvider>
+        <ScrollArea className="h-screen w-screen no-padding">
+          <ClerkProvider className="min-h-screen flex flex-col justify-between bg-background antialiased leading-tight lg:leading-[1.1] gap-10">
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <TanstackQueryProvider>
+                <MainNavbar />
+                <main className="sm:container px-[0.9rem]">{children}</main>
+                <MainFooter />
+              </TanstackQueryProvider>
+            </ThemeProvider>
+          </ClerkProvider>
+        </ScrollArea>
       </body>
     </html>
   );

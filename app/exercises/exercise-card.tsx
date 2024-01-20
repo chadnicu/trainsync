@@ -10,37 +10,26 @@ import DeleteDialog from "@/components/delete-dialog";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
-import { cn } from "@/lib/utils";
+import { cn, getYouTubeEmbedURL } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ExerciseContext } from "./helpers";
 import ExerciseForm from "./exercise-form";
-import { useDeleteExerciseMutation, useEditExerciseMutation } from "./helpers";
+import { useDeleteExercise, useEditExercise } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function ExerciseCard() {
   const queryClient = useQueryClient();
 
-  const { mutate: deleteOptimistically } =
-    useDeleteExerciseMutation(queryClient);
+  const { mutate: deleteOptimistically } = useDeleteExercise(queryClient);
 
   const { id, title, instructions, url } = useContext(ExerciseContext);
 
-  const { mutate: editOptimistically, isPending: isEditing } =
-    useEditExerciseMutation(queryClient, id);
+  const { mutate: editOptimistically, isPending: isEditing } = useEditExercise(
+    queryClient,
+    id
+  );
 
-  const playbackId = url?.includes("/watch?v=")
-    ? url?.split("/watch?v=")[1]
-    : url?.includes(".be/")
-    ? url.split(".be/")[1]
-    : url?.includes("?feature=share")
-    ? url?.split("shorts/")[1].split("?feature=share")[0]
-    : url?.includes("shorts/")
-    ? url?.split("shorts/")[1]
-    : "";
-
-  const embedUrl = playbackId
-    ? "https://www.youtube.com/embed/" + playbackId
-    : url;
+  const embedUrl = getYouTubeEmbedURL(url);
 
   const isOptimistic = id === 0;
 

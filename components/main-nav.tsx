@@ -36,14 +36,14 @@ export default function MainNavbar() {
   const Socials = () => (
     <>
       <Link
-        href={"https://github.com/iusedebian"}
+        href={"https://github.com/chadnicu"}
         target="_blank"
         className={buttonVariants({ variant: "ghost", size: "icon" })}
       >
         <GitHubLogoIcon className="w-[1.2rem] h-[1.2rem]" />
       </Link>
       <Link
-        href={"https://x.com/iusedebian"}
+        href={"https://x.com/chadnicu"}
         target="_blank"
         className={buttonVariants({ variant: "ghost", size: "icon" })}
       >

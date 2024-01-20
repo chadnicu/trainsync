@@ -5,15 +5,14 @@ import { Button } from "@/components/ui/button";
 import {
   WorkoutContext,
   invalidateWorkouts,
-  useAddWorkoutMutation,
+  useAddWorkout,
   useWorkouts,
 } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import WorkoutCard from "./workout-card";
 import WorkoutSkeleton from "./workout-skeleton";
 import AddWorkoutForm from "./add-workout-form";
-import { H1 } from "@/components/typography/h1";
-import { P } from "@/components/typography/p";
+import { H1, P } from "@/components/typography";
 
 export default function Workouts() {
   const queryClient = useQueryClient();
@@ -21,7 +20,7 @@ export default function Workouts() {
   const { data, isLoading, isFetching, isSuccess, isError } = useWorkouts();
 
   const { mutate: addOptimistically, isPending: isAdding } =
-    useAddWorkoutMutation(queryClient);
+    useAddWorkout(queryClient);
 
   const Error = () => (
     <P className="grid place-items-center gap-3">
