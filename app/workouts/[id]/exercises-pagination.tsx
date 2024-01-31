@@ -6,6 +6,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export default function ExercisesPagination({ length }: { length: number }) {
@@ -15,14 +16,16 @@ export default function ExercisesPagination({ length }: { length: number }) {
   const next = current < length ? current + 1 : current;
   const prev = current > 1 ? current - 1 : current;
 
+  const magicNumber = useMediaQuery("(min-width: 450px)") ? 5 : 3;
+
   const PaginationLinks = () => {
     let amount: number;
     if (current <= 3) {
       amount = 0;
     } else if (current >= length - 2) {
-      amount = current - (5 - (length - current));
+      amount = current - (magicNumber - (length - current));
     } else {
-      amount = current - 3;
+      amount = current - (magicNumber === 5 ? 3 : 2);
     }
 
     return Array.from({ length }, (_, i) => {
@@ -38,7 +41,7 @@ export default function ExercisesPagination({ length }: { length: number }) {
           </PaginationLink>
         </PaginationItem>
       );
-    }).splice(amount, 5);
+    }).splice(amount, magicNumber);
   };
 
   return (

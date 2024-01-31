@@ -10,7 +10,7 @@ import {
 } from "./helpers";
 import { Button } from "@/components/ui/button";
 import WorkoutExerciseCard from "./workout-exercise-card";
-import { H1, H2, P } from "@/components/typography";
+import { H1, P } from "@/components/typography";
 import { useSearchParams } from "next/navigation";
 import ExercisesPagination from "./exercises-pagination";
 
@@ -21,7 +21,7 @@ type Props = {
 export default function Workout({ params: { id } }: Props) {
   const workoutId = parseInt(id, 10);
 
-  const { data: workout } = useWorkout(workoutId);
+  const { data: workout, isFetched, isSuccess } = useWorkout(workoutId);
 
   const {
     data: { inWorkout, other },
@@ -39,19 +39,15 @@ export default function Workout({ params: { id } }: Props) {
 
   return (
     <section className="sm:container text-center space-y-4">
-      <H2>Workout {workoutId}</H2>
       <H1>{workout?.title}</H1>
       <P>{workout?.description}</P>
 
       <ExercisesPagination length={inWorkout.length} />
-
-      <div className="grid place-items-center gap-10">
-        {inWorkout.map((e, i) => (
-          <WorkoutExerciseContext.Provider value={e} key={e.id}>
-            {i + 1 === exerciseIndex && <WorkoutExerciseCard />}
-          </WorkoutExerciseContext.Provider>
-        ))}
-      </div>
+      {inWorkout[exerciseIndex - 1] && (
+        <WorkoutExerciseContext.Provider value={inWorkout[exerciseIndex - 1]}>
+          <WorkoutExerciseCard />
+        </WorkoutExerciseContext.Provider>
+      )}
 
       <ResponsiveComboBox
         trigger={<Button variant="outline">Add another exercise</Button>}

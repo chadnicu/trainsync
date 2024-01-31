@@ -14,7 +14,6 @@ const paths = [
   { title: "Exercises", href: "/exercises" },
   { title: "Workouts", href: "/workouts" },
   { title: "Templates", href: "/templates" },
-  { title: "Logs", href: "/logs" },
 ];
 
 export default function MainNavbar() {
@@ -24,7 +23,7 @@ export default function MainNavbar() {
         <li key={i}>
           <Link
             href={href}
-            className={buttonVariants({ variant: "link", fontSize: "md" })}
+            className={buttonVariants({ variant: "navLink", fontSize: "md" })}
           >
             {title}
           </Link>

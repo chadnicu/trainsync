@@ -5,8 +5,8 @@ import { P } from "@/components/typography";
 
 export default function MainFooter() {
   const className = cn(
-    buttonVariants({ variant: "link", fontSize: "sm" }),
-    "-ml-3 -mr-4"
+    buttonVariants({ variant: "navLink", fontSize: "sm" }),
+    "p-0 ml-[3px]"
   );
 
   return (

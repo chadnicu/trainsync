@@ -35,13 +35,11 @@ export default function ResponsiveFormDialog({
   title,
   description,
   children,
-  popoverContent,
 }: {
   trigger: ReactNode;
   title?: ReactNode;
   description?: ReactNode;
   children: ReactNode;
-  popoverContent?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");

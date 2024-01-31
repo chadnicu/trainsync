@@ -18,7 +18,8 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "underline-offset-4 transition-colors hover:text-foreground/80 text-foreground/60 font-normal tracking-tight",
+        navLink:
+          "underline-offset-4 transition-colors hover:text-foreground/80 text-foreground/60 font-normal tracking-tight",
       },
       size: {
         default: "h-9 px-4 py-2",

@@ -9,7 +9,7 @@ import {
 import DeleteDialog from "@/components/delete-dialog";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
-import { ReactNode, useContext } from "react";
+import { useContext } from "react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
 import {
@@ -27,9 +27,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ChatBubbleIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ChevronDownIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { typography } from "@/components/typography";
+import CommentAlert from "@/components/comment";
 
 export default function WorkoutCard() {
   const queryClient = useQueryClient();
@@ -70,14 +71,6 @@ export default function WorkoutCard() {
     </Popover>
   );
 
-  const Comment = ({ children }: { children: ReactNode }) => (
-    <Alert>
-      <ChatBubbleIcon className="h-4 w-4" />
-      <AlertTitle>Comment</AlertTitle>
-      <AlertDescription>{children}</AlertDescription>
-    </Alert>
-  );
-
   return (
     <Card
       className={cn("w-[330px] sm:w-[348px]", {
@@ -86,12 +79,13 @@ export default function WorkoutCard() {
     >
       <CardHeader className="relative">
         <CardTitle className="break-words max-w-[90%]">
-          <Link
-            href={`/workouts/${id}`}
-            className="hover:underline underline-offset-2 focus:underline active:outline outline-selection"
-          >
-            {title}
-          </Link>
+          {isOptimistic ? (
+            title
+          ) : (
+            <Link href={`/workouts/${id}`} className={typography("a")}>
+              {title} <ExternalLinkIcon />
+            </Link>
+          )}
           {description && <DescriptionPopover />}
         </CardTitle>
         <CardDescription>
@@ -106,7 +100,7 @@ export default function WorkoutCard() {
         )}
       </CardHeader>
       <CardContent className="-mt-1">
-        {comment && <Comment>{comment}</Comment>}
+        {comment && <CommentAlert>{comment}</CommentAlert>}
       </CardContent>
       <CardFooter className="flex justify-between">
         <ResponsiveFormDialog

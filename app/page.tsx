@@ -1,5 +1,7 @@
 import { H1 } from "@/components/typography";
 
+export const dynamic = "force-static";
+
 export default function Home() {
   return (
     <section>

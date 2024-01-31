@@ -15,7 +15,7 @@ export async function getExercises() {
     .select({ id, title, instructions, url })
     .from(exercise)
     .where(eq(exercise.userId, userId))
-    .orderBy(desc(exercise.id))
+    .orderBy(desc(id))
     .all();
 }
 

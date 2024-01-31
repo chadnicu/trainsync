@@ -16,6 +16,10 @@ import { ExerciseContext } from "./helpers";
 import ExerciseForm from "./exercise-form";
 import { useDeleteExercise, useEditExercise } from "./helpers";
 import { useQueryClient } from "@tanstack/react-query";
+import LazyYoutube from "@/components/lazy-youtube";
+import Link from "next/link";
+import { typography } from "@/components/typography";
+import { ExternalLinkIcon } from "@radix-ui/react-icons";
 
 export default function ExerciseCard() {
   const queryClient = useQueryClient();
@@ -40,7 +44,15 @@ export default function ExerciseCard() {
       })}
     >
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>
+          {isOptimistic ? (
+            title
+          ) : (
+            <Link href={`/exercises/${id}`} className={typography("a")}>
+              {title} <ExternalLinkIcon />
+            </Link>
+          )}
+        </CardTitle>
         {instructions && <CardDescription>{instructions}</CardDescription>}
         {isOptimistic && (
           <LoadingSpinner className="absolute right-[12px] top-[6px] h-4 w-4" />
@@ -48,15 +60,17 @@ export default function ExerciseCard() {
       </CardHeader>
       {embedUrl && (
         <CardContent>
-          <iframe
-            src={embedUrl}
-            width="283.5"
-            height="159.3"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="rounded-md sm:w-[299px] sm:h-[168px]"
-          />
+          <LazyYoutube>
+            <iframe
+              src={embedUrl}
+              width="283.5"
+              height="159.3"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="rounded-md sm:w-[299px] sm:h-[168px]"
+            />
+          </LazyYoutube>
         </CardContent>
       )}
       <CardFooter className="flex justify-between">

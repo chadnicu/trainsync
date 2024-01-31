@@ -101,6 +101,20 @@ export function InlineCode({
   );
 }
 
+export function A({ className, children, ...props }: ComponentProps<"a">) {
+  return (
+    <a
+      className={cn(
+        "hover:underline underline-offset-2 focus:underline active:brightness-75 duration-200 flex items-center justify-start gap-1",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </a>
+  );
+}
+
 // cant use this in above components because classes get purged if unused
 // might find a fix in the future
 const variants = {
@@ -112,6 +126,7 @@ const variants = {
   "inline-code":
     "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
   blockquote: "mt-6 border-l-2 pl-6 italic",
+  a: "hover:underline underline-offset-2 focus:underline active:brightness-75 duration-200 flex items-center justify-start gap-1",
 };
 
 export const typography = (element: keyof typeof variants) => variants[element];
