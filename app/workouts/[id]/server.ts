@@ -1,9 +1,9 @@
 "use server";
 
-import { exercise, workout, workout_exercise } from "@/lib/schema";
+import { exercise, sets, workout, workout_exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { auth } from "@clerk/nextjs";
-import { and, eq, notInArray } from "drizzle-orm";
+import { and, eq, notInArray, sql } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 export async function getWorkoutById(workoutId: number) {
@@ -23,20 +23,31 @@ export async function getExercisesByWorkoutId(workoutId: number) {
   const { userId } = auth();
   if (!userId) return { inWorkout: [], other: [] };
 
+  const { title, instructions, url } = exercise;
+  const {
+    id,
+    exerciseId,
+    workoutId: workout_id,
+    comment,
+    todo,
+  } = workout_exercise;
+
   const inWorkout = await db
-    .select()
+    .select({
+      id,
+      title,
+      instructions,
+      url,
+      comment,
+      todo,
+      exerciseId,
+      workout_id,
+    })
     .from(workout_exercise)
     .where(eq(workout_exercise.workoutId, workoutId))
     .innerJoin(exercise, eq(workout_exercise.exerciseId, exercise.id))
-    .all()
-    .then((data) =>
-      data.map(({ exercise, workout_exercise }) => ({
-        ...exercise,
-        workoutExerciseId: workout_exercise.id,
-        todo: workout_exercise.todo,
-        comment: workout_exercise.comment,
-      }))
-    );
+    .groupBy(workout_exercise.id)
+    .all();
 
   const exerciseIds = inWorkout.length ? inWorkout.map((e) => e.id) : [-1];
 

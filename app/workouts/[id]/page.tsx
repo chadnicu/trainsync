@@ -13,6 +13,7 @@ import WorkoutExerciseCard from "./workout-exercise-card";
 import { H1, P } from "@/components/typography";
 import { useSearchParams } from "next/navigation";
 import ExercisesPagination from "./exercises-pagination";
+import { useSets } from "@/app/exercises/[id]/helpers";
 
 type Props = {
   params: { id: string };
@@ -40,7 +41,7 @@ export default function Workout({ params: { id } }: Props) {
   return (
     <section className="sm:container text-center space-y-4">
       <H1>{workout?.title}</H1>
-      <P>{workout?.description}</P>
+      <P className="max-w-lg mx-auto">{workout?.description}</P>
 
       <ExercisesPagination length={inWorkout.length} />
       {inWorkout[exerciseIndex - 1] && (

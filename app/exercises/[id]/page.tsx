@@ -60,6 +60,8 @@ export default function Exercise({ params: { id } }: Props) {
       <SetCard key={date} sets={setsForDate} />
     ));
 
+  // return <LoadingExercise />;
+
   return (
     <section className="sm:container text-center space-y-4">
       <div className="space-y-2">
@@ -72,13 +74,15 @@ export default function Exercise({ params: { id } }: Props) {
           <iframe
             src={embedUrl}
             title="YouTube video player"
+            width={472}
+            height={265}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             className="rounded-md h-[52vw] w-full sm:max-w-[472px] sm:h-[265px] mx-auto"
           />
         )}
         {(isFetching || isLoading) && !embedUrl && (
-          <Skeleton className="rounded-md h-[44vw] w-full sm:max-w-lg sm:h-[288px] mx-auto" />
+          <Skeleton className="rounded-md h-[52vw] w-full sm:max-w-[472px] sm:h-[265px] mx-auto" />
         )}
         {(isFetching || isLoading) && !sets.length && <SetsChartSkeleton />}
         {isSuccess && <SetsChart sets={sets} />}

@@ -1,6 +1,7 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { getExerciseById, getSetsById } from "./server";
+import { addSet, getExerciseById, getSetsById } from "./server";
 import { createContext } from "react";
+import { z } from "zod";
 
 export const invalidateExerciseAndSets = (
   queryClient: QueryClient,
@@ -23,6 +24,7 @@ export const useSets = (exerciseId: number) =>
     initialData: [],
   });
 
+// random func
 export function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
   const groupedSets: Record<string, Set[]> = {};
 
@@ -36,6 +38,30 @@ export function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
 
   return groupedSets;
 }
+
+export const useAddSet = (
+  queryClient: QueryClient,
+  exerciseId: number,
+  workoutExerciseId: number
+) => {
+  const queryKey = ["sets", exerciseId];
+  return useMutation({
+    mutationFn: async (values: SetFormData) =>
+      await addSet(values, workoutExerciseId),
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: Set[]) => {
+        return [...old, { ...values, id: 0 }];
+      });
+      return { previous };
+    },
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+    },
+    onSettled: () => invalidateExerciseAndSets(queryClient, exerciseId),
+  });
+};
 
 // export const useWorkoutExercises = (workoutId: number) =>
 //   useQuery({
@@ -69,7 +95,7 @@ export function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
 //     },
 //     onSettled: () => queryClient.invalidateQueries({ queryKey }),
 //   });
-// };
+// }
 
 // export const WorkoutExerciseContext = createContext<WorkoutExercise>({
 //   workoutExerciseId: 0,
@@ -85,5 +111,13 @@ export function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
 // export type WorkoutExercises = Awaited<
 //   ReturnType<typeof getExercisesByWorkoutId>
 // >;
+
 // export type WorkoutExercise = WorkoutExercises["inWorkout"][0];
+export const SetSchema = z.object({
+  reps: z.coerce.number().min(1),
+  weight: z.coerce.number().min(1),
+});
+
 export type Set = Awaited<ReturnType<typeof getSetsById>>[0];
+
+export type SetFormData = z.infer<typeof SetSchema>;

@@ -5,6 +5,7 @@ import { db } from "@/lib/turso";
 import { auth } from "@clerk/nextjs";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
+import { SetFormData } from "./helpers";
 
 export async function getExerciseById(exerciseId: number) {
   const { userId } = auth();
@@ -45,4 +46,13 @@ export async function getSetsById(exerciseId: number) {
     .innerJoin(workout, eq(workout.id, workout_exercise.workoutId))
     .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)))
     .all();
+}
+
+export async function addSet(values: SetFormData, workoutExerciseId: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .insert(sets)
+    .values({ ...values, workoutExerciseId: workoutExerciseId, userId });
 }

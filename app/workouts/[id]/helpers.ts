@@ -5,6 +5,8 @@ import {
   getWorkoutById,
 } from "./server";
 import { createContext } from "react";
+import { z } from "zod";
+import { Set } from "@/app/exercises/[id]/helpers";
 
 export const useWorkout = (workoutId: number) =>
   useQuery({
@@ -47,14 +49,14 @@ export const useAddExerciseToWorkout = (
 };
 
 export const WorkoutExerciseContext = createContext<WorkoutExercise>({
-  workoutExerciseId: 0,
-  todo: "",
-  comment: "",
   id: 0,
   title: "",
-  userId: "",
   instructions: "",
   url: "",
+  todo: "",
+  comment: "",
+  exerciseId: 0,
+  workout_id: 0,
 });
 
 export type WorkoutExercises = Awaited<
