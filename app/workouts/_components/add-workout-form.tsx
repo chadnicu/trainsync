@@ -15,11 +15,9 @@ import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
-import {
-  WorkoutContext,
-  AddWorkoutFormData,
-  AddWorkoutSchema,
-} from "../helpers";
+import { WorkoutContext } from "../_utils/context";
+import { addWorkoutSchema } from "../_utils/validators";
+import { AddWorkoutInput } from "../_utils/types";
 import {
   Popover,
   PopoverContent,
@@ -35,7 +33,7 @@ export default function AddWorkoutForm({
   isSubmitting,
   submitButtonText,
 }: {
-  mutate: (values: AddWorkoutFormData) => void;
+  mutate: (values: AddWorkoutInput) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
 }) {
@@ -47,8 +45,8 @@ export default function AddWorkoutForm({
     date: date ? new Date(date) : new Date(),
   };
 
-  const form = useForm<AddWorkoutFormData>({
-    resolver: zodResolver(AddWorkoutSchema),
+  const form = useForm<AddWorkoutInput>({
+    resolver: zodResolver(addWorkoutSchema),
     defaultValues,
   });
 

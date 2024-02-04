@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
-import { WorkoutContext, useDeleteWorkout, useEditWorkout } from "../helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import EditWorkoutForm from "./edit-workout-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -26,6 +25,8 @@ import { ChevronDownIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { typography } from "@/components/typography";
 import CommentAlert from "@/components/comment";
+import { WorkoutContext } from "../_utils/context";
+import { useDeleteWorkout, useEditWorkout } from "../_utils/hooks";
 
 function getDiffInMinutes(started: string | null, finished: string | null) {
   if (

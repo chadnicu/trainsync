@@ -15,11 +15,6 @@ import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
-import {
-  WorkoutContext,
-  EditWorkoutFormData,
-  EditWorkoutSchema,
-} from "../helpers";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -30,13 +25,16 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
+import { editWorkoutSchema } from "../_utils/validators";
+import { WorkoutContext } from "../_utils/context";
+import { EditWorkoutInput } from "../_utils/types";
 
 export default function EditWorkoutForm({
   mutate,
   isSubmitting,
   submitButtonText,
 }: {
-  mutate: (values: EditWorkoutFormData) => void;
+  mutate: (values: EditWorkoutInput) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
 }) {
@@ -53,8 +51,8 @@ export default function EditWorkoutForm({
     clearTime: false,
   };
 
-  const form = useForm<EditWorkoutFormData>({
-    resolver: zodResolver(EditWorkoutSchema),
+  const form = useForm<EditWorkoutInput>({
+    resolver: zodResolver(editWorkoutSchema),
     defaultValues,
   });
 
