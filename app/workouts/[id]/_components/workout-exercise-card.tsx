@@ -14,7 +14,9 @@ import { Button } from "@/components/ui/button";
 import CommentAlert from "@/components/comment";
 import { useAddSet, useSets } from "../_utils/hooks";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import ResponsiveFormDialog from "@/components/responsive-form-dialog";
+import ResponsiveFormDialog, {
+  ToggleDialogFunction,
+} from "@/components/responsive-form-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 import SetForm from "./set-form";
 
@@ -36,10 +38,7 @@ export default function WorkoutExerciseCard() {
   const sets = data.filter((e) => e.workoutId === workoutId);
 
   const queryClient = useQueryClient();
-  const { mutate: addSet, isPending } = useAddSet(queryClient, exerciseId, id);
-
-  // const { mutate: addSet } = useAddSet(queryClient, workoutId,);
-  // finish the card
+  const { mutate: addSet, isPending } = useAddSet(queryClient);
 
   return (
     <Card className={cn("max-w-lg w-full mx-auto text-left")}>
@@ -65,6 +64,7 @@ export default function WorkoutExerciseCard() {
         <div className="mx-auto w-fit">
           {sets.map((e) => (
             <div key={e.id} className="flex items-center gap-3 justify-center">
+              {e.id === 0 && <p>NIGAAAAAAAAAAAAAAAAAAAAaa</p>}
               <button className="text-xl font-semibold">{e.reps}</button>
               <Cross2Icon />
               <button className="text-xl font-semibold">{e.weight}</button>

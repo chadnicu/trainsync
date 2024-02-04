@@ -7,6 +7,9 @@ import {
   getWorkoutById,
 } from "./server";
 import { Set, SetInput, WorkoutExercises } from "./types";
+import { getValueByDataKey } from "recharts/types/util/ChartUtils";
+import { useContext } from "react";
+import { WorkoutExerciseContext } from "./context";
 
 const queryKeys = {
   workout: (id: number) => ["workouts", { workoutId: id }],
@@ -61,11 +64,12 @@ export const useSets = (exerciseId: number) =>
     initialData: [],
   });
 
-export const useAddSet = (
-  queryClient: QueryClient,
-  exerciseId: number,
-  workoutExerciseId: number
-) => {
+export const useAddSet = (queryClient: QueryClient) => {
+  const {
+    exerciseId,
+    workout_id: workoutId,
+    id: workoutExerciseId,
+  } = useContext(WorkoutExerciseContext);
   const queryKey = queryKeys.sets(exerciseId);
   return useMutation({
     mutationFn: async (values: SetInput) =>
@@ -74,7 +78,7 @@ export const useAddSet = (
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
       queryClient.setQueryData(queryKey, (old: Set[]) => {
-        return [...old, { ...values, id: 0 }];
+        return [...old, { ...values, workoutId }];
       });
       return { previous };
     },

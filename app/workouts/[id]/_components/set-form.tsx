@@ -43,9 +43,7 @@ export default function SetForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          if (JSON.stringify(values) !== JSON.stringify(defaultValues)) {
-            mutate(values);
-          }
+          mutate(values);
           setOpen(false);
         })}
         className="space-y-4"

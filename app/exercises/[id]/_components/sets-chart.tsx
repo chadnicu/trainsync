@@ -43,8 +43,8 @@ export default function SetsChart({ sets }: { sets: Set[] }) {
             : `, but your reps are${lastWeight > avgWeight ? " not" : ""}.`}
         </CardDescription>
       </CardHeader>
-      <CardContent className="pb-8">
-        <div className="h-28 xl:h-32">
+      <CardContent>
+        <div className="h-28 xl:h-32 mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={sets} className="mx-auto">
               <Tooltip
