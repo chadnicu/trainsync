@@ -5,17 +5,13 @@ import {
   getExercises,
 } from "./server";
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { createContext } from "react";
-import { z } from "zod";
+import { Exercise, ExerciseInput } from "./types";
 
-// key
 const queryKey = ["exercises"];
 
-// function to revalidate
 export const invalidateExercises = (queryClient: QueryClient) =>
   queryClient.invalidateQueries({ queryKey });
 
-// tanstack query hooks
 export const useExercises = () =>
   useQuery({
     queryKey,
@@ -25,7 +21,7 @@ export const useExercises = () =>
 
 export const useAddExercise = (queryClient: QueryClient) =>
   useMutation({
-    mutationFn: async (values: ExerciseFormData) => await addExercise(values),
+    mutationFn: async (values: ExerciseInput) => await addExercise(values),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
@@ -60,7 +56,7 @@ export const useDeleteExercise = (queryClient: QueryClient) =>
 
 export const useEditExercise = (queryClient: QueryClient, exerciseId: number) =>
   useMutation({
-    mutationFn: async (values: ExerciseFormData) =>
+    mutationFn: async (values: ExerciseInput) =>
       await editExercise(exerciseId, values),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
@@ -84,31 +80,3 @@ export const useEditExercise = (queryClient: QueryClient, exerciseId: number) =>
     },
     onSettled: () => invalidateExercises(queryClient),
   });
-
-// react context
-export const ExerciseContext = createContext<Exercise>({
-  id: 0,
-  title: "",
-  instructions: "",
-  url: "",
-});
-
-// form schema
-export const exerciseSchema = z.object({
-  title: z.string().min(1).max(80),
-  instructions: z.string().min(0).max(255).optional(),
-  url: z
-    .string()
-    .url()
-    .refine((url) =>
-      /^(https?:\/\/)?(www\.)?(youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/shorts\/)?([a-zA-Z0-9_-]{11})/.test(
-        url
-      )
-    )
-    .optional()
-    .or(z.literal("")),
-});
-
-// types
-export type ExerciseFormData = z.infer<typeof exerciseSchema>;
-export type Exercise = Awaited<ReturnType<typeof getExercises>>[0];

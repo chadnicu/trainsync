@@ -19,7 +19,7 @@ import {
   WorkoutContext,
   EditWorkoutFormData,
   EditWorkoutSchema,
-} from "./helpers";
+} from "../helpers";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";

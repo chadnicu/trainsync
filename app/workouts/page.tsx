@@ -2,16 +2,12 @@
 
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  WorkoutContext,
-  invalidateWorkouts,
-  useAddWorkout,
-  useWorkouts,
-} from "./helpers";
+import { invalidateWorkouts, useAddWorkout, useWorkouts } from "./_utils/hooks";
+import { WorkoutContext } from "./_utils/context";
 import { useQueryClient } from "@tanstack/react-query";
-import WorkoutCard from "./workout-card";
-import WorkoutSkeleton from "./workout-skeleton";
-import AddWorkoutForm from "./add-workout-form";
+import WorkoutCard from "./_components/workout-card";
+import WorkoutSkeleton from "./_components/workout-skeleton";
+import AddWorkoutForm from "./_components/add-workout-form";
 import { H1, P } from "@/components/typography";
 
 export default function Workouts() {

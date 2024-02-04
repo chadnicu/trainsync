@@ -1,4 +1,4 @@
-import WorkoutSkeleton from "./workout-skeleton";
+import WorkoutSkeleton from "./_components/workout-skeleton";
 import { H1 } from "@/components/typography";
 import { Skeleton } from "@/components/ui/skeleton";
 

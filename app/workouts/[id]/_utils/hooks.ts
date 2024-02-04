@@ -4,9 +4,7 @@ import {
   getExercisesByWorkoutId,
   getWorkoutById,
 } from "./server";
-import { createContext } from "react";
-import { z } from "zod";
-import { Set } from "@/app/exercises/[id]/helpers";
+import { WorkoutExercises } from "./types";
 
 export const useWorkout = (workoutId: number) =>
   useQuery({
@@ -47,19 +45,3 @@ export const useAddExerciseToWorkout = (
     onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 };
-
-export const WorkoutExerciseContext = createContext<WorkoutExercise>({
-  id: 0,
-  title: "",
-  instructions: "",
-  url: "",
-  todo: "",
-  comment: "",
-  exerciseId: 0,
-  workout_id: 0,
-});
-
-export type WorkoutExercises = Awaited<
-  ReturnType<typeof getExercisesByWorkoutId>
->;
-export type WorkoutExercise = WorkoutExercises["inWorkout"][0];

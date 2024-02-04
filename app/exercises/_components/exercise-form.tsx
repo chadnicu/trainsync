@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ExerciseContext, ExerciseFormData, exerciseSchema } from "./helpers";
+import { ExerciseContext } from "../_utils/context";
+import { ExerciseInput } from "../_utils/types";
+import { exerciseSchema } from "../_utils/validators";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
@@ -22,7 +24,7 @@ export default function ExerciseForm({
   isSubmitting,
   submitButtonText,
 }: {
-  mutate: (values: ExerciseFormData) => void;
+  mutate: (values: ExerciseInput) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
 }) {
@@ -34,7 +36,7 @@ export default function ExerciseForm({
     url: url ?? "",
   };
 
-  const form = useForm<ExerciseFormData>({
+  const form = useForm<ExerciseInput>({
     resolver: zodResolver(exerciseSchema),
     defaultValues,
   });

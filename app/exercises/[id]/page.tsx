@@ -2,25 +2,38 @@
 
 import { H1, P } from "@/components/typography";
 import {
-  Set,
-  groupSetsByDate,
   invalidateExerciseAndSets,
   useExercise,
   useSets,
-} from "./helpers";
-import { getYouTubeEmbedURL } from "@/lib/utils";
-import SetsChart from "./sets-chart";
-import SetCard from "./set-card";
-import SetSkeleton from "./set-skeleton";
+} from "./_utils/hooks";
+
+import { cn, getYouTubeEmbedURL } from "@/lib/utils";
+import SetsChart from "./_components/sets-chart";
+import SetCard from "./_components/set-card";
+import SetSkeleton from "./_components/set-skeleton";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import SetsChartSkeleton from "./sets-chart-skeleton";
-import LoadingExercise from "./loading";
+import SetsChartSkeleton from "./_components/sets-chart-skeleton";
+import { Set } from "./_utils/types";
 
 type Props = {
   params: { id: string };
 };
+
+function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
+  const groupedSets: Record<string, Set[]> = {};
+
+  sets.forEach((set) => {
+    const date = set.workoutDate || "No Date";
+    if (!groupedSets[date]) {
+      groupedSets[date] = [];
+    }
+    groupedSets[date].push(set);
+  });
+
+  return groupedSets;
+}
 
 export default function Exercise({ params: { id } }: Props) {
   const exerciseId = parseInt(id, 10);
@@ -60,13 +73,13 @@ export default function Exercise({ params: { id } }: Props) {
       <SetCard key={date} sets={setsForDate} />
     ));
 
-  // return <LoadingExercise />;
-
   return (
     <section className="sm:container text-center space-y-4">
       <div className="space-y-2">
         <H1>{exercise?.title ?? "Loading.."}</H1>
-        <P>{exercise?.instructions ?? `Exercise with id ${exerciseId}`}</P>
+        <P className="max-w-lg mx-auto">
+          {exercise?.instructions ?? `Exercise with id ${exerciseId}`}
+        </P>
       </div>
       {isError && <Error />}
       <div className="xl:flex xl:px-20 space-y-4 xl:space-y-0">
@@ -87,7 +100,12 @@ export default function Exercise({ params: { id } }: Props) {
         {(isFetching || isLoading) && !sets.length && <SetsChartSkeleton />}
         {isSuccess && <SetsChart sets={sets} />}
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 place-items-center">
+      <div
+        className={cn("grid gap-4 place-items-center", {
+          "md:grid-cols-2": Object.entries(groupedSets).length > 1,
+          "lg:grid-cols-3": Object.entries(groupedSets).length > 2,
+        })}
+      >
         {(isFetching || isLoading) && !sets.length && <SetsSkeletons />}
         {isSuccess && <Sets />}
       </div>

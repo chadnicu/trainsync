@@ -1,7 +1,7 @@
 import { H1, P } from "@/components/typography";
-import SetSkeleton from "./set-skeleton";
+import SetSkeleton from "./_components/set-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
-import SetsChartSkeleton from "./sets-chart-skeleton";
+import SetsChartSkeleton from "./_components/sets-chart-skeleton";
 
 export default function LoadingExercise() {
   const Skeletons = () =>

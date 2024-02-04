@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { WorkoutExerciseContext } from "./helpers";
+import { WorkoutExerciseContext } from "../_utils/context";
 import {
   Card,
   CardContent,
@@ -10,14 +10,13 @@ import {
 } from "@/components/ui/card";
 import { cn, getYouTubeEmbedURL } from "@/lib/utils";
 import { typography } from "@/components/typography";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import CommentAlert from "@/components/comment";
-import { useAddSet, useSets } from "@/app/exercises/[id]/helpers";
+import { useAddSet, useSets } from "@/app/exercises/[id]/_utils/hooks";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import SetForm from "./set-form";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
-import { addSet } from "@/app/exercises/[id]/server";
 import { useQueryClient } from "@tanstack/react-query";
+import SetForm from "./set-form";
 
 export default function WorkoutExerciseCard() {
   const {

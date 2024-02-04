@@ -12,12 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { cn } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
-import {
-  WorkoutContext,
-  getDiffInMinutes,
-  useDeleteWorkout,
-  useEditWorkout,
-} from "./helpers";
+import { WorkoutContext, useDeleteWorkout, useEditWorkout } from "../helpers";
 import { useQueryClient } from "@tanstack/react-query";
 import EditWorkoutForm from "./edit-workout-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,6 +26,26 @@ import { ChevronDownIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { typography } from "@/components/typography";
 import CommentAlert from "@/components/comment";
+
+function getDiffInMinutes(started: string | null, finished: string | null) {
+  if (
+    !started ||
+    !finished ||
+    started.length !== 5 ||
+    finished.length !== 5 ||
+    started.indexOf(":") === -1 ||
+    finished.indexOf(":") === -1
+  )
+    return -1;
+
+  const [sHour, sMin] = started.split(":").map((e) => parseInt(e, 10));
+  const [fHour, fMin] = finished.split(":").map((e) => parseInt(e, 10));
+  const startTime = dayjs().hour(sHour).minute(sMin);
+  const finishTime = dayjs().hour(fHour).minute(fMin);
+  const duration = finishTime.diff(startTime, "minutes");
+
+  return duration;
+}
 
 export default function WorkoutCard() {
   const queryClient = useQueryClient();

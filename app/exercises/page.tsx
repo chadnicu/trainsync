@@ -1,16 +1,16 @@
 "use client";
 
-import ExerciseCard from "./exercise-card";
-import ExerciseSkeleton from "./exercise-skeleton";
-import ExerciseForm from "./exercise-form";
+import ExerciseCard from "./_components/exercise-card";
+import ExerciseSkeleton from "./_components/exercise-skeleton";
+import ExerciseForm from "./_components/exercise-form";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
 import {
   useExercises,
   useAddExercise,
-  ExerciseContext,
   invalidateExercises,
-} from "./helpers";
+} from "./_utils/hooks";
+import { ExerciseContext } from "./_utils/context";
 import { useQueryClient } from "@tanstack/react-query";
 import { H1, P } from "@/components/typography";
 

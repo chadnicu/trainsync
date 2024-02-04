@@ -4,7 +4,7 @@ import CommentAlert from "@/components/comment";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import dayjs from "@/lib/dayjs";
 import { buttonVariants } from "@/components/ui/button";
-import { Set } from "./helpers";
+import { Set } from "../_utils/types";
 import { cn } from "@/lib/utils";
 
 export default function SetCard({ sets }: { sets: Set[] }) {

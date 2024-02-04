@@ -3,17 +3,16 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
 import {
-  WorkoutExerciseContext,
   useAddExerciseToWorkout,
   useWorkout,
   useWorkoutExercises,
-} from "./helpers";
+} from "./_utils/hooks";
+import { WorkoutExerciseContext } from "./_utils/context";
 import { Button } from "@/components/ui/button";
-import WorkoutExerciseCard from "./workout-exercise-card";
+import WorkoutExerciseCard from "./_components/workout-exercise-card";
 import { H1, P } from "@/components/typography";
 import { useSearchParams } from "next/navigation";
-import ExercisesPagination from "./exercises-pagination";
-import { useSets } from "@/app/exercises/[id]/helpers";
+import ExercisesPagination from "./_components/exercises-pagination";
 
 type Props = {
   params: { id: string };

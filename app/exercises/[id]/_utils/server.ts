@@ -5,7 +5,7 @@ import { db } from "@/lib/turso";
 import { auth } from "@clerk/nextjs";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { SetFormData } from "./helpers";
+import { SetInput } from "./types";
 
 export async function getExerciseById(exerciseId: number) {
   const { userId } = auth();
@@ -48,7 +48,7 @@ export async function getSetsById(exerciseId: number) {
     .all();
 }
 
-export async function addSet(values: SetFormData, workoutExerciseId: number) {
+export async function addSet(values: SetInput, workoutExerciseId: number) {
   const { userId } = auth();
   if (!userId) return;
 

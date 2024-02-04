@@ -19,7 +19,7 @@ import {
   WorkoutContext,
   AddWorkoutFormData,
   AddWorkoutSchema,
-} from "./helpers";
+} from "../helpers";
 import {
   Popover,
   PopoverContent,

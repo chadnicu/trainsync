@@ -4,7 +4,7 @@ import { exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq } from "drizzle-orm";
-import { ExerciseFormData } from "./helpers";
+import { ExerciseInput } from "./types";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -19,10 +19,7 @@ export async function getExercises() {
     .all();
 }
 
-export async function editExercise(
-  exerciseId: number,
-  values: ExerciseFormData
-) {
+export async function editExercise(exerciseId: number, values: ExerciseInput) {
   const { userId } = auth();
   if (!userId) return;
 
@@ -41,7 +38,7 @@ export async function deleteExercise(exerciseId: number) {
     .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)));
 }
 
-export async function addExercise(values: ExerciseFormData) {
+export async function addExercise(values: ExerciseInput) {
   const { userId } = auth();
   if (!userId) return;
 

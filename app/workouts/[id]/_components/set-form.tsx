@@ -15,22 +15,23 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { SetFormData, SetSchema } from "@/app/exercises/[id]/helpers";
-import { WorkoutExerciseContext } from "./helpers";
+import { SetInput } from "@/app/exercises/[id]/_utils/types";
+import { setSchema } from "@/app/exercises/[id]/_utils/validators";
+import { WorkoutExerciseContext } from "../_utils/context";
 
 export default function SetForm({
   mutate,
   isSubmitting,
   submitButtonText,
 }: {
-  mutate: (values: SetFormData) => void;
+  mutate: (values: SetInput) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
 }) {
   const defaultValues = { reps: 0, weight: 0 };
 
-  const form = useForm<SetFormData>({
-    resolver: zodResolver(SetSchema),
+  const form = useForm<SetInput>({
+    resolver: zodResolver(setSchema),
     defaultValues,
   });
 

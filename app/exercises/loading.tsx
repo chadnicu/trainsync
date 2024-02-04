@@ -1,5 +1,5 @@
 import { H1 } from "@/components/typography";
-import ExerciseSkeleton from "./exercise-skeleton";
+import ExerciseSkeleton from "./_components/exercise-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function LoadingExercises() {
