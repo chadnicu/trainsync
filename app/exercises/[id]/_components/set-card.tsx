@@ -4,8 +4,8 @@ import CommentAlert from "@/components/comment";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import dayjs from "@/lib/dayjs";
 import { buttonVariants } from "@/components/ui/button";
-import { Set } from "../_utils/types";
 import { cn } from "@/lib/utils";
+import { Set } from "@/app/workouts/[id]/_utils/types";
 
 export default function SetCard({ sets }: { sets: Set[] }) {
   const [date, title, comment] = [
