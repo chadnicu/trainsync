@@ -15,9 +15,9 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { SetInput } from "@/app/exercises/[id]/_utils/types";
-import { setSchema } from "@/app/exercises/[id]/_utils/validators";
 import { WorkoutExerciseContext } from "../_utils/context";
+import { SetInput } from "../_utils/types";
+import { setSchema } from "../_utils/validators";
 
 export default function SetForm({
   mutate,

@@ -1,12 +1,8 @@
 "use client";
 
 import { H1, P } from "@/components/typography";
-import {
-  invalidateExerciseAndSets,
-  useExercise,
-  useSets,
-} from "./_utils/hooks";
-
+import { invalidateExercise, useExercise } from "./_utils/hooks";
+import { useSets } from "@/app/workouts/[id]/_utils/hooks"; // oof
 import { cn, getYouTubeEmbedURL } from "@/lib/utils";
 import SetsChart from "./_components/sets-chart";
 import SetCard from "./_components/set-card";
@@ -15,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import SetsChartSkeleton from "./_components/sets-chart-skeleton";
-import { Set } from "./_utils/types";
+import { Set } from "@/app/workouts/[id]/_utils/types";
 
 type Props = {
   params: { id: string };
@@ -55,7 +51,7 @@ export default function Exercise({ params: { id } }: Props) {
     <P className="grid place-items-center gap-3">
       Something went wrong.
       <Button
-        onClick={() => invalidateExerciseAndSets(queryClient, exerciseId)}
+        onClick={() => invalidateExercise(queryClient, exerciseId)}
         className="w-fit"
       >
         Refresh

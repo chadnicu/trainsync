@@ -12,7 +12,7 @@ import { cn, getYouTubeEmbedURL } from "@/lib/utils";
 import { typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import CommentAlert from "@/components/comment";
-import { useAddSet, useSets } from "@/app/exercises/[id]/_utils/hooks";
+import { useAddSet, useSets } from "../_utils/hooks";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { useQueryClient } from "@tanstack/react-query";

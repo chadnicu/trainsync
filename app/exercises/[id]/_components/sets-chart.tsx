@@ -1,5 +1,4 @@
 import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
-import { Set } from "../_utils/types";
 import {
   Card,
   CardHeader,
@@ -7,6 +6,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Set } from "@/app/workouts/[id]/_utils/types";
 
 function averages(sets: Set[]) {
   let averageReps = 0,
