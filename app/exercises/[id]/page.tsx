@@ -2,7 +2,7 @@
 
 import { H1, P } from "@/components/typography";
 import { invalidateExercise, useExercise } from "./_utils/hooks";
-import { useSets } from "@/app/workouts/[id]/_utils/hooks"; // oof
+import { useExerciseSets } from "./_utils/hooks";
 import { cn, getYouTubeEmbedURL } from "@/lib/utils";
 import SetsChart from "./_components/sets-chart";
 import SetCard from "./_components/set-card";
@@ -11,14 +11,14 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import SetsChartSkeleton from "./_components/sets-chart-skeleton";
-import { Set } from "@/app/workouts/[id]/_utils/types";
+import { ExerciseSet } from "./_utils/types";
 
 type Props = {
   params: { id: string };
 };
 
-function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
-  const groupedSets: Record<string, Set[]> = {};
+function groupSetsByDate(sets: ExerciseSet[]): Record<string, ExerciseSet[]> {
+  const groupedSets: Record<string, ExerciseSet[]> = {};
 
   sets.forEach((set) => {
     const date = set.workoutDate || "No Date";
@@ -41,7 +41,7 @@ export default function Exercise({ params: { id } }: Props) {
     isSuccess,
     isError,
   } = useExercise(exerciseId);
-  const { data: sets } = useSets(exerciseId);
+  const { data: sets } = useExerciseSets(exerciseId);
 
   const embedUrl = getYouTubeEmbedURL(exercise?.url ?? "");
 

@@ -48,6 +48,7 @@ export const workout_exercise = sqliteTable("workout_exercise", {
   exerciseId: integer("exercise_id")
     .notNull()
     .references(() => exercise.id),
+  // userId: text("user_id").notNull(),
 });
 
 export const sets = sqliteTable("sets", {

@@ -1,20 +1,23 @@
 import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import {
+  addCommentToSets,
   addExerciseToWorkout,
   addSet,
+  deleteSet,
   getExercisesByWorkoutId,
-  getSetsById,
+  getSetsByWorkoutId,
   getWorkoutById,
+  updateSet,
 } from "./server";
-import { Set, SetInput, WorkoutExercises } from "./types";
-import { getValueByDataKey } from "recharts/types/util/ChartUtils";
+import { WorkoutSet, SetInput, WorkoutExercises, CommentInput } from "./types";
 import { useContext } from "react";
 import { WorkoutExerciseContext } from "./context";
+import { queryKeys as exerciseQueryKeys } from "@/app/exercises/[id]/_utils/hooks";
 
 const queryKeys = {
   workout: (id: number) => ["workouts", { workoutId: id }],
   workoutExercises: (id: number) => ["exercises", { workoutId: id }],
-  sets: (id: number) => ["sets", { exerciseId: id }],
+  workoutSets: (id: number) => ["sets", { workoutId: id }],
 };
 
 export const useWorkout = (workoutId: number) =>
@@ -57,10 +60,10 @@ export const useAddExerciseToWorkout = (
   });
 };
 
-export const useSets = (exerciseId: number) =>
+export const useWorkoutSets = (workoutId: number) =>
   useQuery({
-    queryKey: queryKeys.sets(exerciseId),
-    queryFn: async () => getSetsById(exerciseId),
+    queryKey: queryKeys.workoutSets(workoutId),
+    queryFn: async () => getSetsByWorkoutId(workoutId),
     initialData: [],
   });
 
@@ -70,21 +73,108 @@ export const useAddSet = (queryClient: QueryClient) => {
     workout_id: workoutId,
     id: workoutExerciseId,
   } = useContext(WorkoutExerciseContext);
-  const queryKey = queryKeys.sets(exerciseId);
+  const queryKey = queryKeys.workoutSets(workoutId);
   return useMutation({
     mutationFn: async (values: SetInput) =>
       await addSet(values, workoutExerciseId),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, (old: Set[]) => {
-        return [...old, { ...values, workoutId }];
+      queryClient.setQueryData(queryKey, (old: WorkoutSet[]) => {
+        return [...old, { ...values, workoutExerciseId, id: 0 }];
       });
       return { previous };
     },
     onError: (err, newTodo, context) => {
       queryClient.setQueryData(queryKey, context?.previous);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey }),
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: exerciseQueryKeys.exerciseSets(exerciseId), //dunno if optimistic is worth it
+      });
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useAddComment = (queryClient: QueryClient) => {
+  const {
+    id,
+    exerciseId,
+    workout_id: workoutId,
+  } = useContext(WorkoutExerciseContext);
+  const queryKey = queryKeys.workoutExercises(workoutId);
+  return useMutation({
+    mutationFn: async (values: CommentInput) =>
+      await addCommentToSets(values, id),
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => {
+        return {
+          inWorkout: old.inWorkout.map((e) => ({
+            ...e,
+            comment: e.id === id ? values.comment : e.comment,
+          })),
+          other: old.other,
+        };
+      });
+      return { previous };
+    },
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: exerciseQueryKeys.exerciseSets(exerciseId), //dunno if optimistic is worth it
+      });
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useEditSet = (queryClient: QueryClient, setId: number) => {
+  const { workout_id: workoutId } = useContext(WorkoutExerciseContext);
+  const queryKey = queryKeys.workoutSets(workoutId);
+  return useMutation({
+    mutationFn: async (values: SetInput) => await updateSet(setId, values),
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: WorkoutSet[]) => {
+        return old.map((e) =>
+          e.id === setId ? { ...e, id: 0, ...values } : e
+        );
+      });
+      return { previous };
+    },
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useDeleteSet = (queryClient: QueryClient, setId: number) => {
+  const { workout_id: workoutId } = useContext(WorkoutExerciseContext);
+  const queryKey = queryKeys.workoutSets(workoutId);
+  return useMutation({
+    mutationFn: async () => await deleteSet(setId),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: WorkoutSet[]) => {
+        return old.filter((e) => e.id !== setId);
+      });
+      return { previous };
+    },
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 };

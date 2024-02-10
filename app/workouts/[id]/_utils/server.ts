@@ -3,9 +3,9 @@
 import { exercise, sets, workout, workout_exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { auth } from "@clerk/nextjs";
-import { and, eq, notInArray, sql } from "drizzle-orm";
+import { and, eq, notInArray } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { SetInput } from "./types";
+import { CommentInput, SetInput } from "./types";
 
 export async function getWorkoutById(workoutId: number) {
   const { userId } = auth();
@@ -75,34 +75,6 @@ export async function addExerciseToWorkout(values: {
   await db.insert(workout_exercise).values(values);
 }
 
-export async function getSetsById(exerciseId: number) {
-  const { userId } = auth();
-  if (!userId) notFound();
-
-  const { id, reps, weight } = sets;
-  const { title, date } = workout;
-  const { comment } = workout_exercise;
-  return await db
-    .select({
-      id,
-      reps,
-      weight,
-      comment,
-      workoutDate: date,
-      workoutId: workout_exercise.workoutId,
-      workoutTitle: title,
-    })
-    .from(sets)
-    .innerJoin(
-      workout_exercise,
-      eq(workout_exercise.id, sets.workoutExerciseId)
-    )
-    .innerJoin(exercise, eq(exercise.id, workout_exercise.exerciseId)) // ?
-    .innerJoin(workout, eq(workout.id, workout_exercise.workoutId))
-    .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)))
-    .all();
-}
-
 export async function addSet(values: SetInput, workoutExerciseId: number) {
   const { userId } = auth();
   if (!userId) return;
@@ -110,4 +82,66 @@ export async function addSet(values: SetInput, workoutExerciseId: number) {
   await db
     .insert(sets)
     .values({ ...values, workoutExerciseId: workoutExerciseId, userId });
+}
+
+export async function getSetsByWorkoutId(workoutId: number) {
+  const { userId } = auth();
+  if (!userId) notFound();
+
+  const { id, reps, weight, workoutExerciseId } = sets;
+  return await db
+    .select({
+      id,
+      reps,
+      weight,
+      workoutExerciseId,
+    })
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .where(
+      and(eq(workout_exercise.workoutId, workoutId), eq(sets.userId, userId))
+    )
+    .all();
+}
+
+export async function addCommentToSets(
+  values: CommentInput,
+  workoutExerciseId: number
+) {
+  const { userId } = auth();
+  if (!userId) notFound();
+
+  const a = await db
+    .update(workout_exercise)
+    .set({ comment: values.comment })
+    .where(eq(workout_exercise.id, workoutExerciseId));
+
+  console.log("niga");
+  return a;
+  // .where(
+  //   and(
+  //     eq(workout_exercise.id, workoutExerciseId),
+  //     eq(workout_exercise.userId, userId) // might need to find a fix
+  //   )
+  // );
+}
+
+export async function updateSet(setId: number, values: SetInput) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .update(sets)
+    .set(values)
+    .where(and(eq(sets.id, setId), eq(sets.userId, userId)));
+}
+
+export async function deleteSet(setId: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db.delete(sets).where(and(eq(sets.id, setId), eq(sets.userId, userId)));
 }

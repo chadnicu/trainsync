@@ -20,16 +20,20 @@ import { SetInput } from "../_utils/types";
 import { setSchema } from "../_utils/validators";
 
 export default function SetForm({
-  mutate,
+  submitAction,
+  deleteSet,
+  isDeleting,
   isSubmitting,
+  defaultValues,
   submitButtonText,
 }: {
-  mutate: (values: SetInput) => void;
+  submitAction: (values: SetInput) => void;
+  deleteSet?: () => void;
+  isDeleting?: boolean;
   isSubmitting?: boolean;
+  defaultValues: { reps: number; weight: number };
   submitButtonText?: ReactNode;
 }) {
-  const defaultValues = { reps: 0, weight: 0 };
-
   const form = useForm<SetInput>({
     resolver: zodResolver(setSchema),
     defaultValues,
@@ -43,7 +47,7 @@ export default function SetForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          mutate(values);
+          submitAction(values);
           setOpen(false);
         })}
         className="space-y-4"
@@ -87,6 +91,22 @@ export default function SetForm({
             )}
           />
         </div>
+        {deleteSet !== undefined && (
+          <Button
+            variant={"destructive"}
+            type="button"
+            onClick={() => {
+              deleteSet();
+              setOpen(false);
+            }}
+            className="float-left flex justify-center items-center"
+          >
+            Delete
+            {isDeleting && (
+              <LoadingSpinner className="ml-1 w-4 h-4 text-background/80 fill-background/80" />
+            )}
+          </Button>
+        )}
         <Button
           type="submit"
           className="float-right flex justify-center items-center"

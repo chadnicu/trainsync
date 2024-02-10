@@ -62,7 +62,7 @@ export default function Exercises() {
         />
       </ResponsiveFormDialog>
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
-        {(isFetching || isLoading) && !data.length && <Skeletons />}
+        {!!((isFetching || isLoading) && !data.length) && <Skeletons />}
         {isSuccess && <Exercises />}
       </div>
     </section>
