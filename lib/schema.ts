@@ -48,7 +48,7 @@ export const workout_exercise = sqliteTable("workout_exercise", {
   exerciseId: integer("exercise_id")
     .notNull()
     .references(() => exercise.id),
-  // userId: text("user_id").notNull(),
+  order: integer("order").notNull().default(-1),
 });
 
 export const sets = sqliteTable("sets", {

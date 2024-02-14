@@ -10,7 +10,7 @@ import DeleteDialog from "@/components/delete-dialog";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
-import { cn, getYouTubeEmbedURL } from "@/lib/utils";
+import { cn, getYouTubeEmbedURL, slugify } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ExerciseContext } from "../_utils/context";
 import ExerciseForm from "./exercise-form";
@@ -20,6 +20,7 @@ import LazyYoutube from "@/components/lazy-youtube";
 import Link from "next/link";
 import { typography } from "@/components/typography";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { usePathname } from "next/navigation";
 
 export default function ExerciseCard() {
   const queryClient = useQueryClient();
@@ -37,6 +38,8 @@ export default function ExerciseCard() {
 
   const isOptimistic = id === 0;
 
+  const pathname = usePathname();
+
   return (
     <Card
       className={cn("w-[330px] sm:w-[348px]", {
@@ -48,7 +51,10 @@ export default function ExerciseCard() {
           {isOptimistic ? (
             title
           ) : (
-            <Link href={`/exercises/${id}`} className={typography("a")}>
+            <Link
+              href={slugify(pathname, title, id)}
+              className={typography("a")}
+            >
               {title} <ExternalLinkIcon />
             </Link>
           )}

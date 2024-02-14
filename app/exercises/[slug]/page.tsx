@@ -3,7 +3,7 @@
 import { H1, P } from "@/components/typography";
 import { invalidateExercise, useExercise } from "./_utils/hooks";
 import { useExerciseSets } from "./_utils/hooks";
-import { cn, getYouTubeEmbedURL } from "@/lib/utils";
+import { cn, getIdFromSlug, getYouTubeEmbedURL } from "@/lib/utils";
 import SetsChart from "./_components/sets-chart";
 import SetCard from "./_components/set-card";
 import SetSkeleton from "./_components/set-skeleton";
@@ -14,7 +14,7 @@ import SetsChartSkeleton from "./_components/sets-chart-skeleton";
 import { ExerciseSet } from "./_utils/types";
 
 type Props = {
-  params: { id: string };
+  params: { slug: string };
 };
 
 function groupSetsByDate(sets: ExerciseSet[]): Record<string, ExerciseSet[]> {
@@ -31,8 +31,8 @@ function groupSetsByDate(sets: ExerciseSet[]): Record<string, ExerciseSet[]> {
   return groupedSets;
 }
 
-export default function Exercise({ params: { id } }: Props) {
-  const exerciseId = parseInt(id, 10);
+export default function Exercise({ params: { slug } }: Props) {
+  const exerciseId = getIdFromSlug(slug);
 
   const {
     data: exercise,

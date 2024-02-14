@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
 import {
   useAddExerciseToWorkout,
+  useUpdateExerciseOrder,
   useWorkout,
   useWorkoutExercises,
   useWorkoutSets,
@@ -14,13 +15,16 @@ import WorkoutExerciseCard from "./_components/workout-exercise-card";
 import { H1, P } from "@/components/typography";
 import { useSearchParams } from "next/navigation";
 import ExercisesPagination from "./_components/exercises-pagination";
+import ResponsiveFormDialog from "@/components/responsive-form-dialog";
+import EditWorkoutExercises from "./_components/edit-workout-exercises";
+import { getIdFromSlug } from "@/lib/utils";
 
 type Props = {
-  params: { id: string };
+  params: { slug: string };
 };
 
-export default function Workout({ params: { id } }: Props) {
-  const workoutId = parseInt(id, 10);
+export default function Workout({ params: { slug } }: Props) {
+  const workoutId = getIdFromSlug(slug);
 
   const {
     data: workout,
@@ -47,6 +51,7 @@ export default function Workout({ params: { id } }: Props) {
 
   const searchParams = useSearchParams();
   const exerciseIndex = parseInt(searchParams.get("exercise") ?? "1", 10);
+
 
   return (
     <section className="sm:container text-center space-y-4">
@@ -81,7 +86,13 @@ export default function Workout({ params: { id } }: Props) {
 
       <div className="space-x-3">
         {/* implement this, make it so that i can delete/reorder exercises */}
-        <Button variant={"outline"}>Edit exercises</Button>
+        <ResponsiveFormDialog
+          trigger={<Button variant={"outline"}>Edit exercise order</Button>}
+          title="Edit exercise order"
+          description="Simply click on the exercises to number them in order"
+        >
+          <EditWorkoutExercises exercises={inWorkout} />
+        </ResponsiveFormDialog>
         <ResponsiveComboBox
           trigger={<Button variant="outline">Add another exercise</Button>}
           data={other.map(({ id, title }) => ({

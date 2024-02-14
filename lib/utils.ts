@@ -5,6 +5,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function slugify(path: string, title: string, id: number) {
+  const slug = title.toLocaleLowerCase().split(" ").join("-");
+  return `${path}/${slug}-${id}`;
+}
+
+export function getIdFromSlug(slug: string) {
+  let id = "";
+  loop: for (let i = slug.length - 1; i >= 0; i--) {
+    if (slug[i] === "-") {
+      break loop;
+    } else {
+      id = slug[i] + id;
+    }
+  }
+  return parseInt(id, 10);
+}
+
 export function getYouTubeEmbedURL(url: string | null) {
   if (!url) return "";
 

@@ -30,6 +30,7 @@ export default function WorkoutExerciseCard() {
     exerciseId,
     workout_id: workoutId,
     sets,
+    order,
   } = useContext(WorkoutExerciseContext);
 
   const embedUrl = getYouTubeEmbedURL(url);
@@ -39,8 +40,6 @@ export default function WorkoutExerciseCard() {
 
   const { mutate: addComment, isPending: commentPending } =
     useAddComment(queryClient);
-
-  console.log(sets);
 
   return (
     <Card className={cn("max-w-lg w-full mx-auto text-left")}>

@@ -10,7 +10,7 @@ import DeleteDialog from "@/components/delete-dialog";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
 import { useContext } from "react";
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
 import { useQueryClient } from "@tanstack/react-query";
 import EditWorkoutForm from "./edit-workout-form";
@@ -27,6 +27,7 @@ import { typography } from "@/components/typography";
 import CommentAlert from "@/components/comment";
 import { WorkoutContext } from "../_utils/context";
 import { useDeleteWorkout, useEditWorkout } from "../_utils/hooks";
+import { usePathname } from "next/navigation";
 
 function getDiffInMinutes(started: string | null, finished: string | null) {
   if (
@@ -78,6 +79,8 @@ export default function WorkoutCard() {
     finished ? `-${finished}` : started ? "-unknown" : ""
   }`;
 
+  const pathname = usePathname();
+
   const DescriptionPopover = () => (
     <Popover>
       <PopoverTrigger className="absolute top-6 right-6 gap-1 flex justify-center items-center rounded-md">
@@ -98,7 +101,10 @@ export default function WorkoutCard() {
           {isOptimistic ? (
             title
           ) : (
-            <Link href={`/workouts/${id}`} className={typography("a")}>
+            <Link
+              href={slugify(pathname, title, id)}
+              className={typography("a")}
+            >
               {title} <ExternalLinkIcon />
             </Link>
           )}

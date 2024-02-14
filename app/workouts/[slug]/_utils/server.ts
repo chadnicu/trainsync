@@ -31,6 +31,7 @@ export async function getExercisesByWorkoutId(workoutId: number) {
     workoutId: workout_id,
     comment,
     todo,
+    order,
   } = workout_exercise;
 
   const inWorkout = await db
@@ -43,14 +44,18 @@ export async function getExercisesByWorkoutId(workoutId: number) {
       todo,
       exerciseId,
       workout_id,
+      order,
     })
     .from(workout_exercise)
     .where(eq(workout_exercise.workoutId, workoutId))
     .innerJoin(exercise, eq(workout_exercise.exerciseId, exercise.id))
     .groupBy(workout_exercise.id)
+    .orderBy(workout_exercise.order)
     .all();
 
-  const exerciseIds = inWorkout.length ? inWorkout.map((e) => e.id) : [-1];
+  const exerciseIds = inWorkout.length
+    ? inWorkout.map((e) => e.exerciseId)
+    : [-1];
 
   const other = await db
     .select()
@@ -144,4 +149,29 @@ export async function deleteSet(setId: number) {
   if (!userId) return;
 
   await db.delete(sets).where(and(eq(sets.id, setId), eq(sets.userId, userId)));
+}
+
+export async function updateExerciseOrder(arr: number[]) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  const promises = arr.map((e, i) =>
+    db
+      .update(workout_exercise)
+      .set({ order: i + 1 })
+      .where(eq(workout_exercise.id, e))
+      .returning()
+      .get()
+  );
+
+  await Promise.all(promises);
+
+  // for (let i = 0; i < arr.length; i++) {
+  //   await db
+  //     .update(workout_exercise)
+  //     .set({ order: i + 1 })
+  //     .where(eq(workout_exercise.id, arr[i]))
+  //     .returning()
+  //     .get();
+  // }
 }

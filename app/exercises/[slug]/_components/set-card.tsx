@@ -4,10 +4,11 @@ import CommentAlert from "@/components/comment";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import dayjs from "@/lib/dayjs";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { WorkoutSet } from "@/app/workouts/[id]/_utils/types";
+import { cn, slugify } from "@/lib/utils";
+import { ExerciseSet } from "../_utils/types";
+import { usePathname } from "next/navigation";
 
-export default function SetCard({ sets }: { sets: WorkoutSet[] }) {
+export default function SetCard({ sets }: { sets: ExerciseSet[] }) {
   const [date, title, comment] = [
     sets[0].workoutDate,
     sets[0].workoutTitle,
@@ -29,7 +30,7 @@ export default function SetCard({ sets }: { sets: WorkoutSet[] }) {
           ))}
         </div>
         <Link
-          href={`/workouts/${sets[0].workoutId}`}
+          href={slugify("/workouts", sets[0].workoutTitle, sets[0].workoutId)}
           className={cn(
             buttonVariants({ variant: "navLink" }),
             // fix this overflow somehow
