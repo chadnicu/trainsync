@@ -175,3 +175,12 @@ export async function updateExerciseOrder(arr: number[]) {
   //     .get();
   // }
 }
+
+export async function removeExerciseFromWorkout(workoutExerciseId: number) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .delete(workout_exercise)
+    .where(eq(workout_exercise.id, workoutExerciseId));
+}

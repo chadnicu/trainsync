@@ -13,7 +13,7 @@ import { WorkoutExerciseContext } from "./_utils/context";
 import { Button } from "@/components/ui/button";
 import WorkoutExerciseCard from "./_components/workout-exercise-card";
 import { H1, P } from "@/components/typography";
-import { useSearchParams } from "next/navigation";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditWorkoutExercises from "./_components/edit-workout-exercises";
@@ -51,7 +51,6 @@ export default function Workout({ params: { slug } }: Props) {
 
   const searchParams = useSearchParams();
   const exerciseIndex = parseInt(searchParams.get("exercise") ?? "1", 10);
-
 
   return (
     <section className="sm:container text-center space-y-4">

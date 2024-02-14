@@ -3,6 +3,7 @@ import {
   addCommentToSets,
   addExerciseToWorkout,
   addSet,
+  removeExerciseFromWorkout,
   deleteSet,
   getExercisesByWorkoutId,
   getSetsByWorkoutId,
@@ -15,6 +16,7 @@ import { useContext } from "react";
 import { WorkoutExerciseContext } from "./context";
 import { queryKeys as exerciseQueryKeys } from "@/app/exercises/[slug]/_utils/hooks";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
 
 const queryKeys = {
   workout: (id: number) => ["workouts", { workoutId: id }],
@@ -212,6 +214,31 @@ export const useUpdateExerciseOrder = (
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey });
       setOpen(false);
+    },
+  });
+};
+
+export const useRemoveExercise = (queryClient: QueryClient) => {
+  const { id, workout_id: workoutId } = useContext(WorkoutExerciseContext);
+  const queryKey = queryKeys.workoutExercises(workoutId);
+  return useMutation({
+    mutationFn: async () => await removeExerciseFromWorkout(id),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => {
+        return {
+          inWorkout: old.inWorkout.filter((e) => e.id !== id),
+          other: [...old.other, old.inWorkout.find((e) => e.id === id)],
+        };
+      });
+      return { previous };
+    },
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 };

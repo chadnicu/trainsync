@@ -14,4 +14,5 @@ export const WorkoutExerciseContext = createContext<
   workout_id: 0,
   // sets: [{ reps: 69, weight: 69, id: 0, workoutExerciseId: 0 }],
   sets: [],
+  order: -1,
 });

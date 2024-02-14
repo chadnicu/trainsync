@@ -12,12 +12,15 @@ import { cn, getYouTubeEmbedURL } from "@/lib/utils";
 import { typography } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import CommentAlert from "@/components/comment";
-import { useAddComment, useAddSet } from "../_utils/hooks";
+import { useAddComment, useAddSet, useRemoveExercise } from "../_utils/hooks";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 import CommentForm from "./comment-form";
 import WorkoutSetCard from "./workout-set-card";
 import SetForm from "./set-form";
+import { TrashIcon } from "@radix-ui/react-icons";
+import { redirect, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function WorkoutExerciseCard() {
   const {
@@ -41,10 +44,33 @@ export default function WorkoutExerciseCard() {
   const { mutate: addComment, isPending: commentPending } =
     useAddComment(queryClient);
 
+  const { mutate: removeExercise } = useRemoveExercise(queryClient);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const current = parseInt(searchParams.get("exercise") ?? "1", 10);
+  const prev = current > 1 ? current - 1 : current;
+
   return (
-    <Card className={cn("max-w-lg w-full mx-auto text-left")}>
+    <Card className={cn("max-w-lg w-full mx-auto text-left relative")}>
       <CardHeader>
-        <CardTitle className={typography("h3")}>{title}</CardTitle>
+        <CardTitle className={typography("h3")}>
+          {title}
+          <Button
+            variant={"ghost"}
+            className="absolute top-3 right-3 h-8 w-8"
+            size={"icon"}
+            onClick={() => {
+              removeExercise();
+              // router.push(pathname + "?exercise=" + prev);
+              router.replace(pathname + "?exercise=" + prev);
+              // nush care mai bn
+            }}
+          >
+            <TrashIcon className="h-4 w-4" />
+          </Button>
+        </CardTitle>
         {(instructions || todo) && (
           <CardDescription className="space-y-2">
             {instructions && <span className="block">{instructions}</span>}
