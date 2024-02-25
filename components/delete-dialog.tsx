@@ -10,22 +10,26 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "./ui/button";
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, ReactNode } from "react";
 
 export default function DeleteDialog({
   action,
+  customTrigger,
   ...props
 }: {
+  customTrigger?: ReactNode;
   action: () => void;
 } & ComponentPropsWithoutRef<"button">) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger
-        className={buttonVariants({ variant: "destructive" })}
-        {...props}
-      >
-        Delete
-      </AlertDialogTrigger>
+      {customTrigger ?? (
+        <AlertDialogTrigger
+          className={buttonVariants({ variant: "destructive" })}
+          {...props}
+        >
+          Delete
+        </AlertDialogTrigger>
+      )}
       <AlertDialogContent className="max-w-[90vw] rounded-lg sm:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

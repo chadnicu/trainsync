@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -12,33 +14,26 @@ import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { cn, getYouTubeEmbedURL, slugify } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
-import { ExerciseContext } from "../_utils/context";
 import ExerciseForm from "./exercise-form";
-import { useDeleteExercise, useEditExercise } from "../_utils/hooks";
-import { useQueryClient } from "@tanstack/react-query";
 import LazyYoutube from "@/components/lazy-youtube";
 import Link from "next/link";
 import { typography } from "@/components/typography";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { usePathname } from "next/navigation";
+import {
+  ExerciseContext,
+  useDeleteExercise,
+  useUpdateExercise,
+} from "@/hooks/exercises";
 
 export default function ExerciseCard() {
-  const queryClient = useQueryClient();
-
-  const { mutate: deleteOptimistically } = useDeleteExercise(queryClient);
-
+  const pathname = usePathname();
   const { id, title, instructions, url } = useContext(ExerciseContext);
-
-  const { mutate: editOptimistically, isPending: isEditing } = useEditExercise(
-    queryClient,
-    id
-  );
+  const { mutate: updateExercise, isPending: isEditing } = useUpdateExercise();
+  const { mutate: deleteExercise } = useDeleteExercise();
 
   const embedUrl = getYouTubeEmbedURL(url);
-
   const isOptimistic = id === 0;
-
-  const pathname = usePathname();
 
   return (
     <Card
@@ -90,13 +85,13 @@ export default function ExerciseCard() {
           description="Make changes to your exercise here. Click save when you're done."
         >
           <ExerciseForm
-            mutate={editOptimistically}
+            mutate={(values) => updateExercise({ ...values, id })}
             submitButtonText="Edit"
             isSubmitting={isEditing}
           />
         </ResponsiveFormDialog>
         <DeleteDialog
-          action={() => deleteOptimistically(id)}
+          action={() => deleteExercise(id)}
           disabled={isOptimistic}
         />
       </CardFooter>

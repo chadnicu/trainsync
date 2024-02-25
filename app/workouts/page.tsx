@@ -2,26 +2,32 @@
 
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
-import { invalidateWorkouts, useAddWorkout, useWorkouts } from "./_utils/hooks";
-import { WorkoutContext } from "./_utils/context";
 import { useQueryClient } from "@tanstack/react-query";
 import WorkoutCard from "./_components/workout-card";
 import WorkoutSkeleton from "./_components/workout-skeleton";
-import AddWorkoutForm from "./_components/add-workout-form";
+import CreateWorkoutForm from "./_components/create-workout-form";
 import { H1, P } from "@/components/typography";
+import {
+  queryKey as workoutsQueryKey,
+  useWorkouts,
+  WorkoutContext,
+  useCreateWorkout,
+} from "@/hooks/workouts";
 
 export default function Workouts() {
-  const queryClient = useQueryClient();
-
   const { data, isLoading, isFetching, isSuccess, isError } = useWorkouts();
+  const { mutate: createWorkout, isPending } = useCreateWorkout();
 
-  const { mutate: addOptimistically, isPending: isAdding } =
-    useAddWorkout(queryClient);
-
+  const queryClient = useQueryClient();
   const Error = () => (
     <P className="grid place-items-center gap-3">
       Something went wrong.
-      <Button onClick={() => invalidateWorkouts(queryClient)} className="w-fit">
+      <Button
+        onClick={() =>
+          queryClient.invalidateQueries({ queryKey: workoutsQueryKey })
+        }
+        className="w-fit"
+      >
         Refresh
       </Button>
     </P>
@@ -31,8 +37,8 @@ export default function Workouts() {
     Array.from({ length: 6 }, (_, i) => <WorkoutSkeleton key={i} />);
 
   const Workouts = () =>
-    data.map((w) => (
-      <WorkoutContext.Provider key={w.id} value={w}>
+    data.map((e) => (
+      <WorkoutContext.Provider key={e.id} value={e}>
         <WorkoutCard />
       </WorkoutContext.Provider>
     ));
@@ -48,9 +54,9 @@ export default function Workouts() {
         title="Add workout"
         description="Idk for now, subject to change"
       >
-        <AddWorkoutForm
-          mutate={addOptimistically}
-          isSubmitting={isAdding}
+        <CreateWorkoutForm
+          mutate={createWorkout}
+          isSubmitting={isPending}
           submitButtonText="Create"
         />
       </ResponsiveFormDialog>

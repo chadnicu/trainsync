@@ -12,12 +12,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ExerciseContext } from "../_utils/context";
-import { ExerciseInput } from "../_utils/types";
-import { exerciseSchema } from "../_utils/validators";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
+import { ExerciseContext } from "@/hooks/exercises";
+import { ExerciseInput } from "@/types";
+import { exerciseSchema } from "@/lib/validators/exercise";
 
 export default function ExerciseForm({
   mutate,

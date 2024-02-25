@@ -13,10 +13,11 @@ import {
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
-import { WorkoutExerciseContext } from "../_utils/context";
-import { CommentInput } from "../_utils/types";
-import { commentSchema } from "../_utils/validators";
+import { CommentInput } from "@/types";
+import { WorkoutExerciseContext } from "@/hooks/workout-exercises";
+import { editWorkoutSchema } from "@/lib/validators/workout";
 import { Textarea } from "@/components/ui/textarea";
+import { exerciseCommentSchema } from "@/lib/validators/workout-exercise";
 
 export default function CommentForm({
   mutate,
@@ -28,13 +29,11 @@ export default function CommentForm({
   submitButtonText?: ReactNode;
 }) {
   const { comment } = useContext(WorkoutExerciseContext);
-  const defaultValues = { comment: comment ?? "" };
-
+  const defaultValues = { comment: comment ?? undefined };
   const form = useForm<CommentInput>({
-    resolver: zodResolver(commentSchema),
+    resolver: zodResolver(exerciseCommentSchema),
     defaultValues,
   });
-
   const setOpen = useContext(ToggleDialogFunction);
 
   return (

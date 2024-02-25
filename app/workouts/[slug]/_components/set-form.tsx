@@ -15,9 +15,9 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { WorkoutExerciseContext } from "../_utils/context";
-import { SetInput } from "../_utils/types";
-import { setSchema } from "../_utils/validators";
+import { SetInput } from "@/types";
+import { setSchema } from "@/lib/validators/set";
+import DeleteDialog from "@/components/delete-dialog";
 
 export default function SetForm({
   submitAction,
@@ -38,10 +38,8 @@ export default function SetForm({
     resolver: zodResolver(setSchema),
     defaultValues,
   });
-
   const setOpen = useContext(ToggleDialogFunction);
-
-  const { id } = useContext(WorkoutExerciseContext);
+  // const { id } = useContext(WorkoutExerciseContext);
 
   return (
     <Form {...form}>
@@ -92,20 +90,14 @@ export default function SetForm({
           />
         </div>
         {deleteSet !== undefined && (
-          <Button
-            variant={"destructive"}
-            type="button"
-            onClick={() => {
-              deleteSet();
-              setOpen(false);
-            }}
-            className="float-left flex justify-center items-center"
-          >
-            Delete
-            {isDeleting && (
-              <LoadingSpinner className="ml-1 w-4 h-4 text-background/80 fill-background/80" />
-            )}
-          </Button>
+          <div className="float-left ml-24 md:ml-0">
+            <DeleteDialog
+              action={() => {
+                deleteSet();
+                setOpen(false);
+              }}
+            />
+          </div>
         )}
         <Button
           type="submit"

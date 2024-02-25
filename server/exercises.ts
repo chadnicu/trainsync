@@ -2,9 +2,10 @@
 
 import { exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
+import { ExerciseInput } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq } from "drizzle-orm";
-import { ExerciseInput } from "./types";
+import { notFound } from "next/navigation";
 
 export async function getExercises() {
   const { userId } = auth();
@@ -19,7 +20,17 @@ export async function getExercises() {
     .all();
 }
 
-export async function editExercise(exerciseId: number, values: ExerciseInput) {
+export async function createExercise(values: ExerciseInput) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db.insert(exercise).values({ ...values, userId });
+}
+
+export async function updateExercise(
+  exerciseId: number,
+  values: ExerciseInput
+) {
   const { userId } = auth();
   if (!userId) return;
 
@@ -38,9 +49,15 @@ export async function deleteExercise(exerciseId: number) {
     .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)));
 }
 
-export async function addExercise(values: ExerciseInput) {
+export async function getExerciseById(exerciseId: number) {
   const { userId } = auth();
-  if (!userId) return;
+  if (!userId) notFound();
 
-  await db.insert(exercise).values({ ...values, userId });
+  return (
+    await db
+      .select()
+      .from(exercise)
+      .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)))
+      .limit(1)
+  )[0];
 }

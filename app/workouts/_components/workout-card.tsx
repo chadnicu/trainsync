@@ -13,7 +13,7 @@ import { useContext } from "react";
 import { cn, slugify } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
 import { useQueryClient } from "@tanstack/react-query";
-import EditWorkoutForm from "./edit-workout-form";
+import UpdateWorkoutForm from "./update-workout-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import dayjs from "@/lib/dayjs";
 import {
@@ -25,9 +25,12 @@ import { ChevronDownIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { typography } from "@/components/typography";
 import CommentAlert from "@/components/comment";
-import { WorkoutContext } from "../_utils/context";
-import { useDeleteWorkout, useEditWorkout } from "../_utils/hooks";
 import { usePathname } from "next/navigation";
+import {
+  WorkoutContext,
+  useDeleteWorkout,
+  useUpdateWorkout,
+} from "@/hooks/workouts";
 
 function getDiffInMinutes(started: string | null, finished: string | null) {
   if (
@@ -50,23 +53,15 @@ function getDiffInMinutes(started: string | null, finished: string | null) {
 }
 
 export default function WorkoutCard() {
-  const queryClient = useQueryClient();
-
-  const { mutate: deleteOptimistically } = useDeleteWorkout(queryClient);
-
   const { id, title, description, date, started, finished, comment } =
     useContext(WorkoutContext);
-
-  const { mutate: editOptimistically, isPending: isEditing } = useEditWorkout(
-    queryClient,
-    id
-  );
+  const { mutate: deleteWorkout } = useDeleteWorkout();
+  const { mutate: updateWorkout, isPending: isUpdating } = useUpdateWorkout();
+  const pathname = usePathname();
 
   const isOptimistic = id === 0;
-
   const dayJsDate = dayjs(date);
   const duration = getDiffInMinutes(started, finished);
-
   const formattedDate = dayJsDate.format("DD-MM-YYYY");
   const relativeDay = dayJsDate.isToday()
     ? "(today)"
@@ -78,8 +73,6 @@ export default function WorkoutCard() {
   const formattedHours = `${started ? started : finished ? "unknown" : ""}${
     finished ? `-${finished}` : started ? "-unknown" : ""
   }`;
-
-  const pathname = usePathname();
 
   const DescriptionPopover = () => (
     <Popover>
@@ -135,15 +128,15 @@ export default function WorkoutCard() {
           description="Make changes to your workout here. Click save when you're done."
         >
           <ScrollArea className="h-screen max-h-[70vh] overflow-y-hidden">
-            <EditWorkoutForm
-              mutate={editOptimistically}
+            <UpdateWorkoutForm
+              mutate={(values) => updateWorkout({ ...values, id })}
               submitButtonText="Edit"
-              isSubmitting={isEditing}
+              isSubmitting={isUpdating}
             />
           </ScrollArea>
         </ResponsiveFormDialog>
         <DeleteDialog
-          action={() => deleteOptimistically(id)}
+          action={() => deleteWorkout(id)}
           disabled={isOptimistic}
         />
       </CardFooter>

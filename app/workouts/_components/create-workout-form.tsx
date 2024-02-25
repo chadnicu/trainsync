@@ -15,20 +15,20 @@ import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
-import { WorkoutContext } from "../_utils/context";
-import { addWorkoutSchema } from "../_utils/validators";
-import { AddWorkoutInput } from "../_utils/types";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn, mapNullKeysToUndefined } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
+import { AddWorkoutInput } from "@/types";
+import { addWorkoutSchema } from "@/lib/validators/workout";
+import { WorkoutContext } from "@/hooks/workouts";
 
-export default function AddWorkoutForm({
+export default function CreateWorkoutForm({
   mutate,
   isSubmitting,
   submitButtonText,
@@ -37,19 +37,12 @@ export default function AddWorkoutForm({
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
 }) {
-  const { title, description, date } = useContext(WorkoutContext);
-
-  const defaultValues = {
-    title,
-    description: description ?? "",
-    date: date ? new Date(date) : new Date(),
-  };
-
+  const initialValues = useContext(WorkoutContext);
+  const defaultValues = mapNullKeysToUndefined(initialValues);
   const form = useForm<AddWorkoutInput>({
     resolver: zodResolver(addWorkoutSchema),
-    defaultValues,
+    defaultValues
   });
-
   const setOpen = useContext(ToggleDialogFunction);
 
   return (

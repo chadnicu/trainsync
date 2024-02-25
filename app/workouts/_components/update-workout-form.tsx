@@ -17,7 +17,7 @@ import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, mapNullKeysToUndefined } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
@@ -25,11 +25,11 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { editWorkoutSchema } from "../_utils/validators";
-import { WorkoutContext } from "../_utils/context";
-import { EditWorkoutInput } from "../_utils/types";
+import { WorkoutContext } from "@/hooks/workouts";
+import { EditWorkoutInput } from "@/types";
+import { editWorkoutSchema } from "@/lib/validators/workout";
 
-export default function EditWorkoutForm({
+export default function UpdateWorkoutForm({
   mutate,
   isSubmitting,
   submitButtonText,
@@ -38,24 +38,12 @@ export default function EditWorkoutForm({
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
 }) {
-  const { title, description, date, started, finished, comment } =
-    useContext(WorkoutContext);
-
-  const defaultValues = {
-    title,
-    description: description ?? "",
-    date: date ? new Date(date) : new Date(),
-    started: started ?? undefined,
-    finished: finished ?? undefined,
-    comment: comment ?? "",
-    clearTime: false,
-  };
-
+  const initialValues = useContext(WorkoutContext);
+  const defaultValues = mapNullKeysToUndefined(initialValues);
   const form = useForm<EditWorkoutInput>({
     resolver: zodResolver(editWorkoutSchema),
     defaultValues,
   });
-
   const setOpen = useContext(ToggleDialogFunction);
 
   const showTimes = !form.getValues("clearTime");

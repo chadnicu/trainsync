@@ -1,9 +1,12 @@
 "use client";
 
 import { H1, P } from "@/components/typography";
-import { invalidateExercise, useExercise } from "./_utils/hooks";
-import { useExerciseSets } from "./_utils/hooks";
-import { cn, getIdFromSlug, getYouTubeEmbedURL } from "@/lib/utils";
+import {
+  cn,
+  getIdFromSlug,
+  getYouTubeEmbedURL,
+  groupSetsByDate,
+} from "@/lib/utils";
 import SetsChart from "./_components/sets-chart";
 import SetCard from "./_components/set-card";
 import SetSkeleton from "./_components/set-skeleton";
@@ -11,47 +14,36 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import SetsChartSkeleton from "./_components/sets-chart-skeleton";
-import { ExerciseSet } from "./_utils/types";
+import { queryKey as exerciseQueryKey, useExercise } from "@/hooks/exercises";
+import { queryKeys as setsQueryKeys, useExerciseSets } from "@/hooks/sets";
 
-type Props = {
+type Params = {
   params: { slug: string };
 };
 
-function groupSetsByDate(sets: ExerciseSet[]): Record<string, ExerciseSet[]> {
-  const groupedSets: Record<string, ExerciseSet[]> = {};
-
-  sets.forEach((set) => {
-    const date = set.workoutDate || "No Date";
-    if (!groupedSets[date]) {
-      groupedSets[date] = [];
-    }
-    groupedSets[date].push(set);
-  });
-
-  return groupedSets;
-}
-
-export default function Exercise({ params: { slug } }: Props) {
-  const exerciseId = getIdFromSlug(slug);
-
+export default function Exercise({ params: { slug } }: Params) {
   const {
     data: exercise,
     isLoading,
     isFetching,
     isSuccess,
     isError,
-  } = useExercise(exerciseId);
-  const { data: sets } = useExerciseSets(exerciseId);
+  } = useExercise();
+  const { data: sets } = useExerciseSets();
+  const queryClient = useQueryClient();
 
   const embedUrl = getYouTubeEmbedURL(exercise?.url ?? "");
-
-  const queryClient = useQueryClient();
+  const exerciseId = getIdFromSlug(slug);
+  const setsQueryKey = setsQueryKeys.exerciseSets(exerciseId);
 
   const Error = () => (
     <P className="grid place-items-center gap-3">
       Something went wrong.
       <Button
-        onClick={() => invalidateExercise(queryClient, exerciseId)}
+        onClick={() => {
+          queryClient.invalidateQueries({ queryKey: setsQueryKey });
+          queryClient.invalidateQueries({ queryKey: exerciseQueryKey });
+        }}
         className="w-fit"
       >
         Refresh
@@ -63,7 +55,6 @@ export default function Exercise({ params: { slug } }: Props) {
     Array.from({ length: 6 }, (_, i) => <SetSkeleton key={i} />);
 
   const groupedSets = groupSetsByDate(sets);
-
   const Sets = () =>
     Object.entries(groupedSets).map(([date, setsForDate]) => (
       <SetCard key={date} sets={setsForDate} />

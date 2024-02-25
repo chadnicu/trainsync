@@ -1,53 +1,37 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
-import {
-  useAddExerciseToWorkout,
-  useUpdateExerciseOrder,
-  useWorkout,
-  useWorkoutExercises,
-  useWorkoutSets,
-} from "./_utils/hooks";
-import { WorkoutExerciseContext } from "./_utils/context";
 import { Button } from "@/components/ui/button";
 import WorkoutExerciseCard from "./_components/workout-exercise-card";
 import { H1, P } from "@/components/typography";
-import { redirect, usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditWorkoutExercises from "./_components/edit-workout-exercises";
 import { getIdFromSlug } from "@/lib/utils";
+import { useWorkout } from "@/hooks/workouts";
+import {
+  WorkoutExerciseContext,
+  useAddExerciseToWorkout,
+  useWorkoutExercises,
+} from "@/hooks/workout-exercises";
+import { useWorkoutSets } from "@/hooks/sets";
 
-type Props = {
+type Params = {
   params: { slug: string };
 };
 
-export default function Workout({ params: { slug } }: Props) {
+export default function Workout({ params: { slug } }: Params) {
   const workoutId = getIdFromSlug(slug);
-
-  const {
-    data: workout,
-    isLoading,
-    isFetching,
-    isSuccess,
-  } = useWorkout(workoutId);
-
+  const { data: workout, isLoading, isFetching, isSuccess } = useWorkout();
   const {
     data: { inWorkout, other },
-    isSuccess: exercisesSucces,
-    isLoading: exercisesLoading,
+    // isSuccess: exercisesSucces,
+    // isLoading: exercisesLoading,
     isFetching: exercisesFetching,
-  } = useWorkoutExercises(workoutId);
-
-  const { data: sets } = useWorkoutSets(workoutId);
-
-  const queryClient = useQueryClient();
-
-  const { mutate: addExerciseToWorkout } = useAddExerciseToWorkout(
-    queryClient,
-    workoutId
-  );
+  } = useWorkoutExercises();
+  const { data: sets } = useWorkoutSets();
+  const { mutate: addExerciseToWorkout } = useAddExerciseToWorkout();
 
   const searchParams = useSearchParams();
   const exerciseIndex = parseInt(searchParams.get("exercise") ?? "1", 10);

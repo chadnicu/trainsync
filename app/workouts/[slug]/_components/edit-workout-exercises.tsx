@@ -1,11 +1,9 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { WorkoutExercise } from "../_utils/types";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useUpdateExerciseOrder } from "../_utils/hooks";
-import { useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/loading-spinner";
-import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
+import { WorkoutExercise } from "@/types";
+import { useUpdateExerciseOrder } from "@/hooks/workout-exercises";
 
 export default function EditWorkoutExercises({
   exercises,
@@ -13,16 +11,9 @@ export default function EditWorkoutExercises({
   exercises: WorkoutExercise[];
 }) {
   const [order, setOrder] = useState<number[]>([]);
-
   const getIndex = (arr: number[], id: number) =>
     arr.findIndex((e) => e === id);
-
-  const queryClient = useQueryClient();
-
-  const { mutate: updateExerciseOrder, isPending } = useUpdateExerciseOrder(
-    queryClient,
-    exercises[0]?.workout_id ?? -1
-  );
+  const { mutate: updateExerciseOrder, isPending } = useUpdateExerciseOrder();
 
   return (
     <>
@@ -56,13 +47,13 @@ export default function EditWorkoutExercises({
         ))}
       </div>
       <Button
-        className="ml-auto w-fit"
+        className="float-right mt-4 md:mt-0 w-fit ml-auto"
         disabled={order.length !== exercises.length || exercises.length < 2}
         onClick={() => {
           updateExerciseOrder(order);
         }}
       >
-        Save
+        Update order
         {isPending && (
           <LoadingSpinner className="ml-1 w-4 h-4 text-background/80 fill-background/80" />
         )}

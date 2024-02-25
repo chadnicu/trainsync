@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { ExerciseSet } from "../_utils/types";
+import { ExerciseSet } from "@/types";
 
 function averages(sets: ExerciseSet[]) {
   let averageReps = 0,

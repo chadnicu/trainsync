@@ -5,31 +5,34 @@ import ExerciseSkeleton from "./_components/exercise-skeleton";
 import ExerciseForm from "./_components/exercise-form";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  useExercises,
-  useAddExercise,
-  invalidateExercises,
-} from "./_utils/hooks";
-import { ExerciseContext } from "./_utils/context";
-import { useQueryClient } from "@tanstack/react-query";
 import { H1, P } from "@/components/typography";
+import {
+  ExerciseContext,
+  queryKey as exercisesQueryKey,
+  useCreateExercise,
+  useExercises,
+} from "@/hooks/exercises";
+import { useQueryClient } from "@tanstack/react-query";
+import LoadingSpinner from "@/components/loading-spinner";
 
 export default function Exercises() {
   const { data, isLoading, isFetching, isSuccess, isError } = useExercises();
+  const { mutate: createExercise, isPending } = useCreateExercise();
 
   const queryClient = useQueryClient();
-
-  const { mutate: addOptimistically, isPending: isAdding } =
-    useAddExercise(queryClient);
-
   const Error = () => (
     <P className="grid place-items-center gap-3">
       Something went wrong.
       <Button
-        onClick={() => invalidateExercises(queryClient)}
+        onClick={() =>
+          queryClient.invalidateQueries({ queryKey: exercisesQueryKey })
+        }
         className="w-fit"
       >
         Refresh
+        {!!(isLoading || isFetching) && (
+          <LoadingSpinner className="ml-1 w-4 h-4 text-background/80 fill-background/80" />
+        )}
       </Button>
     </P>
   );
@@ -56,8 +59,8 @@ export default function Exercises() {
         description="Instructions and URL are not mandatory."
       >
         <ExerciseForm
-          mutate={addOptimistically}
-          isSubmitting={isAdding}
+          mutate={createExercise}
+          isSubmitting={isPending}
           submitButtonText="Create"
         />
       </ResponsiveFormDialog>

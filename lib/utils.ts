@@ -1,3 +1,4 @@
+import { ExerciseSet } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -40,4 +41,56 @@ export function getYouTubeEmbedURL(url: string | null) {
     : url;
 
   return embedUrl;
+}
+
+export function mapUndefinedKeysToNull(obj: any) {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("Input must be a non-null object");
+  }
+
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (obj[key] === undefined) {
+        obj[key] = null as any;
+      }
+    }
+  }
+
+  return obj;
+}
+
+export function mapNullKeysToUndefined(obj: any) {
+  if (typeof obj !== "object" || obj === null) {
+    throw new Error("Input must be a non-null object");
+  }
+
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      // tweak this for react-hook-form
+      if (key === "date") {
+        if (!obj[key]) obj[key] = new Date();
+        else obj[key] = new Date(obj[key]);
+      } else if (obj[key] === null) {
+        obj[key] = undefined;
+      }
+    }
+  }
+
+  return obj;
+}
+
+export function groupSetsByDate(
+  sets: ExerciseSet[]
+): Record<string, ExerciseSet[]> {
+  const groupedSets: Record<string, ExerciseSet[]> = {};
+
+  sets.forEach((set) => {
+    const date = set.workoutDate || "No Date";
+    if (!groupedSets[date]) {
+      groupedSets[date] = [];
+    }
+    groupedSets[date].push(set);
+  });
+
+  return groupedSets;
 }

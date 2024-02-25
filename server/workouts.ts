@@ -2,9 +2,10 @@
 
 import { workout } from "@/lib/schema";
 import { db } from "@/lib/turso";
+import { AddWorkoutInput, EditWorkoutInput } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq } from "drizzle-orm";
-import { AddWorkoutInput, EditWorkoutInput } from "./types";
+import { notFound } from "next/navigation";
 
 export async function getWorkouts() {
   const { userId } = auth();
@@ -19,7 +20,19 @@ export async function getWorkouts() {
     .all();
 }
 
-export async function editWorkout(workoutId: number, values: EditWorkoutInput) {
+export async function createWorkout(values: AddWorkoutInput) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  await db
+    .insert(workout)
+    .values({ ...values, date: values.date.toDateString(), userId });
+}
+
+export async function updateWorkout(
+  workoutId: number,
+  values: EditWorkoutInput
+) {
   const { userId } = auth();
   if (!userId) return;
 
@@ -43,11 +56,15 @@ export async function deleteWorkout(workoutId: number) {
     .where(and(eq(workout.id, workoutId), eq(workout.userId, userId)));
 }
 
-export async function addWorkout(values: AddWorkoutInput) {
+export async function getWorkoutById(workoutId: number) {
   const { userId } = auth();
-  if (!userId) return;
+  if (!userId) notFound();
 
-  await db
-    .insert(workout)
-    .values({ ...values, date: values.date.toDateString(), userId });
+  return (
+    await db
+      .select()
+      .from(workout)
+      .where(and(eq(workout.id, workoutId), eq(workout.userId, userId)))
+      .limit(1)
+  )[0];
 }

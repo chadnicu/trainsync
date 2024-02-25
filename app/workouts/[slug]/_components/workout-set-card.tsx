@@ -1,26 +1,18 @@
 import { cn } from "@/lib/utils";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { WorkoutSet } from "../_utils/types";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditSetForm from "./set-form";
-import { useQueryClient } from "@tanstack/react-query";
-import { useDeleteSet, useEditSet } from "../_utils/hooks";
+import { WorkoutSet } from "@/types";
+import { useDeleteSet, useUpdateSet } from "@/hooks/sets";
 
+// testeaza tot cand poti
 export default function WorkoutSetCard({ set }: { set: WorkoutSet }) {
-  const isOptimistic = set.id === 0;
+  const { mutate: updateSet, isPending: isEditing } = useUpdateSet();
+  const { mutate: deleteSet, isPending: isDeleting } = useDeleteSet();
 
+  const isOptimistic = set.id === 0;
   const BoldNumber = ({ n }: { n: number | null }) => (
     <span className="text-xl font-semibold">{n}</span>
-  );
-
-  const queryClient = useQueryClient();
-  const { mutate: editSet, isPending: isEditing } = useEditSet(
-    queryClient,
-    set.id
-  );
-  const { mutate: deleteSet, isPending: isDeleting } = useDeleteSet(
-    queryClient,
-    set.id
   );
 
   return (
@@ -41,8 +33,8 @@ export default function WorkoutSetCard({ set }: { set: WorkoutSet }) {
       description={"Edit or delete this set"}
     >
       <EditSetForm
-        submitAction={editSet}
-        deleteSet={deleteSet}
+        submitAction={(values) => updateSet({ ...values, id: set.id })}
+        deleteSet={() => deleteSet(set.id)}
         isDeleting={isDeleting}
         isSubmitting={isEditing}
         submitButtonText="Edit"
