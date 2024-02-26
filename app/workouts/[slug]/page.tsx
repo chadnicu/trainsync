@@ -67,7 +67,7 @@ export default function Workout({ params: { slug } }: Params) {
         <>{exercisesFetching && <WorkoutExerciseCard />}</>
       )}
 
-      <div className="space-x-3">
+      <div className="space-y-2 sm:space-x-3 sm:space-y-0">
         {/* implement this, make it so that i can delete/reorder exercises */}
         <ResponsiveFormDialog
           trigger={<Button variant={"outline"}>Edit exercise order</Button>}

@@ -36,11 +36,13 @@ export default function ResponsiveFormDialog({
   trigger,
   title,
   description,
+  drawerContentClassname,
   children,
 }: {
   trigger: ReactNode;
   title?: ReactNode;
   description?: ReactNode;
+  drawerContentClassname?: string;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -70,7 +72,7 @@ export default function ResponsiveFormDialog({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className={drawerContentClassname}>
         {(title || description) && (
           <DrawerHeader className="text-left px-6">
             {title && <DrawerTitle>{title}</DrawerTitle>}

@@ -92,7 +92,7 @@ export default function WorkoutExerciseCard() {
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-            className="rounded-md h-[44vw] w-full sm:w-full sm:h-[260px] mx-auto"
+            className="rounded-md h-[44vw] w-full sm:w-full sm:h-[260px] mx-auto "
           />
         )}
         <div>
@@ -124,6 +124,7 @@ export default function WorkoutExerciseCard() {
           trigger={<Button>Add set</Button>}
           title="Add set"
           description={`Add a new set to ${title}`}
+          drawerContentClassname="max-h-[272px]"
         >
           <SetForm
             submitAction={addSet}

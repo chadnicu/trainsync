@@ -31,6 +31,7 @@ export default function WorkoutSetCard({ set }: { set: WorkoutSet }) {
       }
       title={"Edit set"}
       description={"Edit or delete this set"}
+      drawerContentClassname="max-h-[272px]"
     >
       <EditSetForm
         submitAction={(values) => updateSet({ ...values, id: set.id })}
