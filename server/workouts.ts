@@ -29,7 +29,7 @@ export async function createWorkout(values: AddWorkoutInput) {
 
   await db
     .insert(workout)
-    .values({ ...values, date: values.date.toDateString(), userId });
+    .values({ ...values, date: values.date.toString(), userId });
 }
 
 export async function updateWorkout(
