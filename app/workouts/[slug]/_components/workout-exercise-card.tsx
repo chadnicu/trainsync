@@ -51,8 +51,6 @@ export default function WorkoutExerciseCard() {
   const prev = current > 1 ? current - 1 : current;
   const embedUrl = getYouTubeEmbedURL(url);
 
-  console.log(comment, "nigaer asa skid");
-
   return (
     <Card className={cn("max-w-lg w-full mx-auto text-left relative")}>
       <CardHeader>

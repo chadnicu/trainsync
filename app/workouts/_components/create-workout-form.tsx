@@ -44,7 +44,6 @@ export default function CreateWorkoutForm({
     defaultValues,
   });
   const setOpen = useContext(ToggleDialogFunction);
-  console.log(form.getValues("date"), "client");
 
   return (
     <Form {...form}>
