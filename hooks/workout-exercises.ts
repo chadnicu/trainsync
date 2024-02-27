@@ -30,8 +30,13 @@ export function useAddExerciseToWorkout() {
   const queryClient = useQueryClient();
   const queryKey = queryKeyFn(workoutId);
   return useMutation({
-    mutationFn: async ({ exerciseId }: { exerciseId: number }) =>
-      await addExerciseToWorkout({ exerciseId, workoutId }),
+    mutationFn: async ({
+      exerciseId,
+      order,
+    }: {
+      exerciseId: number;
+      order: number;
+    }) => await addExerciseToWorkout({ exerciseId, workoutId, order }),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
@@ -91,6 +96,7 @@ export function useUpdateExerciseOrder() {
   const setOpen = useContext(ToggleDialogFunction);
   return useMutation({
     mutationFn: async (arr: number[]) => {
+      if (!arr.length) return;
       await updateExerciseOrder(arr);
     },
     onError: (err, newElement, context) => {

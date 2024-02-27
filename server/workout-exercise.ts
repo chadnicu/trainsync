@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs";
-import { exercise, workout, workout_exercise } from "@/lib/schema";
+import { exercise, sets, workout, workout_exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { and, eq, notInArray } from "drizzle-orm";
 import { CommentInput } from "@/types";
@@ -60,6 +60,7 @@ export async function addExerciseToWorkout(values: {
   workoutId: number;
   comment?: string;
   todo?: string;
+  order?: number;
 }) {
   const { userId } = auth();
   if (!userId) return;
@@ -86,6 +87,16 @@ export async function updateExerciseOrder(arr: number[]) {
 export async function removeExerciseFromWorkout(workoutExerciseId: number) {
   const { userId } = auth();
   if (!userId) return;
+
+  const a = await db
+    .delete(sets)
+    .where(eq(sets.workoutExerciseId, workoutExerciseId))
+    .returning()
+    .get();
+
+  // hz dc nu merge
+  console.log(workoutExerciseId);
+  console.log(a, "nige");
 
   await db
     .delete(workout_exercise)

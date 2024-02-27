@@ -70,7 +70,11 @@ export default function Workout({ params: { slug } }: Params) {
       <div className="space-y-2 sm:space-x-3 sm:space-y-0">
         {/* implement this, make it so that i can delete/reorder exercises */}
         <ResponsiveFormDialog
-          trigger={<Button variant={"outline"}>Edit exercise order</Button>}
+          trigger={
+            inWorkout.length > 1 && (
+              <Button variant={"outline"}>Edit exercise order</Button>
+            )
+          }
           title="Edit exercise order"
           description="Simply click on the exercises to number them in order"
         >
@@ -83,7 +87,15 @@ export default function Workout({ params: { slug } }: Params) {
             title,
           }))}
           placeholder="Search exercise.."
-          mutate={addExerciseToWorkout}
+          mutate={(v) =>
+            addExerciseToWorkout({
+              ...v,
+              order:
+                inWorkout.length > 0
+                  ? inWorkout[inWorkout.length - 1].order + 1
+                  : 1,
+            })
+          }
         />
       </div>
     </section>

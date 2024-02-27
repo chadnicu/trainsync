@@ -37,7 +37,7 @@ export default function WorkoutExerciseCard() {
     // exerciseId,
     // workout_id: workoutId,
     sets,
-    // order,
+    order,
   } = useContext(WorkoutExerciseContext);
   const { mutate: addSet, isPending: setPending } = useCreateSet();
   const { mutate: addComment, isPending: commentPending } =

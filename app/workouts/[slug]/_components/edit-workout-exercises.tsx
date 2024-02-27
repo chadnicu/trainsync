@@ -50,7 +50,9 @@ export default function EditWorkoutExercises({
         className="float-right mt-4 md:mt-0 w-fit ml-auto"
         disabled={order.length !== exercises.length || exercises.length < 2}
         onClick={() => {
-          updateExerciseOrder(order);
+          if (order.join("") === exercises.map((e) => e.id).join("")) {
+            updateExerciseOrder([]);
+          } else updateExerciseOrder(order);
         }}
       >
         Update order

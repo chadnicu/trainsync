@@ -41,9 +41,10 @@ export default function CreateWorkoutForm({
   const defaultValues = mapNullKeysToUndefined(initialValues);
   const form = useForm<AddWorkoutInput>({
     resolver: zodResolver(addWorkoutSchema),
-    defaultValues
+    defaultValues,
   });
   const setOpen = useContext(ToggleDialogFunction);
+  console.log(form.getValues("date"), "client");
 
   return (
     <Form {...form}>

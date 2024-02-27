@@ -24,6 +24,9 @@ export async function createWorkout(values: AddWorkoutInput) {
   const { userId } = auth();
   if (!userId) return;
 
+  console.log(values.date, "server");
+  console.log(values.date.toString(), "server toString");
+
   await db
     .insert(workout)
     .values({ ...values, date: values.date.toDateString(), userId });
