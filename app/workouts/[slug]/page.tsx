@@ -4,7 +4,7 @@ import { ResponsiveComboBox } from "@/components/responsive-combobox";
 import { Button } from "@/components/ui/button";
 import WorkoutExerciseCard from "./_components/workout-exercise-card";
 import { H1, P } from "@/components/typography";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditWorkoutExercises from "./_components/edit-workout-exercises";
@@ -16,6 +16,7 @@ import {
   useWorkoutExercises,
 } from "@/hooks/workout-exercises";
 import { useWorkoutSets } from "@/hooks/sets";
+import { useEffect } from "react";
 
 type Params = {
   params: { slug: string };
@@ -34,7 +35,22 @@ export default function Workout({ params: { slug } }: Params) {
   const { mutate: addExerciseToWorkout } = useAddExerciseToWorkout();
 
   const searchParams = useSearchParams();
-  const exerciseIndex = parseInt(searchParams.get("exercise") ?? "1", 10);
+  const value = searchParams.get("exercise");
+  const exerciseIndex = value ? parseInt(value, 10) : -1;
+
+  const router = useRouter();
+  const pathname = usePathname();
+  // if (!value && inWorkout.length > 0) router.push(pathname + "?exercise=1");
+  // else if (!value) router.push("?nigger=loh");
+
+  // if (!value) {
+  // useEffect(() => {
+  //   if (!value && exerciseIndex === -1 && inWorkout.length === 0)
+  //     router.push("?exercise=1");
+  // }, [value, exerciseIndex, inWorkout, router]);
+
+  // else if (!value) router.push("?exercise=1");
+  // }
 
   return (
     <section className="sm:container text-center space-y-4">
@@ -51,7 +67,7 @@ export default function Workout({ params: { slug } }: Params) {
         </>
       )}
 
-      <ExercisesPagination length={inWorkout.length || 3} />
+      <ExercisesPagination length={inWorkout.length} />
       {inWorkout[exerciseIndex - 1] ? (
         <WorkoutExerciseContext.Provider
           value={{
@@ -81,21 +97,26 @@ export default function Workout({ params: { slug } }: Params) {
           <EditWorkoutExercises exercises={inWorkout} />
         </ResponsiveFormDialog>
         <ResponsiveComboBox
-          trigger={<Button variant="outline">Add another exercise</Button>}
+          trigger={
+            <Button variant="outline">
+              Add {inWorkout.length > 0 ? "another" : "an"} exercise
+            </Button>
+          }
           data={other.map(({ id, title }) => ({
             id,
             title,
           }))}
           placeholder="Search exercise.."
-          mutate={(v) =>
-            addExerciseToWorkout({
-              ...v,
+          mutate={({ exerciseId }) => {
+            router.push(pathname + "?exercise=" + (inWorkout.length + 1));
+            return addExerciseToWorkout({
+              exerciseId,
               order:
                 inWorkout.length > 0
                   ? inWorkout[inWorkout.length - 1].order + 1
                   : 1,
-            })
-          }
+            });
+          }}
         />
       </div>
     </section>

@@ -1,3 +1,4 @@
+import { H4 } from "@/components/typography";
 import {
   Pagination,
   PaginationContent,
@@ -17,6 +18,8 @@ export default function ExercisesPagination({ length }: { length: number }) {
   const prev = current > 1 ? current - 1 : current;
 
   const magicNumber = useMediaQuery("(min-width: 450px)") ? 5 : 3;
+  if (!length) return <H4>You have no exercises</H4>;
+  // const magicNumber = 5;
 
   const PaginationLinks = () => {
     let amount: number;

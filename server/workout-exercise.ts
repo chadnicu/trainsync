@@ -88,15 +88,7 @@ export async function removeExerciseFromWorkout(workoutExerciseId: number) {
   const { userId } = auth();
   if (!userId) return;
 
-  const a = await db
-    .delete(sets)
-    .where(eq(sets.workoutExerciseId, workoutExerciseId))
-    .returning()
-    .get();
-
-  // hz dc nu merge
-  console.log(workoutExerciseId);
-  console.log(a, "nige");
+  await db.delete(sets).where(eq(sets.workoutExerciseId, workoutExerciseId));
 
   await db
     .delete(workout_exercise)
