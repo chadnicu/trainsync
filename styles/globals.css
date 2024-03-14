@@ -76,8 +76,4 @@
   body {
     @apply bg-background text-foreground;
   }
-
-  h1.typography {
-    @apply scroll-m-20 text-4xl font-extrabold tracking-tighter lg:text-5xl
-  }
 }

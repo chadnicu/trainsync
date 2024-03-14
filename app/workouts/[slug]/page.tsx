@@ -17,6 +17,7 @@ import {
 } from "@/hooks/workout-exercises";
 import { useWorkoutSets } from "@/hooks/sets";
 import { useEffect } from "react";
+import Timer from "./_components/timer";
 
 type Params = {
   params: { slug: string };
@@ -57,7 +58,9 @@ export default function Workout({ params: { slug } }: Params) {
       {isSuccess && (
         <>
           <H1>{workout.title}</H1>
-          <P className="max-w-lg mx-auto">{workout.description}</P>
+          {workout.description && (
+            <P className="max-w-lg mx-auto">{workout.description}</P>
+          )}
         </>
       )}
       {!!((isFetching || isLoading) && !workout?.title) && (
@@ -66,6 +69,8 @@ export default function Workout({ params: { slug } }: Params) {
           <P className="max-w-lg mx-auto">Workout with id {workoutId}</P>
         </>
       )}
+
+      {isSuccess && <Timer workout={workout} />}
 
       <ExercisesPagination length={inWorkout.length} />
       {inWorkout[exerciseIndex - 1] ? (

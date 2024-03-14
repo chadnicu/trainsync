@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn, mapNullKeysToUndefined } from "@/lib/utils";
@@ -46,7 +46,8 @@ export default function UpdateWorkoutForm({
   });
   const setOpen = useContext(ToggleDialogFunction);
 
-  const showTimes = !form.getValues("clearTime");
+  // need state cuz the old way doesnt work for some reason
+  const [showTimes, setShowTimes] = useState(!defaultValues.clearTime);
 
   return (
     <Form {...form}>
@@ -122,7 +123,10 @@ export default function UpdateWorkoutForm({
                 <FormControl>
                   <Checkbox
                     checked={field.value}
-                    onCheckedChange={field.onChange}
+                    onCheckedChange={(e) => {
+                      setShowTimes((e: boolean | undefined) => !e);
+                      return field.onChange(e);
+                    }}
                     className="border-border brightness-150"
                   />
                 </FormControl>
