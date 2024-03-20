@@ -9,14 +9,13 @@ import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditWorkoutExercises from "./_components/edit-workout-exercises";
 import { getIdFromSlug } from "@/lib/utils";
-import { useWorkout } from "@/hooks/workouts";
+import { WorkoutContext, useWorkout } from "@/hooks/workouts";
 import {
   WorkoutExerciseContext,
   useAddExerciseToWorkout,
   useWorkoutExercises,
 } from "@/hooks/workout-exercises";
 import { useWorkoutSets } from "@/hooks/sets";
-import { useEffect } from "react";
 import Timer from "./_components/timer";
 
 type Params = {
@@ -70,8 +69,6 @@ export default function Workout({ params: { slug } }: Params) {
         </>
       )}
 
-      {isSuccess && <Timer workout={workout} />}
-
       <ExercisesPagination length={inWorkout.length} />
       {inWorkout[exerciseIndex - 1] ? (
         <WorkoutExerciseContext.Provider
@@ -85,7 +82,8 @@ export default function Workout({ params: { slug } }: Params) {
           <WorkoutExerciseCard />
         </WorkoutExerciseContext.Provider>
       ) : (
-        <>{exercisesFetching && <WorkoutExerciseCard />}</>
+        <></>
+        // <>{exercisesFetching && <WorkoutExerciseCard />}</>
       )}
 
       <div className="space-y-2 sm:space-x-3 sm:space-y-0">

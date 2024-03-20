@@ -16,15 +16,15 @@ export const editWorkoutSchema = z.object({
   }),
   started: z
     .string()
-    .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
-      message: "Invalid time format. Expected HH:MM",
-    })
+    // .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
+    //   message: "Invalid time format. Expected HH:MM",
+    // })
     .optional(),
   finished: z
     .string()
-    .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
-      message: "Invalid time format. Expected HH:MM",
-    })
+    // .regex(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
+    //   message: "Invalid time format. Expected HH:MM",
+    // })
     .optional(),
   comment: z.string().min(0).max(255).optional(),
   clearTime: z.boolean().default(false).optional(),

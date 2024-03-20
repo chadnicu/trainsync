@@ -5,12 +5,19 @@ import {
   removeExerciseFromWorkout,
   updateExerciseOrder,
 } from "@/server/workout-exercise";
-import { WorkoutSet, WorkoutExercises, WorkoutExercise } from "@/types";
+import {
+  WorkoutSet,
+  WorkoutExercises,
+  WorkoutExercise,
+  Workout,
+} from "@/types";
 import { useContext } from "react";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { useParams } from "next/navigation";
-import { getIdFromSlug } from "@/lib/utils";
+import { getIdFromSlug, mapUndefinedKeysToNull } from "@/lib/utils";
 import { createContext } from "react";
+import { updateWorkout } from "@/server/workouts";
+import { useWorkout, queryKey as workoutQueryKey } from "./workouts";
 
 export const queryKeyFn = (workoutId: number) => ["exercises", { workoutId }];
 
@@ -21,6 +28,47 @@ export function useWorkoutExercises() {
     queryKey: queryKeyFn(workoutId),
     queryFn: async () => getExercisesByWorkoutId(workoutId),
     initialData: { inWorkout: [], other: [] },
+  });
+}
+
+export function useUpdateWorkoutPage() {
+  const params = useParams<{ slug: string }>();
+  const workoutId = getIdFromSlug(params.slug);
+  const queryClient = useQueryClient();
+  const { data } = useWorkout();
+  const { id, title, date } = data ?? { id: 0, title: "", date: "" }; // this shouldnt happen
+  const defaultValues = {
+    id,
+    title,
+    date: new Date(date ?? ""),
+  };
+  const queryKey = [...workoutQueryKey, { workoutId }];
+
+  return useMutation({
+    mutationFn: async (values: {
+      started?: string;
+      finished?: string;
+      comment?: string;
+    }) =>
+      await updateWorkout(workoutId, {
+        ...defaultValues,
+        ...values,
+      }),
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: Workout) => ({
+        ...old,
+        ...values,
+      }));
+      return { previous };
+    },
+    onError: (err, newValues, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+      console.log("Error optimistic ", newValues);
+      console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 }
 
