@@ -55,7 +55,7 @@ export default function Exercises() {
         trigger={
           <Button className="block ml-auto sm:float-right">Create</Button>
         }
-        title="Add exercise"
+        title="Create exercise"
         description="Instructions and URL are not mandatory."
       >
         <ExerciseForm

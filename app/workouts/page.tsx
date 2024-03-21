@@ -51,8 +51,8 @@ export default function Workouts() {
         trigger={
           <Button className="block ml-auto sm:float-right">Create</Button>
         }
-        title="Add workout"
-        description="Idk for now, subject to change"
+        title="Create workout"
+        description="Description field isn't mandatory."
       >
         <CreateWorkoutForm
           mutate={createWorkout}

@@ -40,7 +40,7 @@ export default function Workout({ params: { slug } }: Params) {
 
   useEffect(() => {
     const value = searchParams.get("exercise");
-    if (!value && inWorkout.length > 0) router.push("?exercise=1");
+    if (!value && inWorkout.length > 0) router.replace("?exercise=1");
   }, [inWorkout, router, searchParams]);
 
   return (
@@ -98,7 +98,7 @@ export default function Workout({ params: { slug } }: Params) {
           }))}
           placeholder="Search exercise.."
           mutate={({ exerciseId }) => {
-            router.push(pathname + "?exercise=" + (inWorkout.length + 1));
+            router.replace(pathname + "?exercise=" + (inWorkout.length + 1));
             return addExerciseToWorkout({
               exerciseId,
               order:
