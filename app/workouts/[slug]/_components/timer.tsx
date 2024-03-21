@@ -23,6 +23,11 @@ function getTimePassed(started: string | null) {
   const minutesDiff = Math.floor((diff % 3600) / 60);
   const secondsDiff = Math.floor(diff % 60);
 
+  if (secondsDiff.toString().length > 2) {
+    // if this never happens then remove it and bottom one too
+    alert(secondsDiff + "secondssdiff");
+  }
+
   return `${hours}:${minutesDiff}:${secondsDiff}`;
 }
 
