@@ -21,7 +21,7 @@ function getTimePassed(started: string | null) {
 
   const hours = Math.floor(diff / 3600);
   const minutesDiff = Math.floor((diff % 3600) / 60);
-  const secondsDiff = diff % 60;
+  const secondsDiff = Math.floor(diff % 60);
 
   return `${hours}:${minutesDiff}:${secondsDiff}`;
 }
@@ -164,7 +164,9 @@ export default function Timer() {
     );
 
   if (diff.length > 8) {
-    console.log(diff);
+    // this probably shoulndt happen anymore since ive used math.floor but ill leave it just to find out
+    console.log(diff, " :diff");
+    alert("Diff: " + diff);
   }
 
   return (
