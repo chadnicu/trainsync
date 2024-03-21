@@ -12,6 +12,7 @@ import { queryKey as templatesQueryKey } from "@/hooks/templates";
 import { useQueryClient } from "@tanstack/react-query";
 import TemplateCard from "./_components/template-card";
 import TemplateForm from "./_components/template-form";
+import TemplateSkeleton from "./_components/template-skeleton";
 
 export default function Templates() {
   const {
@@ -39,8 +40,8 @@ export default function Templates() {
     </P>
   );
 
-  // const Skeletons = () =>
-  //   Array.from({ length: 6 }, (_, i) => <TemplateSkeleton key={i} />);
+  const Skeletons = () =>
+    Array.from({ length: 6 }, (_, i) => <TemplateSkeleton key={i} />);
 
   const Templates = () =>
     templates.map((e) => (
@@ -67,7 +68,8 @@ export default function Templates() {
         />
       </ResponsiveFormDialog>
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
-        {/* {(isFetching || isLoading) && !data.length && <Skeletons />} */}
+        {(isFetching || isLoading) && !templates.length && <Skeletons />}
+        <Skeletons />
         {isSuccess && <Templates />}
       </div>
     </section>
