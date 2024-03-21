@@ -9,14 +9,13 @@ import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditWorkoutExercises from "./_components/edit-workout-exercises";
 import { getIdFromSlug } from "@/lib/utils";
-import { WorkoutContext, useWorkout } from "@/hooks/workouts";
+import { useWorkout } from "@/hooks/workouts";
 import {
   WorkoutExerciseContext,
   useAddExerciseToWorkout,
   useWorkoutExercises,
 } from "@/hooks/workout-exercises";
 import { useWorkoutSets } from "@/hooks/sets";
-import Timer from "./_components/timer";
 
 type Params = {
   params: { slug: string };
@@ -27,9 +26,6 @@ export default function Workout({ params: { slug } }: Params) {
   const { data: workout, isLoading, isFetching, isSuccess } = useWorkout();
   const {
     data: { inWorkout, other },
-    // isSuccess: exercisesSucces,
-    // isLoading: exercisesLoading,
-    isFetching: exercisesFetching,
   } = useWorkoutExercises();
   const { data: sets } = useWorkoutSets();
   const { mutate: addExerciseToWorkout } = useAddExerciseToWorkout();
@@ -40,17 +36,6 @@ export default function Workout({ params: { slug } }: Params) {
 
   const router = useRouter();
   const pathname = usePathname();
-  // if (!value && inWorkout.length > 0) router.push(pathname + "?exercise=1");
-  // else if (!value) router.push("?nigger=loh");
-
-  // if (!value) {
-  // useEffect(() => {
-  //   if (!value && exerciseIndex === -1 && inWorkout.length === 0)
-  //     router.push("?exercise=1");
-  // }, [value, exerciseIndex, inWorkout, router]);
-
-  // else if (!value) router.push("?exercise=1");
-  // }
 
   return (
     <section className="sm:container text-center space-y-4 mt-[52.5px]">
@@ -70,7 +55,7 @@ export default function Workout({ params: { slug } }: Params) {
       )}
 
       <ExercisesPagination length={inWorkout.length} />
-      {inWorkout[exerciseIndex - 1] ? (
+      {inWorkout[exerciseIndex - 1] && (
         <WorkoutExerciseContext.Provider
           value={{
             ...inWorkout[exerciseIndex - 1],
@@ -81,13 +66,9 @@ export default function Workout({ params: { slug } }: Params) {
         >
           <WorkoutExerciseCard />
         </WorkoutExerciseContext.Provider>
-      ) : (
-        <></>
-        // <>{exercisesFetching && <WorkoutExerciseCard />}</>
       )}
 
-      <div className="space-y-2 sm:space-x-3 sm:space-y-0">
-        {/* implement this, make it so that i can delete/reorder exercises */}
+      <div className="flex flex-col gap-2 min-[370px]:flex-row w-fit mx-auto">
         <ResponsiveFormDialog
           trigger={
             inWorkout.length > 1 && (

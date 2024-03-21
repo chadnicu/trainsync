@@ -163,6 +163,10 @@ export default function Timer() {
       </Button>
     );
 
+  if (diff.length > 8) {
+    console.log(diff);
+  }
+
   return (
     <div className="top-[52.5px] absolute border-b w-full left-0 backdrop-blur supports-[backdrop-filter]:bg-background/70 z-10">
       <div className="flex gap-10 p-2">
