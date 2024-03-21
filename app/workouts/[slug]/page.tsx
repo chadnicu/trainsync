@@ -53,7 +53,7 @@ export default function Workout({ params: { slug } }: Params) {
   // }
 
   return (
-    <section className="sm:container text-center space-y-4">
+    <section className="sm:container text-center space-y-4 mt-[52.5px]">
       {isSuccess && (
         <>
           <H1>{workout.title}</H1>

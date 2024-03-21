@@ -83,7 +83,7 @@ export default function Timer() {
     !!(started && finished) && (
       <div className="flex items-center justify-between w-full relative">
         <Button
-          variant={"outline"}
+          variant={"ghost"}
           onClick={() => {
             setDiff("0:0:0");
             updateWorkout({
@@ -98,13 +98,15 @@ export default function Timer() {
         <H4 className="absolute inset-0 m-auto w-fit h-fit grid place-items-center">
           {getWorkoutDuration(started, finished)}
           <p className="text-xs font-normal">
-            {started.split(":").splice(0, 2).join(":")}
+            {started}
+            {/* .split(":").splice(0, 2).join(":") */}
             <span className="mx-[2px]">—</span>
-            {finished.split(":").splice(0, 2).join(":")}
+            {finished}
+            {/* .split(":").splice(0, 2).join(":") */}
           </p>
         </H4>
         <Button
-          variant={"outline"}
+          variant={"ghost"}
           onClick={() => {
             setDiff("0:0:0");
             updateWorkout({
@@ -123,7 +125,7 @@ export default function Timer() {
     !!(started && !finished) && (
       <div className="flex items-center justify-between w-full relative">
         <Button
-          variant={"outline"}
+          variant={"ghost"}
           onClick={() => {
             setDiff("0:0:0");
             updateWorkout({
@@ -137,7 +139,7 @@ export default function Timer() {
         </Button>
         <H4 className="absolute inset-0 m-auto w-fit h-fit">{diff}</H4>
         <Button
-          variant="outline"
+          variant="ghost"
           onClick={() =>
             updateWorkout({ ...defaultValues, finished: getFormattedNow() })
           }
@@ -150,7 +152,7 @@ export default function Timer() {
   const StartWorkoutButton = () =>
     !started && (
       <Button
-        variant={"outline"}
+        variant={"ghost"}
         onClick={() => {
           setDiff("0:0:0");
           updateWorkout({ ...defaultValues, started: getFormattedNow() });
@@ -162,7 +164,7 @@ export default function Timer() {
     );
 
   return (
-    <div className="top-[53px] absolute border-b w-full left-0 backdrop-blur supports-[backdrop-filter]:bg-background/70 ">
+    <div className="top-[52.5px] absolute border-b w-full left-0 backdrop-blur supports-[backdrop-filter]:bg-background/70 z-10">
       <div className="flex gap-10 p-2">
         <DurationAndTimes />
         <TimePassedBy />
