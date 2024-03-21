@@ -23,11 +23,6 @@ function getTimePassed(started: string | null) {
   const minutesDiff = Math.floor((diff % 3600) / 60);
   const secondsDiff = Math.floor(diff % 60);
 
-  if (secondsDiff.toString().length > 2) {
-    // if this never happens then remove it and bottom one too
-    alert(secondsDiff + "secondssdiff");
-  }
-
   return `${hours}:${minutesDiff}:${secondsDiff}`;
 }
 
@@ -90,15 +85,15 @@ export default function Timer() {
         <Button
           variant={"ghost"}
           onClick={() => {
-            setDiff("0:0:0");
+            // setDiff("0:0:0");
             updateWorkout({
               ...defaultValues,
-              started: getFormattedNow(),
+              // started: getFormattedNow(),
               finished: undefined,
             });
           }}
         >
-          Restart
+          Continue
         </Button>
         <H4 className="absolute inset-0 m-auto w-fit h-fit grid place-items-center">
           {getWorkoutDuration(started, finished)}
@@ -167,12 +162,6 @@ export default function Timer() {
         Start workout
       </Button>
     );
-
-  if (diff.length > 8) {
-    // this probably shoulndt happen anymore since ive used math.floor but ill leave it just to find out
-    console.log(diff, " :diff");
-    alert("Diff: " + diff);
-  }
 
   return (
     <div className="top-[52.5px] absolute border-b w-full left-0 backdrop-blur supports-[backdrop-filter]:bg-background/70 z-10">

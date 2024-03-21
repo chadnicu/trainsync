@@ -16,6 +16,7 @@ import {
   useWorkoutExercises,
 } from "@/hooks/workout-exercises";
 import { useWorkoutSets } from "@/hooks/sets";
+import { useEffect } from "react";
 
 type Params = {
   params: { slug: string };
@@ -36,6 +37,11 @@ export default function Workout({ params: { slug } }: Params) {
 
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const value = searchParams.get("exercise");
+    if (!value && inWorkout.length > 0) router.push("?exercise=1");
+  }, [inWorkout, router, searchParams]);
 
   return (
     <section className="sm:container text-center space-y-4 mt-[52.5px]">

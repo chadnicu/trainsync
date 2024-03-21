@@ -23,9 +23,9 @@ export default function ExercisesPagination({ length }: { length: number }) {
 
   const PaginationLinks = () => {
     let amount: number;
-    if (current <= 3) {
+    if (current < 3) {
       amount = 0;
-    } else if (current >= length - 2) {
+    } else if (current >= length - 1) {
       amount = current - (magicNumber - (length - current));
     } else {
       amount = current - (magicNumber === 5 ? 3 : 2);
