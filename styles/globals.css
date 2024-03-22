@@ -32,6 +32,7 @@
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
     --selection: 166.7 100% 73.5%;
+    /* --selection: 34 100% 50%; */
 
     --radius: 0.5rem;
   }
@@ -64,7 +65,8 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
-    --selection: 305.2 94% 54.1%
+    --selection: 305.2 94% 54.1%;
+    /* --selection: 30 100% 50%; ciotkos orange */
   }
 }
 
