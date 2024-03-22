@@ -21,8 +21,8 @@ import { useRouter } from "next/navigation";
 import {
   WorkoutExerciseContext,
   useRemoveExerciseFromWorkout,
-} from "@/hooks/workout-exercises";
-import { useAddCommentToSets, useCreateSet } from "@/hooks/sets";
+} from "@/hooks/workouts/exercises";
+import { useAddCommentToSets, useCreateSet } from "@/hooks/workouts/sets";
 import DeleteDialog from "@/components/delete-dialog";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 

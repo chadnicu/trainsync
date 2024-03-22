@@ -3,7 +3,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditSetForm from "./set-form";
 import { WorkoutSet } from "@/types";
-import { useDeleteSet, useUpdateSet } from "@/hooks/sets";
+import { useDeleteSet, useUpdateSet } from "@/hooks/workouts/sets";
 
 // testeaza tot cand poti
 export default function WorkoutSetCard({ set }: { set: WorkoutSet }) {

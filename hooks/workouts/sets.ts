@@ -1,25 +1,17 @@
+import { queryKeys } from "@/lib/query-keys";
 import { getIdFromSlug } from "@/lib/utils";
 import {
-  addSet as createSet,
+  createSet,
   deleteSet,
-  getSetsByExerciseId,
   getSetsByWorkoutId,
   updateSet,
 } from "@/server/sets";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import {
-  WorkoutExerciseContext,
-  queryKeyFn as workoutExercisesQueryKey,
-} from "./workout-exercises";
 import { useContext } from "react";
+import { WorkoutExerciseContext } from "./exercises";
 import { CommentInput, SetInput, WorkoutExercises, WorkoutSet } from "@/types";
 import { addCommentToExercise } from "@/server/workout-exercise";
-
-export const queryKeys = {
-  workoutSets: (workoutId: number) => ["sets", { workoutId }],
-  exerciseSets: (exerciseId: number) => ["sets", { exerciseId }],
-};
 
 export function useWorkoutSets() {
   const params = useParams<{ slug: string }>();
@@ -27,16 +19,6 @@ export function useWorkoutSets() {
   return useQuery({
     queryKey: queryKeys.workoutSets(workoutId),
     queryFn: async () => getSetsByWorkoutId(workoutId),
-    initialData: [],
-  });
-}
-
-export function useExerciseSets() {
-  const params = useParams<{ slug: string }>();
-  const exerciseId = getIdFromSlug(params.slug);
-  return useQuery({
-    queryKey: queryKeys.exerciseSets(exerciseId),
-    queryFn: async () => getSetsByExerciseId(exerciseId),
     initialData: [],
   });
 }
@@ -133,7 +115,7 @@ export function useAddCommentToSets() {
   const queryClient = useQueryClient();
   const params = useParams<{ slug: string }>();
   const workoutId = getIdFromSlug(params.slug);
-  const queryKey = workoutExercisesQueryKey(workoutId);
+  const queryKey = queryKeys.workoutExercises(workoutId);
   const { id, exerciseId } = useContext(WorkoutExerciseContext);
   return useMutation({
     mutationFn: async (values: CommentInput) =>

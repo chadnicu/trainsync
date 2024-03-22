@@ -14,8 +14,9 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import SetsChartSkeleton from "./_components/sets-chart-skeleton";
-import { queryKey as exerciseQueryKey, useExercise } from "@/hooks/exercises";
-import { queryKeys as setsQueryKeys, useExerciseSets } from "@/hooks/sets";
+import { useExercise } from "@/hooks/exercises";
+import { useExerciseSets } from "@/hooks/exercises/sets";
+import { queryKeys } from "@/lib/query-keys";
 
 type Params = {
   params: { slug: string };
@@ -34,7 +35,7 @@ export default function Exercise({ params: { slug } }: Params) {
 
   const embedUrl = getYouTubeEmbedURL(exercise?.url ?? "");
   const exerciseId = getIdFromSlug(slug);
-  const setsQueryKey = setsQueryKeys.exerciseSets(exerciseId);
+  const setsQueryKey = queryKeys.exerciseSets(exerciseId);
 
   const Error = () => (
     <P className="grid place-items-center gap-3">
@@ -42,7 +43,9 @@ export default function Exercise({ params: { slug } }: Params) {
       <Button
         onClick={() => {
           queryClient.invalidateQueries({ queryKey: setsQueryKey });
-          queryClient.invalidateQueries({ queryKey: exerciseQueryKey });
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.exerciseSets(exerciseId),
+          });
         }}
         className="w-fit"
       >

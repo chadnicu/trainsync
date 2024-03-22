@@ -14,9 +14,11 @@ import {
   WorkoutExerciseContext,
   useAddExerciseToWorkout,
   useWorkoutExercises,
-} from "@/hooks/workout-exercises";
-import { useWorkoutSets } from "@/hooks/sets";
+} from "@/hooks/workouts/exercises";
+import { useWorkoutSets } from "@/hooks/workouts/sets";
 import { useEffect } from "react";
+import { WorkoutContext } from "@/hooks/workouts";
+import Timer from "./_components/timer";
 
 type Params = {
   params: { slug: string };
@@ -44,71 +46,79 @@ export default function Workout({ params: { slug } }: Params) {
   }, [inWorkout, router, searchParams]);
 
   return (
-    <section className="sm:container text-center space-y-4 mt-[52.5px]">
+    <>
       {isSuccess && (
-        <>
-          <H1>{workout.title}</H1>
-          {workout.description && (
-            <P className="max-w-lg mx-auto">{workout.description}</P>
-          )}
-        </>
-      )}
-      {!!((isFetching || isLoading) && !workout?.title) && (
-        <>
-          <H1>Loading..</H1>
-          <P className="max-w-lg mx-auto">Workout with id {workoutId}</P>
-        </>
+        <WorkoutContext.Provider value={workout}>
+          <Timer />
+        </WorkoutContext.Provider>
       )}
 
-      <ExercisesPagination length={inWorkout.length} />
-      {inWorkout[exerciseIndex - 1] && (
-        <WorkoutExerciseContext.Provider
-          value={{
-            ...inWorkout[exerciseIndex - 1],
-            sets: sets.filter(
-              (e) => e.workoutExerciseId === inWorkout[exerciseIndex - 1].id
-            ),
-          }}
-        >
-          <WorkoutExerciseCard />
-        </WorkoutExerciseContext.Provider>
-      )}
+      <section className="sm:container text-center space-y-4 mt-[52.5px]">
+        {isSuccess && (
+          <>
+            <H1>{workout.title}</H1>
+            {workout.description && (
+              <P className="max-w-lg mx-auto">{workout.description}</P>
+            )}
+          </>
+        )}
+        {!!((isFetching || isLoading) && !workout?.title) && (
+          <>
+            <H1>Loading..</H1>
+            <P className="max-w-lg mx-auto">Workout with id {workoutId}</P>
+          </>
+        )}
 
-      <div className="flex flex-col gap-2 min-[370px]:flex-row w-fit mx-auto">
-        <ResponsiveFormDialog
-          trigger={
-            inWorkout.length > 1 && (
-              <Button variant={"outline"}>Edit exercise order</Button>
-            )
-          }
-          title="Edit exercise order"
-          description="Simply click on the exercises to number them in order"
-        >
-          <EditWorkoutExercises exercises={inWorkout} />
-        </ResponsiveFormDialog>
-        <ResponsiveComboBox
-          trigger={
-            <Button variant="outline">
-              Add {inWorkout.length > 0 ? "another" : "an"} exercise
-            </Button>
-          }
-          data={other.map(({ id, title }) => ({
-            id,
-            title,
-          }))}
-          placeholder="Search exercise.."
-          mutate={({ exerciseId }) => {
-            router.replace(pathname + "?exercise=" + (inWorkout.length + 1));
-            return addExerciseToWorkout({
-              exerciseId,
-              order:
-                inWorkout.length > 0
-                  ? inWorkout[inWorkout.length - 1].order + 1
-                  : 1,
-            });
-          }}
-        />
-      </div>
-    </section>
+        <ExercisesPagination length={inWorkout.length} />
+        {inWorkout[exerciseIndex - 1] && (
+          <WorkoutExerciseContext.Provider
+            value={{
+              ...inWorkout[exerciseIndex - 1],
+              sets: sets.filter(
+                (e) => e.workoutExerciseId === inWorkout[exerciseIndex - 1].id
+              ),
+            }}
+          >
+            <WorkoutExerciseCard />
+          </WorkoutExerciseContext.Provider>
+        )}
+
+        <div className="flex flex-col gap-2 min-[370px]:flex-row w-fit mx-auto">
+          <ResponsiveFormDialog
+            trigger={
+              inWorkout.length > 1 && (
+                <Button variant={"outline"}>Edit exercise order</Button>
+              )
+            }
+            title="Edit exercise order"
+            description="Simply click on the exercises to number them in order"
+          >
+            <EditWorkoutExercises exercises={inWorkout} />
+          </ResponsiveFormDialog>
+          <ResponsiveComboBox
+            trigger={
+              <Button variant="outline">
+                Add {inWorkout.length > 0 ? "another" : "an"} exercise
+              </Button>
+            }
+            data={other.map(({ id, title }) => ({
+              id,
+              title,
+            }))}
+            placeholder="Search exercise.."
+            mutate={({ exerciseId }) => {
+              router.replace(pathname + "?exercise=" + (inWorkout.length + 1));
+              return addExerciseToWorkout({
+                exerciseId,
+                order:
+                  inWorkout.length > 0
+                    ? inWorkout[inWorkout.length - 1].order + 1
+                    : 1,
+              });
+            }}
+          />
+        </div>
+      </section>
+    </>
   );
 }

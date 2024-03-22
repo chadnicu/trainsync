@@ -8,11 +8,11 @@ import WorkoutSkeleton from "./_components/workout-skeleton";
 import CreateWorkoutForm from "./_components/create-workout-form";
 import { H1, P } from "@/components/typography";
 import {
-  queryKey as workoutsQueryKey,
   useWorkouts,
   WorkoutContext,
   useCreateWorkout,
 } from "@/hooks/workouts";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function Workouts() {
   const { data, isLoading, isFetching, isSuccess, isError } = useWorkouts();
@@ -24,7 +24,7 @@ export default function Workouts() {
       Something went wrong.
       <Button
         onClick={() =>
-          queryClient.invalidateQueries({ queryKey: workoutsQueryKey })
+          queryClient.invalidateQueries({ queryKey: queryKeys.workouts })
         }
         className="w-fit"
       >

@@ -9,9 +9,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Exercise, ExerciseInput } from "@/types";
 import { getIdFromSlug, mapUndefinedKeysToNull } from "@/lib/utils";
 import { createContext } from "react";
+import { queryKeys } from "@/lib/query-keys";
 import { useParams } from "next/navigation";
 
-export const queryKey = ["exercises"];
+const queryKey = queryKeys.exercises;
 
 export const useExercises = () =>
   useQuery({
@@ -96,7 +97,7 @@ export function useExercise() {
   const params = useParams<{ slug: string }>();
   const exerciseId = getIdFromSlug(params.slug);
   return useQuery({
-    queryKey: [...queryKey, { exerciseId }],
+    queryKey: queryKeys.exercise(exerciseId),
     queryFn: async () => getExerciseById(exerciseId),
   });
 }

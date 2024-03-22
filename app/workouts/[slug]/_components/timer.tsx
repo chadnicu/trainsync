@@ -1,6 +1,6 @@
 import { H4 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { useUpdateWorkoutPage } from "@/hooks/workout-exercises";
+import { useUpdateWorkoutPage } from "@/hooks/workouts/dynamic";
 import { WorkoutContext } from "@/hooks/workouts";
 import { useContext, useEffect, useState } from "react";
 

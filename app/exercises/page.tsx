@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button";
 import { H1, P } from "@/components/typography";
 import {
   ExerciseContext,
-  queryKey as exercisesQueryKey,
   useCreateExercise,
   useExercises,
 } from "@/hooks/exercises";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/loading-spinner";
+import { queryKeys } from "@/lib/query-keys";
+
+const queryKey = queryKeys.exercises;
 
 export default function Exercises() {
   const { data, isLoading, isFetching, isSuccess, isError } = useExercises();
@@ -24,9 +26,7 @@ export default function Exercises() {
     <P className="grid place-items-center gap-3">
       Something went wrong.
       <Button
-        onClick={() =>
-          queryClient.invalidateQueries({ queryKey: exercisesQueryKey })
-        }
+        onClick={() => queryClient.invalidateQueries({ queryKey })}
         className="w-fit"
       >
         Refresh

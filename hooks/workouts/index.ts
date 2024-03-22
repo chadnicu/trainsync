@@ -8,10 +8,11 @@ import {
 } from "@/server/workouts";
 import { AddWorkoutInput, EditWorkoutInput, Workout } from "@/types";
 import { getIdFromSlug, mapUndefinedKeysToNull } from "@/lib/utils";
-import { useParams } from "next/navigation";
 import { createContext } from "react";
+import { queryKeys } from "@/lib/query-keys";
+import { useParams } from "next/navigation";
 
-export const queryKey = ["workouts"];
+const queryKey = queryKeys.workouts;
 
 export const useWorkouts = () =>
   useQuery({
@@ -96,8 +97,49 @@ export function useWorkout() {
   const params = useParams<{ slug: string }>();
   const workoutId = getIdFromSlug(params.slug);
   return useQuery({
-    queryKey: [...queryKey, { workoutId }],
+    queryKey: queryKeys.workout(workoutId),
     queryFn: async () => getWorkoutById(workoutId),
+  });
+}
+
+export function useUpdateDynamicWorkout() {
+  const params = useParams<{ slug: string }>();
+  const workoutId = getIdFromSlug(params.slug);
+  const queryClient = useQueryClient();
+  const { data } = useWorkout();
+  const { id, title, date } = data ?? { id: 0, title: "", date: "" }; // this shouldnt happen
+  const defaultValues = {
+    id,
+    title,
+    date: new Date(date ?? ""),
+  };
+  const queryKey = queryKeys.workout(workoutId);
+
+  return useMutation({
+    mutationFn: async (values: {
+      started?: string;
+      finished?: string;
+      comment?: string;
+    }) =>
+      await updateWorkout(workoutId, {
+        ...defaultValues,
+        ...values,
+      }),
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: Workout) => ({
+        ...old,
+        ...values,
+      }));
+      return { previous };
+    },
+    onError: (err, newValues, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+      console.log("Error optimistic ", newValues);
+      console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 }
 

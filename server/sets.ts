@@ -58,7 +58,7 @@ export async function getSetsByWorkoutId(workoutId: number) {
     .all();
 }
 
-export async function addSet(values: SetInput, workoutExerciseId: number) {
+export async function createSet(values: SetInput, workoutExerciseId: number) {
   const { userId } = auth();
   if (!userId) return;
 
