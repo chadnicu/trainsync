@@ -14,7 +14,7 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
 import { CommentInput } from "@/types";
-import { WorkoutExerciseContext } from "@/hooks/workouts/dynamic";
+import { WorkoutExerciseContext } from "@/hooks/workouts/exercises";
 import { Textarea } from "@/components/ui/textarea";
 import { exerciseCommentSchema } from "@/lib/validators/workout-exercise";
 

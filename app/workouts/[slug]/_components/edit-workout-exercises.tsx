@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/loading-spinner";
 import { WorkoutExercise } from "@/types";
-import { useUpdateExerciseOrder } from "@/hooks/workouts/dynamic";
+import { useUpdateExerciseOrder } from "@/hooks/workouts/exercises";
 
 export default function EditWorkoutExercises({
   exercises,

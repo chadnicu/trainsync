@@ -1,3 +1,4 @@
+import { queryKeys } from "@/lib/query-keys";
 import { mapUndefinedKeysToNull } from "@/lib/utils";
 import {
   createTemplate,
@@ -9,7 +10,7 @@ import { Template, TemplateInput } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext } from "react";
 
-export const queryKey = ["templates"];
+const queryKey = queryKeys.templates;
 
 export const useTemplates = () =>
   useQuery({

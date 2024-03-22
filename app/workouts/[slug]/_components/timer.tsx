@@ -1,6 +1,6 @@
 import { H4 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { useUpdateWorkoutPage } from "@/hooks/workouts/dynamic";
+import { useUpdateDynamicWorkout } from "@/hooks/workouts";
 import { WorkoutContext } from "@/hooks/workouts";
 import { useContext, useEffect, useState } from "react";
 
@@ -64,7 +64,7 @@ export default function Timer() {
     return () => clearInterval(interval);
   }, [started]);
 
-  const { mutate: updateWorkout } = useUpdateWorkoutPage();
+  const { mutate: updateWorkout } = useUpdateDynamicWorkout();
 
   const defaultValues = {
     id,
