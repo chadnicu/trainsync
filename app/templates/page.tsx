@@ -8,7 +8,7 @@ import {
   useCreateTemplate,
   useTemplates,
 } from "@/hooks/templates";
-import { queryKey as templatesQueryKey } from "@/hooks/templates";
+import { queryKeys } from "@/lib/query-keys";
 import { useQueryClient } from "@tanstack/react-query";
 import TemplateCard from "./_components/template-card";
 import TemplateForm from "./_components/template-form";
@@ -32,7 +32,7 @@ export default function Templates() {
       Something went wrong.
       <Button
         onClick={() =>
-          queryClient.invalidateQueries({ queryKey: templatesQueryKey })
+          queryClient.invalidateQueries({ queryKey: queryKeys.templates })
         }
         className="w-fit"
       >
