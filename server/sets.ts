@@ -32,7 +32,14 @@ export async function getSetsByExerciseId(exerciseId: number) {
     .innerJoin(exercise, eq(exercise.id, workout_exercise.exerciseId)) // ?
     .innerJoin(workout, eq(workout.id, workout_exercise.workoutId))
     .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)))
-    .all();
+    .all()
+    .then((data) =>
+      data.sort(
+        (a, b) =>
+          new Date(b.workoutDate ?? "").getTime() -
+          new Date(a.workoutDate ?? "").getTime()
+      )
+    );
 }
 
 export async function getSetsByWorkoutId(workoutId: number) {

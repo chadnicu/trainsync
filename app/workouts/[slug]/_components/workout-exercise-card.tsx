@@ -122,7 +122,7 @@ export default function WorkoutExerciseCard() {
           trigger={<Button>Add set</Button>}
           title="Add set"
           description={`Add a new set to ${title}`}
-          drawerContentClassname="max-h-[272px]"
+          drawerContentClassname="min-w-[330px]:max-h-[78vw]"
         >
           <SetForm
             submitAction={addSet}
