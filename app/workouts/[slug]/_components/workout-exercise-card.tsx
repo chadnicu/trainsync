@@ -28,6 +28,7 @@ import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { ExerciseSet } from "@/types";
 import { useExerciseSets } from "@/hooks/exercises/sets";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function getLastSets(sets: ExerciseSet[], workoutId: number) {
   const index = sets.findIndex((e) => e.workoutId === workoutId);
@@ -69,12 +70,21 @@ export default function WorkoutExerciseCard() {
   const prev = current > 1 ? current - 1 : current;
   const embedUrl = getYouTubeEmbedURL(url);
 
-  const { data: exerciseSets } = useExerciseSets(exerciseId);
-  console.log(workoutId);
-  console.log(exerciseSets);
+  const {
+    data: exerciseSets,
+    isLoading: setsLoading,
+    isFetching: setsFetching,
+  } = useExerciseSets(exerciseId);
   const lastSets = getLastSets(exerciseSets, workoutId);
 
   const LastSets = () => {
+    if (setsLoading || setsFetching)
+      return (
+        <>
+          <Skeleton className="h-4 w-[50%]" />
+          <Skeleton className="h-4 w-[80%]" />
+        </>
+      );
     if (lastSets && lastSets.length > 0 && lastSets[0])
       return (
         <Link
