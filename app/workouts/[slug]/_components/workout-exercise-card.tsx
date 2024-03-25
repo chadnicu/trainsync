@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn, getYouTubeEmbedURL } from "@/lib/utils";
-import { typography } from "@/components/typography";
+import { cn, getYouTubeEmbedURL, slugify } from "@/lib/utils";
+import { P, typography } from "@/components/typography";
 import { Button, buttonVariants } from "@/components/ui/button";
 import CommentAlert from "@/components/comment";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
@@ -25,6 +25,24 @@ import {
 import { useAddCommentToSets, useCreateSet } from "@/hooks/workouts/sets";
 import DeleteDialog from "@/components/delete-dialog";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { ExerciseSet } from "@/types";
+import { useExerciseSets } from "@/hooks/exercises/sets";
+import Link from "next/link";
+
+function getLastSets(sets: ExerciseSet[], workoutId: number) {
+  const index = sets.findIndex((e) => e.workoutId === workoutId);
+
+  sets = sets.filter((e) => e.workoutId !== workoutId);
+
+  const lastSets: ExerciseSet[] = [];
+
+  for (let i = index; i < sets.length; i++) {
+    lastSets.push(sets[i]);
+    if (i < sets.length - 1 && sets[i]?.workoutId !== sets[i + 1]?.workoutId) {
+      return lastSets;
+    }
+  }
+}
 
 export default function WorkoutExerciseCard() {
   const {
@@ -34,8 +52,8 @@ export default function WorkoutExerciseCard() {
     comment,
     todo,
     url,
-    // exerciseId,
-    // workout_id: workoutId,
+    exerciseId,
+    workout_id: workoutId,
     sets,
     order,
   } = useContext(WorkoutExerciseContext);
@@ -51,9 +69,41 @@ export default function WorkoutExerciseCard() {
   const prev = current > 1 ? current - 1 : current;
   const embedUrl = getYouTubeEmbedURL(url);
 
+  const { data: exerciseSets } = useExerciseSets(exerciseId);
+  console.log(workoutId);
+  console.log(exerciseSets);
+  const lastSets = getLastSets(exerciseSets, workoutId);
+
+  const LastSets = () => {
+    if (lastSets && lastSets.length > 0 && lastSets[0])
+      return (
+        <Link
+          href={slugify(
+            "/workouts",
+            lastSets[0].workoutTitle,
+            lastSets[0].workoutId
+          )}
+          target="_blank"
+        >
+          <P className="text-sm text-muted-foreground hover:brightness-150 duration-300 max-w-[94%] break-words">
+            Last:{" "}
+            {lastSets.map((e, i) => (
+              <span key={e.id}>
+                {e.reps}x{e.weight}
+                {i === lastSets.length - 1 ? " " : ", "}
+              </span>
+            ))}
+            <br />
+            {lastSets[0].comment && <span>({lastSets[0].comment})</span>}
+          </P>
+        </Link>
+      );
+  };
+
   return (
     <Card className={cn("max-w-lg w-full mx-auto text-left relative")}>
       <CardHeader>
+        <LastSets />
         <CardTitle className={typography("h3")}>
           {title}
           <div className="absolute top-3 right-3">

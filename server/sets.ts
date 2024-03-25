@@ -21,7 +21,7 @@ export async function getSetsByExerciseId(exerciseId: number) {
       weight,
       comment,
       workoutDate: date,
-      workoutId: workout_exercise.workoutId,
+      workoutId: workout.id,
       workoutTitle: title,
     })
     .from(sets)

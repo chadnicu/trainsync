@@ -4,12 +4,12 @@ import { useParams } from "next/navigation";
 import { getSetsByExerciseId } from "@/server/sets";
 import { queryKeys } from "@/lib/query-keys";
 
-export function useExerciseSets() {
+export function useExerciseSets(id?: number) {
   const params = useParams<{ slug: string }>();
   const exerciseId = getIdFromSlug(params.slug);
   return useQuery({
-    queryKey: queryKeys.exerciseSets(exerciseId),
-    queryFn: async () => getSetsByExerciseId(exerciseId),
+    queryKey: queryKeys.exerciseSets(id || exerciseId),
+    queryFn: async () => getSetsByExerciseId(id || exerciseId),
     initialData: [],
   });
 }
