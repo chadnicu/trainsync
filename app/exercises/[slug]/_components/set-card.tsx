@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import dayjs from "@/lib/dayjs";
 import { buttonVariants } from "@/components/ui/button";
 import { cn, slugify } from "@/lib/utils";
-import { ExerciseSet } from "@/types";
+import { Set } from "@/types";
 
-export default function SetCard({ sets }: { sets: ExerciseSet[] }) {
+export default function SetCard({ sets }: { sets: Set[] }) {
   const [date, title, comment] = [
     sets[0].workoutDate,
     sets[0].workoutTitle,

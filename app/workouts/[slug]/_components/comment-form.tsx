@@ -17,15 +17,18 @@ import { CommentInput } from "@/types";
 import { WorkoutExerciseContext } from "@/hooks/workouts/exercises";
 import { Textarea } from "@/components/ui/textarea";
 import { exerciseCommentSchema } from "@/lib/validators/workout-exercise";
+import DeleteDialog from "@/components/delete-dialog";
 
 export default function CommentForm({
   mutate,
   isSubmitting,
   submitButtonText,
+  deleteComment,
 }: {
   mutate: (values: CommentInput) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
+  deleteComment?: () => void;
 }) {
   const { comment } = useContext(WorkoutExerciseContext);
   const defaultValues = { comment: comment ?? undefined };
@@ -67,9 +70,20 @@ export default function CommentForm({
             </FormItem>
           )}
         />
+        {deleteComment !== undefined && (
+          <div className="float-left ml-24 md:ml-0">
+            <DeleteDialog
+              action={() => {
+                deleteComment();
+                setOpen(false);
+              }}
+            />
+          </div>
+        )}
         <Button
           type="submit"
           className="float-right flex justify-center items-center"
+          disabled={isSubmitting}
         >
           {submitButtonText ?? "Submit"}
           {isSubmitting && (

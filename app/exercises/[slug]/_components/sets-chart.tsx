@@ -6,9 +6,9 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { ExerciseSet } from "@/types";
+import { Set } from "@/types";
 
-function averages(sets: ExerciseSet[]) {
+function averages(sets: Set[]) {
   let averageReps = 0,
     averageWeight = 0;
 
@@ -20,7 +20,7 @@ function averages(sets: ExerciseSet[]) {
   return [averageReps, averageWeight];
 }
 
-export default function SetsChart({ sets }: { sets: ExerciseSet[] }) {
+export default function SetsChart({ sets }: { sets: Set[] }) {
   if (sets.length === 0) return null;
 
   const [avgReps, avgWeight] = averages(sets);

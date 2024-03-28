@@ -107,3 +107,16 @@ export async function addCommentToExercise(
     .set({ comment: values.comment })
     .where(eq(workout_exercise.id, workoutExerciseId));
 }
+
+export async function swapExercise(
+  workoutExerciseId: number,
+  exerciseId: number
+) {
+  const { userId } = auth();
+  if (!userId) notFound();
+
+  return await db
+    .update(workout_exercise)
+    .set({ exerciseId })
+    .where(eq(workout_exercise.id, workoutExerciseId));
+}

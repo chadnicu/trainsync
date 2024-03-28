@@ -15,8 +15,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import SetsChartSkeleton from "./_components/sets-chart-skeleton";
 import { useExercise } from "@/hooks/exercises";
-import { useExerciseSets } from "@/hooks/exercises/sets";
 import { queryKeys } from "@/lib/query-keys";
+import { useSets } from "@/hooks/sets";
 
 type Params = {
   params: { slug: string };
@@ -30,22 +30,19 @@ export default function Exercise({ params: { slug } }: Params) {
     isSuccess,
     isError,
   } = useExercise();
-  const { data: sets } = useExerciseSets();
+  const { data: sets } = useSets();
   const queryClient = useQueryClient();
 
   const embedUrl = getYouTubeEmbedURL(exercise?.url ?? "");
   const exerciseId = getIdFromSlug(slug);
-  const setsQueryKey = queryKeys.exerciseSets(exerciseId);
 
   const Error = () => (
     <P className="grid place-items-center gap-3">
       Something went wrong.
       <Button
         onClick={() => {
-          queryClient.invalidateQueries({ queryKey: setsQueryKey });
-          queryClient.invalidateQueries({
-            queryKey: queryKeys.exerciseSets(exerciseId),
-          });
+          queryClient.invalidateQueries({ queryKey: queryKeys.sets });
+          // hz daca mai trb ceva
         }}
         className="w-fit"
       >

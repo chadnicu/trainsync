@@ -13,16 +13,17 @@ export async function getSetsByExerciseId(exerciseId: number) {
 
   const { id, reps, weight } = sets;
   const { title, date } = workout;
-  const { comment } = workout_exercise;
+  const { comment, id: workoutExerciseId } = workout_exercise;
   return await db
     .select({
       id,
       reps,
       weight,
       comment,
-      workoutDate: date,
       workoutId: workout.id,
+      workoutDate: date,
       workoutTitle: title,
+      workoutExerciseId,
     })
     .from(sets)
     .innerJoin(
@@ -63,6 +64,39 @@ export async function getSetsByWorkoutId(workoutId: number) {
       and(eq(workout_exercise.workoutId, workoutId), eq(sets.userId, userId))
     )
     .all();
+}
+
+export async function getAllSets() {
+  const { userId } = auth();
+  if (!userId) notFound();
+
+  const { id, reps, weight } = sets;
+  const { title: workoutTitle, date: workoutDate, id: workoutId } = workout;
+  const { comment, id: workoutExerciseId, exerciseId } = workout_exercise;
+  return await db
+    .select({
+      id,
+      reps,
+      weight,
+      comment,
+      workoutExerciseId,
+      exerciseId,
+      workoutId,
+      workoutDate,
+      workoutTitle,
+    })
+    .from(sets)
+    .innerJoin(workout_exercise, eq(workoutExerciseId, sets.workoutExerciseId))
+    .innerJoin(workout, eq(workoutId, workout_exercise.workoutId))
+    .where(eq(sets.userId, userId))
+    .all()
+    .then((data) =>
+      data.sort(
+        (a, b) =>
+          new Date(b.workoutDate ?? "").getTime() -
+          new Date(a.workoutDate ?? "").getTime()
+      )
+    );
 }
 
 export async function createSet(values: SetInput, workoutExerciseId: number) {

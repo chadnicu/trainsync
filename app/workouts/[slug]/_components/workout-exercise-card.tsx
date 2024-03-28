@@ -20,34 +20,22 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import {
   WorkoutExerciseContext,
+  useAddCommentToExercise,
   useRemoveExerciseFromWorkout,
+  useSwapExerciseInWorkout,
+  useWorkoutExercises,
 } from "@/hooks/workouts/exercises";
-import { useAddCommentToSets, useCreateSet } from "@/hooks/workouts/sets";
 import DeleteDialog from "@/components/delete-dialog";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { ExerciseSet } from "@/types";
-import { useExerciseSets } from "@/hooks/exercises/sets";
 import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
-
-function getLastSets(sets: ExerciseSet[], workoutId: number) {
-  const index = sets.findIndex((e) => e.workoutId === workoutId);
-
-  sets = sets.filter((e) => e.workoutId !== workoutId);
-
-  const lastSets: ExerciseSet[] = [];
-
-  for (let i = index; i < sets.length; i++) {
-    lastSets.push(sets[i]);
-    if (i < sets.length - 1 && sets[i]?.workoutId !== sets[i + 1]?.workoutId) {
-      return lastSets;
-    }
-  }
-}
+import { ResponsiveComboBox } from "@/components/responsive-combobox";
+import LastSetsSkeleton from "./last-sets-skeleton";
+import LoadingSpinner from "@/components/loading-spinner";
+import { useCreateSet } from "@/hooks/sets";
 
 export default function WorkoutExerciseCard() {
   const {
-    // id,
+    id,
     title,
     instructions,
     comment,
@@ -56,12 +44,17 @@ export default function WorkoutExerciseCard() {
     exerciseId,
     workout_id: workoutId,
     sets,
+    lastSets,
     order,
   } = useContext(WorkoutExerciseContext);
   const { mutate: addSet, isPending: setPending } = useCreateSet();
   const { mutate: addComment, isPending: commentPending } =
-    useAddCommentToSets();
+    useAddCommentToExercise();
   const { mutate: removeExercise } = useRemoveExerciseFromWorkout();
+  const {
+    data: { inWorkout, other },
+  } = useWorkoutExercises();
+  const { mutate: swapExercise } = useSwapExerciseInWorkout();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -70,21 +63,7 @@ export default function WorkoutExerciseCard() {
   const prev = current > 1 ? current - 1 : current;
   const embedUrl = getYouTubeEmbedURL(url);
 
-  const {
-    data: exerciseSets,
-    isLoading: setsLoading,
-    isFetching: setsFetching,
-  } = useExerciseSets(exerciseId);
-  const lastSets = getLastSets(exerciseSets, workoutId);
-
   const LastSets = () => {
-    if (setsLoading || setsFetching)
-      return (
-        <>
-          <Skeleton className="h-4 w-[50%]" />
-          <Skeleton className="h-4 w-[80%]" />
-        </>
-      );
     if (lastSets && lastSets.length > 0 && lastSets[0])
       return (
         <Link
@@ -103,28 +82,38 @@ export default function WorkoutExerciseCard() {
                 {i === lastSets.length - 1 ? " " : ", "}
               </span>
             ))}
-            <br />
             {lastSets[0].comment && <span>({lastSets[0].comment})</span>}
           </P>
         </Link>
       );
   };
 
+  const isOptimistic = id === 0;
+
   return (
     <Card className={cn("max-w-lg w-full mx-auto text-left relative")}>
       <CardHeader>
         <LastSets />
-        <CardTitle className={typography("h3")}>
+        <CardTitle
+          className={cn(
+            typography("h3"),
+            { "opacity-70": isOptimistic },
+            "flex items-center gap-1"
+          )}
+        >
+          {isOptimistic && <LoadingSpinner className="h-5 w-5" />}
           {title}
           <div className="absolute top-3 right-3">
             <DeleteDialog
               action={() => {
                 removeExercise();
-                router.replace(pathname + "?exercise=" + prev);
+                if (prev <= 1) router.replace(pathname);
+                else router.replace(pathname + "?exercise=" + prev);
               }}
               customTrigger={
                 <AlertDialogTrigger
                   className={buttonVariants({ variant: "ghost", size: "icon" })}
+                  disabled={isOptimistic}
                 >
                   <TrashIcon className="h-4 w-4" />
                 </AlertDialogTrigger>
@@ -133,7 +122,9 @@ export default function WorkoutExerciseCard() {
           </div>
         </CardTitle>
         {(instructions || todo) && (
-          <CardDescription className="space-y-2">
+          <CardDescription
+            className={cn("space-y-2", { "opacity-70": isOptimistic })}
+          >
             {instructions && <span className="block">{instructions}</span>}
             {todo && (
               <span className="text-foreground pt-2 border-t block">
@@ -158,28 +149,61 @@ export default function WorkoutExerciseCard() {
             <WorkoutSetCard key={e.id} set={e} />
           ))}
         </div>
-        {comment && <CommentAlert>{comment}</CommentAlert>}
+        <div className="flex justify-center">
+          {comment ? (
+            <ResponsiveFormDialog
+              trigger={
+                <button className="text-left">
+                  <CommentAlert>{comment}</CommentAlert>
+                </button>
+              }
+              title={"Edit comment"}
+              description={`Edit ${title}'s comment in this workout`}
+            >
+              <CommentForm
+                mutate={addComment}
+                submitButtonText="Edit"
+                isSubmitting={commentPending}
+                deleteComment={() => addComment({ comment: "" })}
+              />
+            </ResponsiveFormDialog>
+          ) : (
+            <ResponsiveFormDialog
+              trigger={
+                <Button variant={"outline"} disabled={isOptimistic}>
+                  Add comment
+                </Button>
+              }
+              title={`Add comment`}
+              description={`Add comment to ${title} in this workout`}
+            >
+              <CommentForm
+                mutate={addComment}
+                submitButtonText="Add"
+                isSubmitting={commentPending}
+              />
+            </ResponsiveFormDialog>
+          )}
+        </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <ResponsiveFormDialog
+        <ResponsiveComboBox
           trigger={
-            <Button variant={"outline"}>
-              {comment ? "Edit" : "Add"} comment
+            <Button variant="outline" disabled={isOptimistic}>
+              Swap
             </Button>
           }
-          title={`${comment ? "Edit" : "Add"} comment`}
-          description={`${
-            comment ? "Edit" : "Add"
-          } comment to ${title} in this workout`}
-        >
-          <CommentForm
-            mutate={addComment}
-            submitButtonText="Add"
-            isSubmitting={commentPending}
-          />
-        </ResponsiveFormDialog>
+          data={other.map(({ id, title }) => ({
+            id,
+            title,
+          }))}
+          placeholder="Search exercise.."
+          mutate={({ exerciseId }) =>
+            swapExercise({ workoutExerciseId: id, exerciseId })
+          }
+        />
         <ResponsiveFormDialog
-          trigger={<Button>Add set</Button>}
+          trigger={<Button disabled={isOptimistic}>Add set</Button>}
           title="Add set"
           description={`Add a new set to ${title}`}
           drawerContentClassname="min-w-[330px]:max-h-[78vw]"

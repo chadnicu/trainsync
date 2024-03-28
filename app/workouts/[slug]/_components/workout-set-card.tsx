@@ -2,11 +2,11 @@ import { cn } from "@/lib/utils";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditSetForm from "./set-form";
-import { WorkoutSet } from "@/types";
-import { useDeleteSet, useUpdateSet } from "@/hooks/workouts/sets";
+import { Set } from "@/types";
+import { useDeleteSet, useUpdateSet } from "@/hooks/sets";
 
 // testeaza tot cand poti
-export default function WorkoutSetCard({ set }: { set: WorkoutSet }) {
+export default function WorkoutSetCard({ set }: { set: Set }) {
   const { mutate: updateSet, isPending: isEditing } = useUpdateSet();
   const { mutate: deleteSet, isPending: isDeleting } = useDeleteSet();
 

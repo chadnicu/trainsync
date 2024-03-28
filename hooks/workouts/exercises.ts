@@ -1,27 +1,21 @@
 import { getIdFromSlug } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { updateWorkout } from "@/server/workouts";
-import {
-  createSet,
-  deleteSet,
-  getSetsByWorkoutId,
-  updateSet,
-} from "@/server/sets";
 import { createContext, useContext } from "react";
 import {
   CommentInput,
+  Set,
   SetInput,
   Workout,
   WorkoutExercise,
   WorkoutExercises,
-  WorkoutSet,
 } from "@/types";
 import {
   addCommentToExercise,
   addExerciseToWorkout,
   getExercisesByWorkoutId,
   removeExerciseFromWorkout,
+  swapExercise,
   updateExerciseOrder,
 } from "@/server/workout-exercise";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
@@ -101,6 +95,42 @@ export function useRemoveExerciseFromWorkout() {
   });
 }
 
+export function useAddCommentToExercise() {
+  const queryClient = useQueryClient();
+  const { id, workout_id: workoutId } = useContext(WorkoutExerciseContext);
+  const queryKey = queryKeys.workoutExercises(workoutId);
+  return useMutation({
+    mutationFn: async (values: CommentInput) =>
+      await addCommentToExercise(values, id),
+    onMutate: async (values) => {
+      console.log(values);
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => {
+        return {
+          inWorkout: old.inWorkout.map((e) => ({
+            ...e,
+            comment: e.id === id ? values.comment : e.comment,
+          })),
+          other: old.other,
+        };
+      });
+      return { previous };
+    },
+    onError: (err, newElement, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+      console.log("Error optimistic ", newElement);
+      console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.workoutExercises(id),
+      });
+    },
+  });
+}
+
 export function useUpdateExerciseOrder() {
   const queryClient = useQueryClient();
   const params = useParams<{ slug: string }>();
@@ -123,12 +153,48 @@ export function useUpdateExerciseOrder() {
   });
 }
 
+export function useSwapExerciseInWorkout() {
+  const params = useParams<{ slug: string }>();
+  const workoutId = getIdFromSlug(params.slug);
+  const queryClient = useQueryClient();
+  const queryKey = queryKeys.workoutExercises(workoutId);
+  return useMutation({
+    mutationFn: async ({
+      workoutExerciseId,
+      exerciseId,
+    }: {
+      workoutExerciseId: number;
+      exerciseId: number;
+    }) => await swapExercise(workoutExerciseId, exerciseId),
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => {
+        return {
+          inWorkout: old.inWorkout.map((e) =>
+            e.id === values.workoutExerciseId ? { ...e, id: 0 } : e
+          ),
+          other: old.other.filter((e) => e.id === values.exerciseId),
+        };
+      });
+      return { previous };
+    },
+    onError: (err, newElement, context) => {
+      console.log("Error swapping exercise. Context: ", context);
+      console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+}
+
 export const WorkoutExerciseContext = createContext<
-  WorkoutExercise & { sets: WorkoutSet[] }
+  WorkoutExercise & { sets: Set[]; lastSets: Set[] }
 >({
   id: 0,
   title: "Loading..",
-  instructions: "exercise card..",
+  instructions: "Exercise card..",
   url: "",
   todo: "",
   comment: "",
@@ -136,5 +202,6 @@ export const WorkoutExerciseContext = createContext<
   workout_id: 0,
   // sets: [{ reps: 69, weight: 69, id: 0, workoutExerciseId: 0 }],
   sets: [],
+  lastSets: [],
   order: -1,
 });
