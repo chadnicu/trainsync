@@ -1,4 +1,4 @@
-import { ExerciseSet } from "@/types";
+import { Set } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -79,10 +79,8 @@ export function mapNullKeysToUndefined(obj: any) {
   return obj;
 }
 
-export function groupSetsByDate(
-  sets: ExerciseSet[]
-): Record<string, ExerciseSet[]> {
-  const groupedSets: Record<string, ExerciseSet[]> = {};
+export function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
+  const groupedSets: Record<string, Set[]> = {};
 
   sets.forEach((set) => {
     const date = set.workoutDate || "No Date";
