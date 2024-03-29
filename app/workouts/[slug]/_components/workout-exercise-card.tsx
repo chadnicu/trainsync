@@ -160,7 +160,7 @@ export default function WorkoutExerciseCard() {
           <CardDescription
             className={cn(
               // this is fucked up why tf does only vw or fixed values work?
-              "space-y-2 bg-red-500 p-0 m-0 max-w-[78vw] break-words",
+              "space-y-2 max-w-[78vw] break-words",
               {
                 "opacity-70": isOptimistic,
               }
