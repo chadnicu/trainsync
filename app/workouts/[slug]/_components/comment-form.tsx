@@ -1,3 +1,10 @@
+"use client";
+
+// cant fix this
+// Warning: Only plain objects can be passed to Client Components from Server Components. Objects with toJSON methods are not supported. Convert it manually to a simple value before passing it to props.
+//   {: {columns: [], columnTypes: [], rows: [], rowsAffected: ..., lastInsertRowid: ...}}
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +21,7 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
 import { CommentInput } from "@/types";
-import { WorkoutExerciseContext } from "@/hooks/workouts/exercises";
+import { WorkoutExerciseContext } from "@/hooks/tanstack/workout-exercises";
 import { Textarea } from "@/components/ui/textarea";
 import { exerciseCommentSchema } from "@/lib/validators/workout-exercise";
 import DeleteDialog from "@/components/delete-dialog";
@@ -23,12 +30,14 @@ export default function CommentForm({
   mutate,
   isSubmitting,
   submitButtonText,
-  deleteComment,
+  // deleteComment,
+  variant,
 }: {
   mutate: (values: CommentInput) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
-  deleteComment?: () => void;
+  // deleteComment?: () => void;
+  variant?: "add" | "edit";
 }) {
   const { comment } = useContext(WorkoutExerciseContext);
   const defaultValues = { comment: comment ?? undefined };
@@ -70,11 +79,11 @@ export default function CommentForm({
             </FormItem>
           )}
         />
-        {deleteComment !== undefined && (
+        {variant === "edit" && (
           <div className="float-left ml-24 md:ml-0">
             <DeleteDialog
               action={() => {
-                deleteComment();
+                mutate({ comment: "" });
                 setOpen(false);
               }}
             />

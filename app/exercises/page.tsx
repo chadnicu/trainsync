@@ -10,10 +10,10 @@ import {
   ExerciseContext,
   useCreateExercise,
   useExercises,
-} from "@/hooks/exercises";
+} from "@/hooks/tanstack/exercises";
 import { useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/loading-spinner";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/hooks/tanstack";
 
 const queryKey = queryKeys.exercises;
 

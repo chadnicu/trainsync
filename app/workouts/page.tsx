@@ -11,8 +11,8 @@ import {
   useWorkouts,
   WorkoutContext,
   useCreateWorkout,
-} from "@/hooks/workouts";
-import { queryKeys } from "@/lib/query-keys";
+} from "@/hooks/tanstack/workouts";
+import { queryKeys } from "@/hooks/tanstack";
 
 export default function Workouts() {
   const { data, isLoading, isFetching, isSuccess, isError } = useWorkouts();

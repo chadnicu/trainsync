@@ -17,7 +17,7 @@ import {
   TemplateContext,
   useDeleteTemplate,
   useUpdateTemplate,
-} from "@/hooks/templates";
+} from "@/hooks/tanstack/templates";
 import { cn, slugify } from "@/lib/utils";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import Link from "next/link";

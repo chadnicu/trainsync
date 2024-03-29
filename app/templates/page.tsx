@@ -7,8 +7,8 @@ import {
   TemplateContext,
   useCreateTemplate,
   useTemplates,
-} from "@/hooks/templates";
-import { queryKeys } from "@/lib/query-keys";
+} from "@/hooks/tanstack/templates";
+import { queryKeys } from "@/hooks/tanstack";
 import { useQueryClient } from "@tanstack/react-query";
 import TemplateCard from "./_components/template-card";
 import TemplateForm from "./_components/template-form";

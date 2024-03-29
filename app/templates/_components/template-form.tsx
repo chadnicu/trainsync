@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { TemplateContext } from "@/hooks/templates";
+import { TemplateContext } from "@/hooks/tanstack/templates";
 import { templateSchema } from "@/lib/validators/template";
 import { TemplateInput } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";

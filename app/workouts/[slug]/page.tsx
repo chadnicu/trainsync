@@ -9,16 +9,15 @@ import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditWorkoutExercises from "./_components/edit-workout-exercises";
 import { getIdFromSlug } from "@/lib/utils";
-import { useWorkout } from "@/hooks/workouts";
+import { useWorkout, WorkoutContext } from "@/hooks/tanstack/workouts";
 import {
   WorkoutExerciseContext,
   useAddExerciseToWorkout,
   useWorkoutExercises,
-} from "@/hooks/workouts/exercises";
+} from "@/hooks/tanstack/workout-exercises";
 import { useEffect } from "react";
-import { WorkoutContext } from "@/hooks/workouts";
 import Timer from "./_components/timer";
-import { useSets } from "@/hooks/sets";
+import { useSets } from "@/hooks/tanstack/sets";
 import { Set } from "@/types";
 
 type Params = {

@@ -9,7 +9,7 @@ import {
 import { AddWorkoutInput, EditWorkoutInput, Workout } from "@/types";
 import { getIdFromSlug, mapUndefinedKeysToNull } from "@/lib/utils";
 import { createContext } from "react";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/hooks/tanstack";
 import { useParams } from "next/navigation";
 
 const queryKey = queryKeys.workouts;

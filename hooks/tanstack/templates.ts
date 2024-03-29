@@ -1,4 +1,4 @@
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/hooks/tanstack";
 import { mapUndefinedKeysToNull } from "@/lib/utils";
 import {
   createTemplate,

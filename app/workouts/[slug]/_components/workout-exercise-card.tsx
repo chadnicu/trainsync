@@ -24,14 +24,13 @@ import {
   useRemoveExerciseFromWorkout,
   useSwapExerciseInWorkout,
   useWorkoutExercises,
-} from "@/hooks/workouts/exercises";
+} from "@/hooks/tanstack/workout-exercises";
 import DeleteDialog from "@/components/delete-dialog";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
-import LastSetsSkeleton from "./last-sets-skeleton";
 import LoadingSpinner from "@/components/loading-spinner";
-import { useCreateSet } from "@/hooks/sets";
+import { useCreateSet } from "@/hooks/tanstack/sets";
 
 export default function WorkoutExerciseCard() {
   const {
@@ -164,7 +163,8 @@ export default function WorkoutExerciseCard() {
                 mutate={addComment}
                 submitButtonText="Edit"
                 isSubmitting={commentPending}
-                deleteComment={() => addComment({ comment: "" })}
+                variant="edit"
+                // deleteComment={() => addComment({ comment: "" })}
               />
             </ResponsiveFormDialog>
           ) : (

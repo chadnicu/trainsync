@@ -26,7 +26,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { AddWorkoutInput } from "@/types";
 import { addWorkoutSchema } from "@/lib/validators/workout";
-import { WorkoutContext } from "@/hooks/workouts";
+import { WorkoutContext } from "@/hooks/tanstack/workouts";
 
 export default function CreateWorkoutForm({
   mutate,

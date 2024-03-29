@@ -24,7 +24,7 @@ import {
   ExerciseContext,
   useDeleteExercise,
   useUpdateExercise,
-} from "@/hooks/exercises";
+} from "@/hooks/tanstack/exercises";
 
 export default function ExerciseCard() {
   const pathname = usePathname();

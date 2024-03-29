@@ -1,10 +1,9 @@
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/hooks/tanstack";
 import { createSet, deleteSet, getAllSets, updateSet } from "@/server/sets";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
-import { WorkoutExerciseContext } from "../workouts/exercises";
-import { CommentInput, Set, SetInput, WorkoutExercises } from "@/types";
-import { addCommentToExercise } from "@/server/workout-exercise";
+import { Set, SetInput } from "@/types";
+import { WorkoutExerciseContext } from "@/hooks/tanstack/workout-exercises";
 
 const queryKey = queryKeys.sets;
 

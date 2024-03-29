@@ -2,14 +2,7 @@ import { getIdFromSlug } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { createContext, useContext } from "react";
-import {
-  CommentInput,
-  Set,
-  SetInput,
-  Workout,
-  WorkoutExercise,
-  WorkoutExercises,
-} from "@/types";
+import { CommentInput, Set, WorkoutExercise, WorkoutExercises } from "@/types";
 import {
   addCommentToExercise,
   addExerciseToWorkout,
@@ -19,7 +12,7 @@ import {
   updateExerciseOrder,
 } from "@/server/workout-exercise";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/hooks/tanstack";
 
 export function useWorkoutExercises() {
   const params = useParams<{ slug: string }>();

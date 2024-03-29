@@ -14,9 +14,9 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import SetsChartSkeleton from "./_components/sets-chart-skeleton";
-import { useExercise } from "@/hooks/exercises";
-import { queryKeys } from "@/lib/query-keys";
-import { useSets } from "@/hooks/sets";
+import { useExercise } from "@/hooks/tanstack/exercises";
+import { queryKeys } from "@/hooks/tanstack";
+import { useSets } from "@/hooks/tanstack/sets";
 
 type Params = {
   params: { slug: string };

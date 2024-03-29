@@ -2,7 +2,7 @@ import { P } from "@/components/typography";
 import Link from "next/link";
 import CommentAlert from "@/components/comment";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import dayjs from "@/lib/dayjs";
+import dayjs from "@/lib/day-js";
 import { buttonVariants } from "@/components/ui/button";
 import { cn, slugify } from "@/lib/utils";
 import { Set } from "@/types";

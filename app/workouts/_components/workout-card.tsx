@@ -12,10 +12,9 @@ import { Button } from "@/components/ui/button";
 import { useContext } from "react";
 import { cn, slugify } from "@/lib/utils";
 import LoadingSpinner from "@/components/loading-spinner";
-import { useQueryClient } from "@tanstack/react-query";
 import UpdateWorkoutForm from "./update-workout-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import dayjs from "@/lib/dayjs";
+import dayjs from "@/lib/day-js";
 import {
   Popover,
   PopoverContent,
@@ -30,7 +29,7 @@ import {
   WorkoutContext,
   useDeleteWorkout,
   useUpdateWorkout,
-} from "@/hooks/workouts";
+} from "@/hooks/tanstack/workouts";
 
 function getDiffInMinutes(started: string | null, finished: string | null) {
   if (

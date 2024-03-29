@@ -1,7 +1,9 @@
 import { H4 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { useUpdateDynamicWorkout } from "@/hooks/workouts";
-import { WorkoutContext } from "@/hooks/workouts";
+import {
+  useUpdateDynamicWorkout,
+  WorkoutContext,
+} from "@/hooks/tanstack/workouts";
 import { useContext, useEffect, useState } from "react";
 
 function getTimePassed(started: string | null) {

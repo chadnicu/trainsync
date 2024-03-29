@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { WorkoutContext } from "@/hooks/workouts";
+import { WorkoutContext } from "@/hooks/tanstack/workouts";
 import { EditWorkoutInput } from "@/types";
 import { editWorkoutSchema } from "@/lib/validators/workout";
 

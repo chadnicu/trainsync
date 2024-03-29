@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import LoadingSpinner from "@/components/loading-spinner";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { ReactNode, useContext } from "react";
-import { ExerciseContext } from "@/hooks/exercises";
+import { ExerciseContext } from "@/hooks/tanstack/exercises";
 import { ExerciseInput } from "@/types";
 import { exerciseSchema } from "@/lib/validators/exercise";
 
