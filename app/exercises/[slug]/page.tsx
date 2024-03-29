@@ -30,11 +30,15 @@ export default function Exercise({ params: { slug } }: Params) {
     isSuccess,
     isError,
   } = useExercise();
-  const { data: sets } = useSets();
+
+  const { data } = useSets();
+
+  const exerciseId = getIdFromSlug(slug);
+  const sets = data.filter((e) => e.exerciseId === exerciseId);
+
   const queryClient = useQueryClient();
 
   const embedUrl = getYouTubeEmbedURL(exercise?.url ?? "");
-  const exerciseId = getIdFromSlug(slug);
 
   const Error = () => (
     <P className="grid place-items-center gap-3">
@@ -64,7 +68,7 @@ export default function Exercise({ params: { slug } }: Params) {
     <section className="sm:container text-center space-y-4">
       <div className="space-y-2">
         <H1>{exercise?.title ?? "Loading.."}</H1>
-        <P className="max-w-lg mx-auto">
+        <P className="max-w-lg mx-auto break-words">
           {exercise?.instructions ?? `Exercise with id ${exerciseId}`}
         </P>
       </div>

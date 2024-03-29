@@ -30,7 +30,25 @@ import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
 import LoadingSpinner from "@/components/loading-spinner";
-import { useCreateSet } from "@/hooks/tanstack/sets";
+import { useCreateSet, useSets } from "@/hooks/tanstack/sets";
+import { Set } from "@/types";
+import { Skeleton } from "@/components/ui/skeleton";
+
+function getLastSets(sets: Set[], workoutId: number) {
+  const lastSets: Set[] = [];
+
+  const index = sets.findIndex((e) => e.workoutId === workoutId);
+
+  let i = index < 0 ? 0 : index;
+  for (; i < sets.length; i++) {
+    if (sets[i].workoutId !== workoutId) {
+      lastSets.push(sets[i]);
+      if (i < sets.length - 1 && sets[i].workoutId !== sets[i + 1].workoutId) {
+        return lastSets;
+      }
+    }
+  }
+}
 
 export default function WorkoutExerciseCard() {
   const {
@@ -42,8 +60,6 @@ export default function WorkoutExerciseCard() {
     url,
     exerciseId,
     workout_id: workoutId,
-    sets,
-    lastSets,
     order,
   } = useContext(WorkoutExerciseContext);
   const { mutate: addSet, isPending: setPending } = useCreateSet();
@@ -55,14 +71,34 @@ export default function WorkoutExerciseCard() {
   } = useWorkoutExercises();
   const { mutate: swapExercise } = useSwapExerciseInWorkout();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  const searchParams = useSearchParams();
   const current = parseInt(searchParams.get("exercise") ?? "1", 10);
   const prev = current > 1 ? current - 1 : current;
+
   const embedUrl = getYouTubeEmbedURL(url);
 
+  const value = searchParams.get("exercise");
+  const exerciseIndex = value ? parseInt(value, 10) : -1;
+  console.log(exerciseIndex);
+
+  const { data, isLoading: setsLoading, isFetching: setsFetching } = useSets();
+  const sets = data.filter(
+    (e) => e.workoutExerciseId === inWorkout[exerciseIndex - 1].id
+  );
+  const lastSets =
+    getLastSets(
+      data.filter(
+        (e) => e.exerciseId === inWorkout[exerciseIndex - 1].exerciseId
+      ),
+      workoutId
+    ) ?? [];
+
   const LastSets = () => {
+    if (setsLoading || setsFetching)
+      return <Skeleton className="h-4 w-[90%] sm:w-[94%]" />;
+
     if (lastSets && lastSets.length > 0 && lastSets[0])
       return (
         <Link
@@ -73,7 +109,7 @@ export default function WorkoutExerciseCard() {
           )}
           target="_blank"
         >
-          <P className="text-sm text-muted-foreground hover:brightness-150 duration-300 max-w-[94%] break-words">
+          <P className="text-sm text-muted-foreground hover:brightness-150 duration-300 max-w-[90%] sm:max-w-[94%] break-words">
             Last:{" "}
             {lastSets.map((e, i) => (
               <span key={e.id}>
@@ -122,7 +158,13 @@ export default function WorkoutExerciseCard() {
         </CardTitle>
         {(instructions || todo) && (
           <CardDescription
-            className={cn("space-y-2", { "opacity-70": isOptimistic })}
+            className={cn(
+              // this is fucked up why tf does only vw or fixed values work?
+              "space-y-2 bg-red-500 p-0 m-0 max-w-[78vw] break-words",
+              {
+                "opacity-70": isOptimistic,
+              }
+            )}
           >
             {instructions && <span className="block">{instructions}</span>}
             {todo && (
@@ -149,11 +191,13 @@ export default function WorkoutExerciseCard() {
           ))}
         </div>
         <div className="flex justify-center">
-          {comment ? (
+          {comment && (
             <ResponsiveFormDialog
               trigger={
-                <button className="text-left">
-                  <CommentAlert>{comment}</CommentAlert>
+                <button className="text-left" disabled={isOptimistic}>
+                  <CommentAlert className={cn({ "opacity-70": isOptimistic })}>
+                    {comment}
+                  </CommentAlert>
                 </button>
               }
               title={"Edit comment"}
@@ -164,23 +208,6 @@ export default function WorkoutExerciseCard() {
                 submitButtonText="Edit"
                 isSubmitting={commentPending}
                 variant="edit"
-                // deleteComment={() => addComment({ comment: "" })}
-              />
-            </ResponsiveFormDialog>
-          ) : (
-            <ResponsiveFormDialog
-              trigger={
-                <Button variant={"outline"} disabled={isOptimistic}>
-                  Add comment
-                </Button>
-              }
-              title={`Add comment`}
-              description={`Add comment to ${title} in this workout`}
-            >
-              <CommentForm
-                mutate={addComment}
-                submitButtonText="Add"
-                isSubmitting={commentPending}
               />
             </ResponsiveFormDialog>
           )}
@@ -202,6 +229,23 @@ export default function WorkoutExerciseCard() {
             swapExercise({ workoutExerciseId: id, exerciseId })
           }
         />
+        {comment && (
+          <ResponsiveFormDialog
+            trigger={
+              <Button variant={"outline"} disabled={isOptimistic}>
+                Add comment
+              </Button>
+            }
+            title={`Add comment`}
+            description={`Add comment to ${title} in this workout`}
+          >
+            <CommentForm
+              mutate={addComment}
+              submitButtonText="Add"
+              isSubmitting={commentPending}
+            />
+          </ResponsiveFormDialog>
+        )}
         <ResponsiveFormDialog
           trigger={<Button disabled={isOptimistic}>Add set</Button>}
           title="Add set"

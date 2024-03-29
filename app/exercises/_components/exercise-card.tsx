@@ -54,7 +54,11 @@ export default function ExerciseCard() {
             </Link>
           )}
         </CardTitle>
-        {instructions && <CardDescription>{instructions}</CardDescription>}
+        {instructions && (
+          <CardDescription className="break-words">
+            {instructions}
+          </CardDescription>
+        )}
         {isOptimistic && (
           <LoadingSpinner className="absolute right-[12px] top-[6px] h-4 w-4" />
         )}

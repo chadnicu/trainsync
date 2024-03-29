@@ -17,29 +17,11 @@ import {
 } from "@/hooks/tanstack/workout-exercises";
 import { useEffect } from "react";
 import Timer from "./_components/timer";
-import { useSets } from "@/hooks/tanstack/sets";
-import { Set } from "@/types";
+import WorkoutExerciseSkeleton from "./_components/workout-exercise-skeleton";
 
 type Params = {
   params: { slug: string };
 };
-
-function getLastSets(sets: Set[], workoutId: number) {
-  const index = sets.findIndex((e) => e.workoutId === workoutId);
-
-  sets = sets.filter((e) => e.workoutId !== workoutId);
-
-  const lastSets: Set[] = [];
-
-  for (let i = index; i < sets.length; i++) {
-    if (i < 0) i = 0;
-
-    lastSets.push(sets[i]);
-    if (i < sets.length - 1 && sets[i]?.workoutId !== sets[i + 1]?.workoutId) {
-      return lastSets;
-    }
-  }
-}
 
 export default function Workout({ params: { slug } }: Params) {
   const workoutId = getIdFromSlug(slug);
@@ -47,7 +29,7 @@ export default function Workout({ params: { slug } }: Params) {
   const {
     data: { inWorkout, other },
   } = useWorkoutExercises();
-  const { data: sets } = useSets();
+  // const { data: sets } = useSets(); // just to cache em i guess
   const { mutate: addExerciseToWorkout } = useAddExerciseToWorkout();
 
   const searchParams = useSearchParams();
@@ -87,27 +69,14 @@ export default function Workout({ params: { slug } }: Params) {
         )}
 
         <ExercisesPagination length={inWorkout.length} />
-        {inWorkout[exerciseIndex - 1] ? (
-          <WorkoutExerciseContext.Provider
-            value={{
-              ...inWorkout[exerciseIndex - 1],
-              sets: sets.filter(
-                (e) => e.workoutExerciseId === inWorkout[exerciseIndex - 1].id
-              ),
-              lastSets:
-                getLastSets(
-                  sets.filter(
-                    (e) =>
-                      e.exerciseId === inWorkout[exerciseIndex - 1].exerciseId
-                  ),
-                  workoutId
-                ) ?? [],
-            }}
-          >
+        {inWorkout[exerciseIndex - 1] && exerciseIndex >= 0 ? (
+          <WorkoutExerciseContext.Provider value={inWorkout[exerciseIndex - 1]}>
             <WorkoutExerciseCard />
           </WorkoutExerciseContext.Provider>
         ) : (
-          <>{/* <WorkoutExerciseSkeleton /> */}</>
+          <>
+            <WorkoutExerciseSkeleton />
+          </>
         )}
 
         <div className="flex flex-col gap-2 min-[370px]:flex-row w-fit mx-auto">

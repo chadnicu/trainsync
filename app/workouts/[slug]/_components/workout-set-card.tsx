@@ -22,7 +22,6 @@ export default function WorkoutSetCard({ set }: { set: Set }) {
           className={cn("flex items-center gap-3 mx-auto px-3 py-1", {
             "opacity-60": isOptimistic,
           })}
-          onClick={() => {}}
         >
           <BoldNumber n={set.reps} />
           <Cross2Icon />

@@ -182,9 +182,7 @@ export function useSwapExerciseInWorkout() {
   });
 }
 
-export const WorkoutExerciseContext = createContext<
-  WorkoutExercise & { sets: Set[]; lastSets: Set[] }
->({
+export const WorkoutExerciseContext = createContext<WorkoutExercise>({
   id: 0,
   title: "Loading..",
   instructions: "Exercise card..",
@@ -194,7 +192,5 @@ export const WorkoutExerciseContext = createContext<
   exerciseId: 0,
   workout_id: 0,
   // sets: [{ reps: 69, weight: 69, id: 0, workoutExerciseId: 0 }],
-  sets: [],
-  lastSets: [],
   order: -1,
 });
