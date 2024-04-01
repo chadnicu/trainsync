@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
-import EditSetForm from "./set-form";
+import SetForm from "./set-form";
 import { Set } from "@/types";
 import { useDeleteSet, useUpdateSet } from "@/hooks/tanstack/sets";
 
@@ -30,9 +30,9 @@ export default function WorkoutSetCard({ set }: { set: Set }) {
       }
       title={"Edit set"}
       description={"Edit or delete this set"}
-      drawerContentClassname="max-h-[272px]"
+      drawerContentClassname="max-h-[276px]"
     >
-      <EditSetForm
+      <SetForm
         submitAction={(values) => updateSet({ ...values, id: set.id })}
         deleteSet={() => deleteSet(set.id)}
         isDeleting={isDeleting}

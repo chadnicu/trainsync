@@ -33,6 +33,7 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { useCreateSet, useSets } from "@/hooks/tanstack/sets";
 import { Set } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import LazyYoutube from "@/components/lazy-youtube";
 
 function getLastSets(sets: Set[], workoutId: number) {
   const lastSets: Set[] = [];
@@ -83,21 +84,34 @@ export default function WorkoutExerciseCard() {
   const exerciseIndex = value ? parseInt(value, 10) : -1;
   console.log(exerciseIndex);
 
-  const { data, isLoading: setsLoading, isFetching: setsFetching } = useSets();
-  const sets = data.filter(
-    (e) => e.workoutExerciseId === inWorkout[exerciseIndex - 1].id
-  );
-  const lastSets =
+  const {
+    data: sets,
+    isLoading: setsLoading,
+    isFetching: setsFetching,
+  } = useSets();
+
+  if (exerciseIndex <= 0 || !inWorkout[exerciseIndex - 1]) return null;
+
+  const filterSets = (sets: Set[]) =>
+    sets.length !== 0 && exerciseIndex > 0
+      ? sets.filter(
+          (e) => e.workoutExerciseId === inWorkout[exerciseIndex - 1].id
+        )
+      : [];
+
+  const filterLastSets = (sets: Set[]) =>
     getLastSets(
-      data.filter(
+      sets.filter(
         (e) => e.exerciseId === inWorkout[exerciseIndex - 1].exerciseId
       ),
       workoutId
     ) ?? [];
 
   const LastSets = () => {
-    if (setsLoading || setsFetching)
+    if ((setsLoading || setsFetching) && sets?.length === 0)
       return <Skeleton className="h-4 w-[90%] sm:w-[94%]" />;
+
+    const lastSets = filterLastSets(sets);
 
     if (lastSets && lastSets.length > 0 && lastSets[0])
       return (
@@ -126,8 +140,12 @@ export default function WorkoutExerciseCard() {
   const isOptimistic = id === 0;
 
   return (
-    <Card className={cn("max-w-lg w-full mx-auto text-left relative")}>
-      <CardHeader>
+    <Card
+      className={cn(
+        "max-w-[330px] sm:max-w-lg w-full mx-auto text-left relative"
+      )}
+    >
+      <CardHeader className="">
         <LastSets />
         <CardTitle
           className={cn(
@@ -158,13 +176,9 @@ export default function WorkoutExerciseCard() {
         </CardTitle>
         {(instructions || todo) && (
           <CardDescription
-            className={cn(
-              // this is fucked up why tf does only vw or fixed values work?
-              "space-y-2 max-w-[78vw] break-words",
-              {
-                "opacity-70": isOptimistic,
-              }
-            )}
+            className={cn("space-y-2 break-words", {
+              "opacity-70": isOptimistic,
+            })}
           >
             {instructions && <span className="block">{instructions}</span>}
             {todo && (
@@ -176,17 +190,19 @@ export default function WorkoutExerciseCard() {
         )}
       </CardHeader>
       <CardContent className="space-y-6">
-        {embedUrl && (
-          <iframe
-            src={embedUrl}
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="rounded-md h-[44vw] w-full sm:w-full sm:h-[260px] mx-auto "
-          />
-        )}
+        <LazyYoutube>
+          {embedUrl && (
+            <iframe
+              src={embedUrl}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className="rounded-md h-[44vw] w-full sm:w-full sm:h-[260px] mx-auto "
+            />
+          )}
+        </LazyYoutube>
         <div>
-          {sets.map((e) => (
+          {filterSets(sets).map((e) => (
             <WorkoutSetCard key={e.id} set={e} />
           ))}
         </div>
@@ -214,43 +230,46 @@ export default function WorkoutExerciseCard() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <ResponsiveComboBox
-          trigger={
-            <Button variant="outline" disabled={isOptimistic}>
-              Swap
-            </Button>
-          }
-          data={other.map(({ id, title }) => ({
-            id,
-            title,
-          }))}
-          placeholder="Search exercise.."
-          mutate={({ exerciseId }) =>
-            swapExercise({ workoutExerciseId: id, exerciseId })
-          }
-        />
-        {comment && (
-          <ResponsiveFormDialog
+        <div className="space-x-3">
+          <ResponsiveComboBox
             trigger={
-              <Button variant={"outline"} disabled={isOptimistic}>
-                Add comment
+              <Button variant="outline" disabled={isOptimistic}>
+                Swap
               </Button>
             }
-            title={`Add comment`}
-            description={`Add comment to ${title} in this workout`}
-          >
-            <CommentForm
-              mutate={addComment}
-              submitButtonText="Add"
-              isSubmitting={commentPending}
-            />
-          </ResponsiveFormDialog>
-        )}
+            data={other.map(({ id, title }) => ({
+              id,
+              title,
+            }))}
+            placeholder="Search exercise.."
+            mutate={({ exerciseId }) =>
+              swapExercise({ workoutExerciseId: id, exerciseId })
+            }
+          />
+          {!comment && (
+            <ResponsiveFormDialog
+              trigger={
+                <Button variant={"outline"} disabled={isOptimistic}>
+                  Comment
+                </Button>
+              }
+              title={`Add comment`}
+              description={`Add comment to ${title} in this workout`}
+            >
+              <CommentForm
+                mutate={addComment}
+                submitButtonText="Add"
+                isSubmitting={commentPending}
+              />
+            </ResponsiveFormDialog>
+          )}
+        </div>
         <ResponsiveFormDialog
           trigger={<Button disabled={isOptimistic}>Add set</Button>}
           title="Add set"
           description={`Add a new set to ${title}`}
-          drawerContentClassname="min-w-[330px]:max-h-[78vw]"
+          // drawerContentClassname="min-w-[330px]:max-h-[78vw]"
+          drawerContentClassname="max-h-[276px]"
         >
           <SetForm
             submitAction={addSet}
