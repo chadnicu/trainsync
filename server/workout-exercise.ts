@@ -65,7 +65,12 @@ export async function addExerciseToWorkout(values: {
   const { userId } = auth();
   if (!userId) return;
 
-  await db.insert(workout_exercise).values(values);
+  const debug = await db
+    .insert(workout_exercise)
+    .values(values)
+    .returning()
+    .get();
+  console.log(debug);
 }
 
 export async function updateExerciseOrder(arr: number[]) {

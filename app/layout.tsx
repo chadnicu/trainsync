@@ -7,13 +7,7 @@ import MainFooter from "@/components/main-footer";
 import ClerkProvider from "@/components/clerk-provider";
 import { TanstackQueryProvider } from "@/components/query-provider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-// remove if no need for inter
-// import { Inter as FontSans } from "next/font/google";
-// export const fontSans = FontSans({
-//   subsets: ["latin"],
-//   variable: "--font-sans",
-// });
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Change this later",
@@ -44,6 +38,7 @@ export default function RootLayout({
             </ThemeProvider>
           </ClerkProvider>
         </ScrollArea>
+        <Toaster />
       </body>
     </html>
   );

@@ -60,8 +60,8 @@ export default function WorkoutCard() {
 
   const isOptimistic = id === 0;
   const dayJsDate = dayjs(date);
-  const duration = getDiffInMinutes(started, finished);
   const formattedDate = dayJsDate.format("DD-MM-YYYY");
+  const duration = getDiffInMinutes(started, finished);
   const relativeDay = dayJsDate.isToday()
     ? "(today)"
     : `(${dayjs()

@@ -23,8 +23,8 @@ import { useEffect } from "react";
 import Timer from "./_components/timer";
 import WorkoutExerciseSkeleton from "./_components/workout-exercise-skeleton";
 import CommentAlert from "@/components/comment";
-import SetCommentForm from "./_components/set-comment-form";
 import WorkoutCommentForm from "./_components/workout-comment-form";
+import dayjs from "@/lib/day-js";
 
 type Params = {
   params: { slug: string };
@@ -49,10 +49,13 @@ export default function Workout({ params: { slug } }: Params) {
   useEffect(() => {
     const value = searchParams.get("exercise");
     if (!value && inWorkout.length > 0) router.replace("?exercise=1");
-  }, [inWorkout, router, searchParams]);
+  }, []);
 
   const { mutate: updateWorkout, isPending: updateWorkoutPending } =
     useUpdateDynamicWorkout();
+
+  const dayJsDate = dayjs(workout?.date);
+  const formattedDate = dayJsDate.format("DD-MM-YYYY");
 
   return (
     <>
@@ -86,14 +89,14 @@ export default function Workout({ params: { slug } }: Params) {
                     </button>
                   }
                   title={"Edit comment"}
-                  description={`Edit comment for ${workout.title} (${workout.date})`}
+                  description={`Edit comment for ${workout.title} (${formattedDate})`}
                 >
                   <WorkoutCommentForm
                     mutate={({ comment }) =>
                       updateWorkout({
                         started: workout.started ?? undefined,
                         finished: workout.finished ?? undefined,
-                        comment
+                        comment,
                       })
                     }
                     submitButtonText="Edit"
@@ -109,14 +112,14 @@ export default function Workout({ params: { slug } }: Params) {
                     </Button>
                   }
                   title={`Add comment`}
-                  description={`Add comment to ${workout.title} (${workout.date})`}
+                  description={`Add comment to ${workout.title} (${formattedDate})`}
                 >
                   <WorkoutCommentForm
                     mutate={({ comment }) =>
                       updateWorkout({
                         started: workout.started ?? undefined,
                         finished: workout.finished ?? undefined,
-                        comment
+                        comment,
                       })
                     }
                     submitButtonText="Add"

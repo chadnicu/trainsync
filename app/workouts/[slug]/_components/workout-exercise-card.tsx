@@ -34,6 +34,9 @@ import { useCreateSet, useSets } from "@/hooks/tanstack/sets";
 import { Set } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import LazyYoutube from "@/components/lazy-youtube";
+import { useWorkout } from "@/hooks/tanstack/workouts";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 function getLastSets(sets: Set[], workoutId: number) {
   const lastSets: Set[] = [];
@@ -71,6 +74,9 @@ export default function WorkoutExerciseCard() {
     data: { inWorkout, other },
   } = useWorkoutExercises();
   const { mutate: swapExercise } = useSwapExerciseInWorkout();
+
+  const { data: workout } = useWorkout();
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -89,6 +95,8 @@ export default function WorkoutExerciseCard() {
     isLoading: setsLoading,
     isFetching: setsFetching,
   } = useSets();
+
+  const { toast } = useToast();
 
   if (exerciseIndex <= 0 || !inWorkout[exerciseIndex - 1]) return null;
 
@@ -160,7 +168,8 @@ export default function WorkoutExerciseCard() {
             <DeleteDialog
               action={() => {
                 removeExercise();
-                if (prev <= 1) router.replace(pathname);
+                if (prev === 1 && inWorkout.length === 1)
+                  router.replace(pathname);
                 else router.replace(pathname + "?exercise=" + prev);
               }}
               customTrigger={
@@ -272,7 +281,17 @@ export default function WorkoutExerciseCard() {
           drawerContentClassname="max-h-[276px]"
         >
           <SetForm
-            submitAction={addSet}
+            submitAction={(values) => {
+              if (!workout?.started) {
+                toast({
+                  title: "Workout hasn't started.",
+                  description:
+                    "You have to start the workout to be able to add sets.",
+                });
+                return;
+              }
+              return addSet(values);
+            }}
             submitButtonText="Add"
             isSubmitting={setPending}
             defaultValues={{ reps: 0, weight: 0 }}
