@@ -1,10 +1,5 @@
 "use client";
 
-// cant fix this
-// Warning: Only plain objects can be passed to Client Components from Server Components. Objects with toJSON methods are not supported. Convert it manually to a simple value before passing it to props.
-//   {: {columns: [], columnTypes: [], rows: [], rowsAffected: ..., lastInsertRowid: ...}}
-//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,21 +20,20 @@ import { WorkoutExerciseContext } from "@/hooks/tanstack/workout-exercises";
 import { Textarea } from "@/components/ui/textarea";
 import { exerciseCommentSchema } from "@/lib/validators/workout-exercise";
 import DeleteDialog from "@/components/delete-dialog";
+import { WorkoutContext } from "@/hooks/tanstack/workouts";
 
-export default function CommentForm({
+export default function WorkoutCommentForm({
   mutate,
   isSubmitting,
   submitButtonText,
-  // deleteComment,
   variant,
 }: {
   mutate: (values: CommentInput) => void;
   isSubmitting?: boolean;
   submitButtonText?: ReactNode;
-  // deleteComment?: () => void;
   variant?: "add" | "edit";
 }) {
-  const { comment } = useContext(WorkoutExerciseContext);
+  const { comment } = useContext(WorkoutContext);
   const defaultValues = { comment: comment ?? undefined };
   const form = useForm<CommentInput>({
     resolver: zodResolver(exerciseCommentSchema),
@@ -51,7 +45,9 @@ export default function CommentForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((values) => {
-          mutate(values);
+          if (JSON.stringify(values) !== JSON.stringify(defaultValues)) {
+            mutate(values);
+          }
           setOpen(false);
         })}
         className="space-y-4"
@@ -61,19 +57,19 @@ export default function CommentForm({
           name="comment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sets comment</FormLabel>
+              <FormLabel>Workout comment</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder={
                     comment && comment?.length
                       ? comment
-                      : "Left one more rep in the tank each set"
+                      : "75kg bodyweight. Great sesh."
                   }
                   {...field}
                 />
               </FormControl>
               <FormDescription>
-                This comment applies to all the sets you added here.
+                This comment only applies to this workout.
               </FormDescription>
               <FormMessage />
             </FormItem>

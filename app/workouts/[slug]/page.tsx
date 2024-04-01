@@ -8,8 +8,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import EditWorkoutExercises from "./_components/edit-workout-exercises";
-import { getIdFromSlug } from "@/lib/utils";
-import { useWorkout, WorkoutContext } from "@/hooks/tanstack/workouts";
+import { cn, getIdFromSlug } from "@/lib/utils";
+import {
+  useUpdateDynamicWorkout,
+  useWorkout,
+  WorkoutContext,
+} from "@/hooks/tanstack/workouts";
 import {
   WorkoutExerciseContext,
   useAddExerciseToWorkout,
@@ -18,6 +22,9 @@ import {
 import { useEffect } from "react";
 import Timer from "./_components/timer";
 import WorkoutExerciseSkeleton from "./_components/workout-exercise-skeleton";
+import CommentAlert from "@/components/comment";
+import SetCommentForm from "./_components/set-comment-form";
+import WorkoutCommentForm from "./_components/workout-comment-form";
 
 type Params = {
   params: { slug: string };
@@ -44,6 +51,9 @@ export default function Workout({ params: { slug } }: Params) {
     if (!value && inWorkout.length > 0) router.replace("?exercise=1");
   }, [inWorkout, router, searchParams]);
 
+  const { mutate: updateWorkout, isPending: updateWorkoutPending } =
+    useUpdateDynamicWorkout();
+
   return (
     <>
       {isSuccess && (
@@ -59,6 +69,62 @@ export default function Workout({ params: { slug } }: Params) {
             {workout.description && (
               <P className="max-w-lg mx-auto">{workout.description}</P>
             )}
+
+            <WorkoutContext.Provider value={workout}>
+              {workout.comment ? (
+                <ResponsiveFormDialog
+                  trigger={
+                    <button
+                      className="text-left"
+                      disabled={updateWorkoutPending}
+                    >
+                      <CommentAlert
+                        className={cn({ "opacity-70": updateWorkoutPending })}
+                      >
+                        {workout.comment}
+                      </CommentAlert>
+                    </button>
+                  }
+                  title={"Edit comment"}
+                  description={`Edit comment for ${workout.title} (${workout.date})`}
+                >
+                  <WorkoutCommentForm
+                    mutate={({ comment }) =>
+                      updateWorkout({
+                        started: workout.started ?? undefined,
+                        finished: workout.finished ?? undefined,
+                        comment
+                      })
+                    }
+                    submitButtonText="Edit"
+                    isSubmitting={updateWorkoutPending}
+                    variant="edit"
+                  />
+                </ResponsiveFormDialog>
+              ) : (
+                <ResponsiveFormDialog
+                  trigger={
+                    <Button variant={"outline"} disabled={updateWorkoutPending}>
+                      Add workout comment
+                    </Button>
+                  }
+                  title={`Add comment`}
+                  description={`Add comment to ${workout.title} (${workout.date})`}
+                >
+                  <WorkoutCommentForm
+                    mutate={({ comment }) =>
+                      updateWorkout({
+                        started: workout.started ?? undefined,
+                        finished: workout.finished ?? undefined,
+                        comment
+                      })
+                    }
+                    submitButtonText="Add"
+                    isSubmitting={updateWorkoutPending}
+                  />
+                </ResponsiveFormDialog>
+              )}
+            </WorkoutContext.Provider>
           </>
         )}
         {!!((isFetching || isLoading) && !workout?.title) && (

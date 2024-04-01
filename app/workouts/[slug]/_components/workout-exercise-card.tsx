@@ -12,7 +12,7 @@ import { P, typography } from "@/components/typography";
 import { Button, buttonVariants } from "@/components/ui/button";
 import CommentAlert from "@/components/comment";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
-import CommentForm from "./comment-form";
+import SetCommentForm from "./set-comment-form";
 import WorkoutSetCard from "./workout-set-card";
 import SetForm from "./set-form";
 import { TrashIcon } from "@radix-ui/react-icons";
@@ -219,7 +219,7 @@ export default function WorkoutExerciseCard() {
               title={"Edit comment"}
               description={`Edit ${title}'s comment in this workout`}
             >
-              <CommentForm
+              <SetCommentForm
                 mutate={addComment}
                 submitButtonText="Edit"
                 isSubmitting={commentPending}
@@ -256,7 +256,7 @@ export default function WorkoutExerciseCard() {
               title={`Add comment`}
               description={`Add comment to ${title} in this workout`}
             >
-              <CommentForm
+              <SetCommentForm
                 mutate={addComment}
                 submitButtonText="Add"
                 isSubmitting={commentPending}
