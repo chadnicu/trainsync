@@ -5,7 +5,7 @@ export function H1({ className, children, ...props }: ComponentProps<"h1">) {
   return (
     <h1
       className={cn(
-        "scroll-m-20 text-5xl font-extrabold tracking-tighter lg:text-6xl",
+        "scroll-m-20 text-5xl font-extrabold tracking-tighter lg:text-6xl text-gradient",
         className
       )}
       {...props}
@@ -33,7 +33,7 @@ export function H3({ className, children, ...props }: ComponentProps<"h3">) {
   return (
     <h3
       className={cn(
-        "scroll-m-20 text-2xl font-semibold tracking-tighter",
+        "scroll-m-20 text-2xl font-semibold tracking-tighter text-gradient",
         className
       )}
       {...props}
@@ -118,9 +118,9 @@ export function A({ className, children, ...props }: ComponentProps<"a">) {
 // cant use this in above components because classes get purged if unused
 // might find a fix in the future
 const variants = {
-  h1: "scroll-m-20 text-5xl font-extrabold tracking-tighter lg:text-6xl",
+  h1: "scroll-m-20 text-5xl font-extrabold tracking-tighter lg:text-6xl text-gradient",
   h2: "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tighter first:mt-0",
-  h3: "scroll-m-20 text-2xl font-semibold tracking-tighter",
+  h3: "scroll-m-20 text-2xl font-semibold tracking-tighter text-gradient",
   h4: "scroll-m-20 text-xl font-semibold tracking-tighter",
   p: "leading-7 [&:not(:first-child)]:mt-6",
   "inline-code":
