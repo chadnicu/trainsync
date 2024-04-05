@@ -26,6 +26,7 @@ import CommentAlert from "@/components/comment";
 import WorkoutCommentForm from "./_components/workout-comment-form";
 import dayjs from "@/lib/day-js";
 import { useSets } from "@/hooks/tanstack/sets";
+import LoadingWorkout from "./loading";
 
 type Params = {
   params: { slug: string };
@@ -59,6 +60,12 @@ export default function Workout({ params: { slug } }: Params) {
 
   const dayJsDate = dayjs(workout?.date);
   const formattedDate = dayJsDate.format("DD-MM-YYYY");
+
+  const last = pathname.split("/")[2].split("-");
+  const loadingName = last.toSpliced(last.length - 1).join(" ");
+
+  // why tf is this hydration error here
+  if ((isFetching || isLoading) && !workout?.title) return <LoadingWorkout />;
 
   return (
     <>
@@ -135,7 +142,7 @@ export default function Workout({ params: { slug } }: Params) {
         )}
         {!!((isFetching || isLoading) && !workout?.title) && (
           <>
-            <H1>Loading..</H1>
+            <H1>{loadingName}</H1>
             <P className="max-w-lg mx-auto">Workout with id {workoutId}</P>
           </>
         )}
