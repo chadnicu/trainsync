@@ -11,7 +11,7 @@ import { Cross2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { Skeleton } from "@/components/ui/skeleton";
 import CommentAlert from "@/components/comment";
 import { cn } from "@/lib/utils";
-import { P, typography } from "@/components/typography";
+import { H3, P, typography } from "@/components/typography";
 import LoadingSpinner from "@/components/loading-spinner";
 
 export default function WorkoutExerciseSkeleton() {
@@ -21,9 +21,9 @@ export default function WorkoutExerciseSkeleton() {
         <P className="text-sm text-muted-foreground hover:brightness-150 duration-300 max-w-[94%] break-words">
           Last sets..
         </P>
-        <CardTitle className={cn(typography("h3"), "flex items-center gap-1")}>
+        <CardTitle className={cn("flex items-center gap-1")}>
           <LoadingSpinner className="h-5 w-5" />
-          Exercise Title
+          <H3>Exercise Title</H3>
           <div className="absolute top-3 right-3">
             <Button variant="ghost" size="icon" disabled>
               <TrashIcon className="h-4 w-4" />
@@ -46,14 +46,14 @@ export default function WorkoutExerciseSkeleton() {
               className="h-8 w-[100px] mx-auto flex justify-between items-center"
             >
               <Skeleton className="w-8 h-8" />
-              <Cross2Icon />
+              <Cross2Icon className="opacity-75" />
               <Skeleton className="w-8 h-8" />
             </div>
           ))}
         </div>
         <div className="flex justify-center">
-          <button className="text-left">
-            <CommentAlert>Loading comment..</CommentAlert>
+          <button className="text-left opacity-75" disabled>
+            <CommentAlert>Loading..</CommentAlert>
           </button>
         </div>
       </CardContent>

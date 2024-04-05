@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn, getYouTubeEmbedURL, slugify } from "@/lib/utils";
-import { P, typography } from "@/components/typography";
+import { H3, P, typography } from "@/components/typography";
 import { Button, buttonVariants } from "@/components/ui/button";
 import CommentAlert from "@/components/comment";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
@@ -37,6 +37,7 @@ import LazyYoutube from "@/components/lazy-youtube";
 import { useWorkout } from "@/hooks/tanstack/workouts";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import LoadingWorkout from "../loading";
 
 function getLastSets(sets: Set[], workoutId: number) {
   const lastSets: Set[] = [];
@@ -157,13 +158,12 @@ export default function WorkoutExerciseCard() {
         <LastSets />
         <CardTitle
           className={cn(
-            typography("h3"),
             { "opacity-70": isOptimistic },
             "flex items-center gap-1"
           )}
         >
           {isOptimistic && <LoadingSpinner className="h-5 w-5" />}
-          {title}
+          <H3>{title}</H3>
           <div className="absolute top-3 right-3">
             <DeleteDialog
               action={() => {

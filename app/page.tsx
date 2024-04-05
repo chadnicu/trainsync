@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export const dynamic = "force-static";
@@ -23,7 +24,7 @@ export default function Home() {
         streamline your lifting journey.
       </P>
       <div className="flex gap-2 mt-6">
-        <Link href="/workouts" className={buttonVariants()}>
+        <Link href="/workouts" className={cn(buttonVariants(), "bg-gradient")}>
           Get started
         </Link>
         <Link href="/about" className={buttonVariants({ variant: "outline" })}>
@@ -44,7 +45,7 @@ export default function Home() {
             className="grid place-items-center hover:bg-foreground/5 duration-300"
           >
             <CardHeader>
-              <CardTitle className="text-xl tracking-tighter">
+              <CardTitle className="text-xl tracking-tighter text-gradient">
                 {title}
               </CardTitle>
               <CardDescription>{description}</CardDescription>

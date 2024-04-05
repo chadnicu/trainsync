@@ -58,13 +58,13 @@ export default function Timer() {
   const { id, title, date, started, finished } = useContext(WorkoutContext);
   const [diff, setDiff] = useState(getTimePassed(started));
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDiff(getTimePassed(started));
-    }, 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setDiff(getTimePassed(started));
+  //   }, 1000);
 
-    return () => clearInterval(interval);
-  }, [started]);
+  //   return () => clearInterval(interval);
+  // }, [started]);
 
   const { mutate: updateWorkout } = useUpdateDynamicWorkout();
 

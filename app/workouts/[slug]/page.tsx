@@ -25,6 +25,7 @@ import WorkoutExerciseSkeleton from "./_components/workout-exercise-skeleton";
 import CommentAlert from "@/components/comment";
 import WorkoutCommentForm from "./_components/workout-comment-form";
 import dayjs from "@/lib/day-js";
+import { useSets } from "@/hooks/tanstack/sets";
 
 type Params = {
   params: { slug: string };
@@ -36,8 +37,9 @@ export default function Workout({ params: { slug } }: Params) {
   const {
     data: { inWorkout, other },
   } = useWorkoutExercises();
-  // const { data: sets } = useSets(); // just to cache em i guess
-  const { mutate: addExerciseToWorkout } = useAddExerciseToWorkout();
+  const { data: sets } = useSets(); // just to cache em i guess
+  const { mutate: addExerciseToWorkout, isPending: isAdding } =
+    useAddExerciseToWorkout();
 
   const searchParams = useSearchParams();
   const value = searchParams.get("exercise");
@@ -48,8 +50,9 @@ export default function Workout({ params: { slug } }: Params) {
 
   useEffect(() => {
     const value = searchParams.get("exercise");
-    if (!value && inWorkout.length > 0) router.replace("?exercise=1");
-  }, []);
+    if (!value && inWorkout.length > 0 && !isAdding)
+      router.replace("?exercise=1");
+  }, [pathname, router, searchParams, inWorkout, isAdding]);
 
   const { mutate: updateWorkout, isPending: updateWorkoutPending } =
     useUpdateDynamicWorkout();

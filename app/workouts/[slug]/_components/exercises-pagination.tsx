@@ -11,7 +11,13 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { usePathname, useSearchParams } from "next/navigation";
 
-export default function ExercisesPagination({ length }: { length: number }) {
+export default function ExercisesPagination({
+  length,
+  disabled,
+}: {
+  length: number;
+  disabled?: boolean;
+}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const current = parseInt(searchParams.get("exercise") ?? "1", 10);
@@ -40,8 +46,11 @@ export default function ExercisesPagination({ length }: { length: number }) {
         <PaginationItem key={i}>
           <PaginationLink
             key={i}
-            href={pathname + "?exercise=" + i}
+            href={disabled ? pathname : pathname + "?exercise=" + i}
             isActive={current === i}
+            className={cn({
+              "opacity-70 hover:bg-transparent pointer-events-none": disabled,
+            })}
           >
             {i}
           </PaginationLink>
@@ -55,10 +64,10 @@ export default function ExercisesPagination({ length }: { length: number }) {
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            href={pathname + "?exercise=" + prev}
+            href={disabled ? pathname : pathname + "?exercise=" + prev}
             className={cn({
-              "opacity-70 hover:bg-transparent pointer-events-none":
-                prev === current,
+              "opacity-75 hover:bg-transparent pointer-events-none":
+                !!(prev === current) || disabled,
             })}
             aria-disabled={prev === current}
           />
@@ -66,10 +75,10 @@ export default function ExercisesPagination({ length }: { length: number }) {
         <PaginationLinks />
         <PaginationItem>
           <PaginationNext
-            href={pathname + "?exercise=" + next}
+            href={disabled ? pathname : pathname + "?exercise=" + next}
             className={cn({
-              "opacity-70 hover:bg-transparent pointer-events-none":
-                next === current,
+              "opacity-75 hover:bg-transparent pointer-events-none":
+                !!(prev === current) || disabled,
             })}
             aria-disabled={next === current}
           />
