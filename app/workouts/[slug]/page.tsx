@@ -3,7 +3,7 @@
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
 import { Button } from "@/components/ui/button";
 import WorkoutExerciseCard from "./_components/workout-exercise-card";
-import { H1, P } from "@/components/typography";
+import { H1, H4, P } from "@/components/typography";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";

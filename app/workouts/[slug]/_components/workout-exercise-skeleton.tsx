@@ -23,7 +23,7 @@ export default function WorkoutExerciseSkeleton() {
         </P>
         <CardTitle className={cn("flex items-center gap-1")}>
           <LoadingSpinner className="h-5 w-5" />
-          <H3>Exercise Title</H3>
+          <span className={cn(typography("h3"), "block")}>Exercise Title</span>
           <div className="absolute top-3 right-3">
             <Button variant="ghost" size="icon" disabled>
               <TrashIcon className="h-4 w-4" />

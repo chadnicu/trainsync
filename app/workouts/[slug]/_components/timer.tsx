@@ -58,14 +58,14 @@ export default function Timer() {
   const { id, title, date, started, finished } = useContext(WorkoutContext);
   const [diff, setDiff] = useState(getTimePassed(started));
 
-  // this runs even when timer stopped
   useEffect(() => {
+    if (finished) return;
+
     const interval = setInterval(() => {
       setDiff(getTimePassed(started));
     }, 1000);
-
     return () => clearInterval(interval);
-  }, [started]);
+  }, [started, finished]);
 
   const { mutate: updateWorkout } = useUpdateDynamicWorkout();
 
