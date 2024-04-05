@@ -53,7 +53,7 @@ export default function Templates() {
 
   return (
     <section className="space-y-10">
-      <H1 className="text-center">Your templates</H1>
+      <H1 className="text-center">TEMPLATES</H1>
       {isError && <Error />}
       <ResponsiveFormDialog
         trigger={

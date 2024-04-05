@@ -49,7 +49,7 @@ export default function Exercises() {
 
   return (
     <section className="space-y-10">
-      <H1 className="text-center">Your exercises</H1>
+      <H1 className="text-center">EXERCISES</H1>
       {isError && <Error />}
       <ResponsiveFormDialog
         trigger={

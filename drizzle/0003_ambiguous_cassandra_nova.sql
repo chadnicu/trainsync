@@ -1,0 +1,1 @@
+ALTER TABLE exercise_template ADD `order` integer DEFAULT -1 NOT NULL;

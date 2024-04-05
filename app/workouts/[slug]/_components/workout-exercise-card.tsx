@@ -177,7 +177,7 @@ export default function WorkoutExerciseCard() {
                   className={buttonVariants({ variant: "ghost", size: "icon" })}
                   disabled={isOptimistic}
                 >
-                  <TrashIcon className="h-4 w-4" />
+                  <TrashIcon className="h-4 w-4 text-foreground" />
                 </AlertDialogTrigger>
               }
             />

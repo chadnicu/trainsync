@@ -95,9 +95,12 @@ export default function WorkoutCard() {
           ) : (
             <Link
               href={slugify(pathname, title, id)}
-              className={typography("a")}
+              className={cn(
+                typography("a"),
+                "hover:text-foreground break-words"
+              )}
             >
-              {title} <ExternalLinkIcon />
+              {title} <ExternalLinkIcon className="text-foreground" />
             </Link>
           )}
           {description && <DescriptionPopover />}

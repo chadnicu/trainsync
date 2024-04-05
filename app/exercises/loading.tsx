@@ -8,7 +8,7 @@ export default function LoadingExercises() {
 
   return (
     <section className="space-y-10">
-      <H1 className="text-center">Your exercises</H1>
+      <H1 className="text-center">EXERCISES</H1>
       <Skeleton className="block ml-auto sm:float-right h-[36px] w-[76px]" />
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
         <Skeletons />

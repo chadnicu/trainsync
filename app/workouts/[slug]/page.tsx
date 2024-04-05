@@ -64,7 +64,6 @@ export default function Workout({ params: { slug } }: Params) {
   const last = pathname.split("/")[2].split("-");
   const loadingName = last.toSpliced(last.length - 1).join(" ");
 
-  // why tf is this hydration error here
   if ((isFetching || isLoading) && !workout?.title) return <LoadingWorkout />;
 
   return (

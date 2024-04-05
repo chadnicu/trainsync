@@ -48,9 +48,12 @@ export default function ExerciseCard() {
           ) : (
             <Link
               href={slugify(pathname, title, id)}
-              className={typography("a")}
+              className={cn(
+                typography("a"),
+                "hover:text-foreground break-words max-w-sm"
+              )}
             >
-              {title} <ExternalLinkIcon />
+              {title} <ExternalLinkIcon className="text-foreground" />
             </Link>
           )}
         </CardTitle>

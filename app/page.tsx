@@ -24,7 +24,7 @@ export default function Home() {
         streamline your lifting journey.
       </P>
       <div className="flex gap-2 mt-6">
-        <Link href="/workouts" className={cn(buttonVariants(), "bg-gradient")}>
+        <Link href="/workouts" className={buttonVariants()}>
           Get started
         </Link>
         <Link href="/about" className={buttonVariants({ variant: "outline" })}>
@@ -45,7 +45,7 @@ export default function Home() {
             className="grid place-items-center hover:bg-foreground/5 duration-300"
           >
             <CardHeader>
-              <CardTitle className="text-xl tracking-tighter text-gradient">
+              <CardTitle className="text-xl tracking-tighter font-bold">
                 {title}
               </CardTitle>
               <CardDescription>{description}</CardDescription>
@@ -85,7 +85,7 @@ const gridContents = [
       "The need for tedious installations and saving valuable storage space on your device is gone.",
   },
   {
-    title: "User Friendly",
+    title: "Simplicity",
     description:
       "Although customizeable, TrainSync offers a user-friendly experience with its modern design and intuitive interface.",
     //  Say goodbye to complicated workout trackers and hello to simplicity and ease of use.
