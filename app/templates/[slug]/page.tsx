@@ -38,7 +38,7 @@ export default function Template({ params: { slug } }: Params) {
   };
 
   return (
-    <section className="sm:container text-center space-y-4 mt-[52.5px]">
+    <section className="sm:container text-center space-y-4">
       {isSuccess && (
         <>
           <H1 className="py-1">{template.title}</H1>
