@@ -2,19 +2,19 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/loading-spinner";
-import { WorkoutExercise } from "@/types";
-import { useUpdateWorkoutExerciseOrder } from "@/hooks/tanstack/workout-exercises";
+import { useUpdateTemplateExerciseOrder } from "@/hooks/tanstack/template-exercise";
+import { TemplateExercise } from "@/types";
 
-export default function EditWorkoutExercises({
+export default function EditTemplateExercises({
   exercises,
 }: {
-  exercises: WorkoutExercise[];
+  exercises: TemplateExercise[];
 }) {
   const [order, setOrder] = useState<number[]>([]);
   const getIndex = (arr: number[], id: number) =>
     arr.findIndex((e) => e === id);
   const { mutate: updateExerciseOrder, isPending } =
-    useUpdateWorkoutExerciseOrder();
+    useUpdateTemplateExerciseOrder();
 
   return (
     <>

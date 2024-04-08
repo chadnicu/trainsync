@@ -163,7 +163,7 @@ export default function WorkoutExerciseCard() {
           )}
         >
           {isOptimistic && <LoadingSpinner className="h-5 w-5" />}
-          <H3>{title}</H3>
+          <span className={cn(typography("h3"))}>{title}</span>
           <div className="absolute top-3 right-3">
             <DeleteDialog
               action={() => {

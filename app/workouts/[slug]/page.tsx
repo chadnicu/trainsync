@@ -3,7 +3,7 @@
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
 import { Button } from "@/components/ui/button";
 import WorkoutExerciseCard from "./_components/workout-exercise-card";
-import { H1, H4, P } from "@/components/typography";
+import { H1, P } from "@/components/typography";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ExercisesPagination from "./_components/exercises-pagination";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
@@ -33,7 +33,6 @@ type Params = {
 };
 
 export default function Workout({ params: { slug } }: Params) {
-  const workoutId = getIdFromSlug(slug);
   const { data: workout, isLoading, isFetching, isSuccess } = useWorkout();
   const {
     data: { inWorkout, other },
@@ -61,9 +60,6 @@ export default function Workout({ params: { slug } }: Params) {
   const dayJsDate = dayjs(workout?.date);
   const formattedDate = dayJsDate.format("DD-MM-YYYY");
 
-  const last = pathname.split("/")[2].split("-");
-  const loadingName = last.toSpliced(last.length - 1).join(" ");
-
   if ((isFetching || isLoading) && !workout?.title) return <LoadingWorkout />;
 
   return (
@@ -77,7 +73,7 @@ export default function Workout({ params: { slug } }: Params) {
       <section className="sm:container text-center space-y-4 mt-[52.5px]">
         {isSuccess && (
           <>
-            <H1>{workout.title}</H1>
+            <H1 className="py-1">{workout.title}</H1>
             {workout.description && (
               <P className="max-w-lg mx-auto">{workout.description}</P>
             )}
@@ -137,12 +133,6 @@ export default function Workout({ params: { slug } }: Params) {
                 </ResponsiveFormDialog>
               )}
             </WorkoutContext.Provider>
-          </>
-        )}
-        {!!((isFetching || isLoading) && !workout?.title) && (
-          <>
-            <H1>{loadingName}</H1>
-            <P className="max-w-lg mx-auto">Workout with id {workoutId}</P>
           </>
         )}
 

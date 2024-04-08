@@ -2,33 +2,33 @@ import { getIdFromSlug } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { createContext, useContext } from "react";
-import { CommentInput, Set, WorkoutExercise, WorkoutExercises } from "@/types";
-import {
-  addCommentToExercise,
-  addExerciseToWorkout,
-  getExercisesByWorkoutId,
-  removeExerciseFromWorkout,
-  swapWorkoutExercise,
-  updateWorkoutExerciseOrder,
-} from "@/server/workout-exercise";
+import { TemplateExercise, TemplateExercises, ToDoInput } from "@/types";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { queryKeys } from "@/hooks/tanstack";
+import {
+  addExerciseToTemplate,
+  addToDoToExercise,
+  getExercisesByTemplateId,
+  removeExerciseFromTemplate,
+  swapTemplateExercise,
+  updateTemplateExerciseOrder,
+} from "@/server/template-exercise";
 
-export function useWorkoutExercises() {
+export function useTemplateExercises() {
   const params = useParams<{ slug: string }>();
-  const workoutId = getIdFromSlug(params.slug);
+  const templateId = getIdFromSlug(params.slug);
   return useQuery({
-    queryKey: queryKeys.workoutExercises(workoutId),
-    queryFn: async () => getExercisesByWorkoutId(workoutId),
-    initialData: { inWorkout: [], other: [] },
+    queryKey: queryKeys.templateExercises(templateId),
+    queryFn: async () => getExercisesByTemplateId(templateId),
+    initialData: { inTemplate: [], other: [] },
   });
 }
 
-export function useAddExerciseToWorkout() {
+export function useAddExerciseToTemplate() {
   const params = useParams<{ slug: string }>();
-  const workoutId = getIdFromSlug(params.slug);
+  const templateId = getIdFromSlug(params.slug);
   const queryClient = useQueryClient();
-  const queryKey = queryKeys.workoutExercises(workoutId);
+  const queryKey = queryKeys.templateExercises(templateId);
   return useMutation({
     mutationFn: async ({
       exerciseId,
@@ -36,13 +36,13 @@ export function useAddExerciseToWorkout() {
     }: {
       exerciseId: number;
       order: number;
-    }) => await addExerciseToWorkout({ exerciseId, workoutId, order }),
+    }) => await addExerciseToTemplate({ exerciseId, templateId, order }),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => ({
-        inWorkout: [
-          ...old.inWorkout,
+      queryClient.setQueryData(queryKey, (old: TemplateExercises) => ({
+        inTemplate: [
+          ...old.inTemplate,
           old.other.find((e) => e.id === values.exerciseId),
         ],
         other: old.other.filter((e) => e.id !== values.exerciseId),
@@ -58,21 +58,21 @@ export function useAddExerciseToWorkout() {
   });
 }
 
-export function useRemoveExerciseFromWorkout() {
+export function useRemoveExerciseFromTemplate() {
   const queryClient = useQueryClient();
   const params = useParams<{ slug: string }>();
-  const workoutId = getIdFromSlug(params.slug);
-  const queryKey = queryKeys.workoutExercises(workoutId);
-  const { id } = useContext(WorkoutExerciseContext);
+  const templateId = getIdFromSlug(params.slug);
+  const queryKey = queryKeys.templateExercises(templateId);
+  const { id } = useContext(TemplateExerciseContext);
   return useMutation({
-    mutationFn: async () => await removeExerciseFromWorkout(id),
+    mutationFn: async () => await removeExerciseFromTemplate(id),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => {
+      queryClient.setQueryData(queryKey, (old: TemplateExercises) => {
         return {
-          inWorkout: old.inWorkout.filter((e) => e.id !== id),
-          other: [...old.other, old.inWorkout.find((e) => e.id === id)],
+          inTemplate: old.inTemplate.filter((e) => e.id !== id),
+          other: [...old.other, old.inTemplate.find((e) => e.id === id)],
         };
       });
       return { previous };
@@ -82,32 +82,32 @@ export function useRemoveExerciseFromWorkout() {
       console.log("Error optimistic ", newElement);
       console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey });
-    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 }
 
-export function useAddCommentToExercise() {
+export function useAddToDoToExercise() {
   const queryClient = useQueryClient();
-  const { id, workout_id: workoutId } = useContext(WorkoutExerciseContext);
-  const queryKey = queryKeys.workoutExercises(workoutId);
+  const { id, template_id: templateId } = useContext(TemplateExerciseContext);
+  const queryKey = queryKeys.templateExercises(templateId);
   return useMutation({
-    mutationFn: async (values: CommentInput) =>
-      await addCommentToExercise(values, id),
+    mutationFn: async (values: ToDoInput) =>
+      await addToDoToExercise(values, id),
     onMutate: async (values) => {
-      console.log(values);
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => {
-        return {
-          inWorkout: old.inWorkout.map((e) => ({
-            ...e,
-            comment: e.id === id ? values.comment : e.comment,
-          })),
-          other: old.other,
-        };
-      });
+      queryClient.setQueryData(
+        queryKey,
+        (old: TemplateExercises): TemplateExercises => {
+          return {
+            inTemplate: old.inTemplate.map((e) => ({
+              ...e,
+              toDo: e.id !== id ? e.toDo : values.toDo ?? null,
+            })),
+            other: old.other,
+          };
+        }
+      );
       return { previous };
     },
     onError: (err, newElement, context) => {
@@ -115,25 +115,20 @@ export function useAddCommentToExercise() {
       console.log("Error optimistic ", newElement);
       console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.workoutExercises(id),
-      });
-    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey }),
   });
 }
 
-export function useUpdateWorkoutExerciseOrder() {
+export function useUpdateTemplateExerciseOrder() {
   const queryClient = useQueryClient();
   const params = useParams<{ slug: string }>();
-  const workoutId = getIdFromSlug(params.slug);
-  const queryKey = queryKeys.workoutExercises(workoutId);
+  const templateId = getIdFromSlug(params.slug);
+  const queryKey = queryKeys.templateExercises(templateId);
   const setOpen = useContext(ToggleDialogFunction);
   return useMutation({
     mutationFn: async (arr: number[]) => {
       if (!arr.length) return;
-      await updateWorkoutExerciseOrder(arr);
+      await updateTemplateExerciseOrder(arr);
     },
     onError: (err, newElement, context) => {
       console.log("Error updating order. Context: ", context);
@@ -146,30 +141,33 @@ export function useUpdateWorkoutExerciseOrder() {
   });
 }
 
-export function useSwapExerciseInWorkout() {
+export function useSwapExerciseInTemplate() {
   const params = useParams<{ slug: string }>();
-  const workoutId = getIdFromSlug(params.slug);
+  const templateId = getIdFromSlug(params.slug);
   const queryClient = useQueryClient();
-  const queryKey = queryKeys.workoutExercises(workoutId);
+  const queryKey = queryKeys.templateExercises(templateId);
   return useMutation({
     mutationFn: async ({
-      workoutExerciseId,
+      templateExerciseId,
       exerciseId,
     }: {
-      workoutExerciseId: number;
+      templateExerciseId: number;
       exerciseId: number;
-    }) => await swapWorkoutExercise(workoutExerciseId, exerciseId),
+    }) => await swapTemplateExercise(templateExerciseId, exerciseId),
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, (old: WorkoutExercises) => {
-        return {
-          inWorkout: old.inWorkout.map((e) =>
-            e.id === values.workoutExerciseId ? { ...e, id: 0 } : e
-          ),
-          other: old.other.filter((e) => e.id === values.exerciseId),
-        };
-      });
+      queryClient.setQueryData(
+        queryKey,
+        (old: TemplateExercises): TemplateExercises => {
+          return {
+            inTemplate: old.inTemplate.map((e) =>
+              e.id === values.templateExerciseId ? { ...e, id: 0 } : e
+            ),
+            other: old.other.filter((e) => e.id === values.exerciseId),
+          };
+        }
+      );
       return { previous };
     },
     onError: (err, newElement, context) => {
@@ -182,15 +180,13 @@ export function useSwapExerciseInWorkout() {
   });
 }
 
-export const WorkoutExerciseContext = createContext<WorkoutExercise>({
+export const TemplateExerciseContext = createContext<TemplateExercise>({
   id: 0,
   title: "Loading..",
-  instructions: "Exercise card..",
+  instructions: "Template card..",
   url: "",
-  todo: "",
-  comment: "",
+  toDo: "",
   exerciseId: 0,
-  workout_id: 0,
-  // sets: [{ reps: 69, weight: 69, id: 0, workoutExerciseId: 0 }],
+  template_id: 0,
   order: -1,
 });

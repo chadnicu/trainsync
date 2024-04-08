@@ -78,7 +78,7 @@ export default function ExercisesPagination({
             href={disabled ? pathname : pathname + "?exercise=" + next}
             className={cn({
               "opacity-75 hover:bg-transparent pointer-events-none":
-                !!(prev === current) || disabled,
+                !!(next === current) || disabled,
             })}
             aria-disabled={next === current}
           />

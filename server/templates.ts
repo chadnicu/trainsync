@@ -5,6 +5,7 @@ import { db } from "@/lib/turso";
 import { TemplateInput } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
 
 export async function getTemplates() {
   const { userId } = auth();
@@ -46,4 +47,17 @@ export async function deleteTemplate(templateId: number) {
   await db
     .delete(template)
     .where(and(eq(template.id, templateId), eq(template.userId, userId)));
+}
+
+export async function getTemplateById(templateId: number) {
+  const { userId } = auth();
+  if (!userId) notFound();
+
+  return (
+    await db
+      .select()
+      .from(template)
+      .where(and(eq(template.id, templateId), eq(template.userId, userId)))
+      .limit(1)
+  )[0];
 }

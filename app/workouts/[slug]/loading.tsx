@@ -10,7 +10,7 @@ import WorkoutExerciseSkeleton from "./_components/workout-exercise-skeleton";
 export default function LoadingWorkout() {
   const pathname = usePathname();
   const last = pathname.split("/")[2].split("-");
-  const name = last.toSpliced(last.length - 1).join(" ");
+  const name = last.toSpliced(last.length - 1).join(" ").toUpperCase();
 
   return (
     <>

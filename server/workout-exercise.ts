@@ -17,7 +17,7 @@ export async function getExercisesByWorkoutId(workoutId: number) {
     exerciseId,
     workoutId: workout_id,
     comment,
-    todo,
+    toDo: todo,
     order,
   } = workout_exercise;
 
@@ -65,15 +65,10 @@ export async function addExerciseToWorkout(values: {
   const { userId } = auth();
   if (!userId) return;
 
-  const debug = await db
-    .insert(workout_exercise)
-    .values(values)
-    .returning()
-    .get();
-  console.log(debug);
+  await db.insert(workout_exercise).values(values).returning().get();
 }
 
-export async function updateExerciseOrder(arr: number[]) {
+export async function updateWorkoutExerciseOrder(arr: number[]) {
   const { userId } = auth();
   if (!userId) return;
 
@@ -113,7 +108,7 @@ export async function addCommentToExercise(
     .where(eq(workout_exercise.id, workoutExerciseId));
 }
 
-export async function swapExercise(
+export async function swapWorkoutExercise(
   workoutExerciseId: number,
   exerciseId: number
 ) {

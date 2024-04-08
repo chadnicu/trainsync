@@ -13,7 +13,7 @@ export const queryKeys = {
 
   templates: [templates],
   template: (templateId: number) => [templates, { templateId }],
-  templateExercises: (templateId: number) => [templates, { templateId }],
+  templateExercises: (templateId: number) => [exercises, { templateId }],
 
   sets: [sets],
 };

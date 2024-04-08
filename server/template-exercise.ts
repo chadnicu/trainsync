@@ -1,11 +1,11 @@
 "use server";
 
 import { auth } from "@clerk/nextjs";
-import { exercise, sets, template_exercise } from "@/lib/schema";
+import { exercise, template_exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { and, eq, getOrderByOperators, notInArray } from "drizzle-orm";
-import { CommentInput } from "@/types";
+import { and, eq, notInArray } from "drizzle-orm";
 import { notFound } from "next/navigation";
+import { ToDoInput } from "@/types";
 
 export async function getExercisesByTemplateId(templateId: number) {
   const { userId } = auth();
@@ -14,7 +14,7 @@ export async function getExercisesByTemplateId(templateId: number) {
   const { title, instructions, url } = exercise;
   const {
     id,
-    todo,
+    toDo,
     exerciseId,
     templateId: template_id,
     order,
@@ -26,7 +26,7 @@ export async function getExercisesByTemplateId(templateId: number) {
       title,
       instructions,
       url,
-      todo,
+      toDo,
       exerciseId,
       template_id,
       order,
@@ -53,73 +53,65 @@ export async function getExercisesByTemplateId(templateId: number) {
   return { inTemplate, other };
 }
 
-// export async function addExerciseToTemplate(values: {
-//   exerciseId: number;
-//   workoutId: number;
-//   comment?: string;
-//   todo?: string;
-//   order?: number;
-// }) {
-//   const { userId } = auth();
-//   if (!userId) return;
+export async function addExerciseToTemplate(values: {
+  exerciseId: number;
+  templateId: number;
+  toDo?: string;
+  order?: number;
+}) {
+  const { userId } = auth();
+  if (!userId) return;
 
-//   const debug = await db
-//     .insert(workout_exercise)
-//     .values(values)
-//     .returning()
-//     .get();
-//   console.log(debug);
-// }
+  await db.insert(template_exercise).values(values).returning().get();
+}
 
-// export async function updateExerciseOrder(arr: number[]) {
-//   const { userId } = auth();
-//   if (!userId) return;
+export async function updateTemplateExerciseOrder(arr: number[]) {
+  const { userId } = auth();
+  if (!userId) return;
 
-//   const promises = arr.map((e, i) =>
-//     db
-//       .update(workout_exercise)
-//       .set({ order: i + 1 })
-//       .where(eq(workout_exercise.id, e))
-//       .returning()
-//       .get()
-//   );
+  const promises = arr.map((e, i) =>
+    db
+      .update(template_exercise)
+      .set({ order: i + 1 })
+      .where(eq(template_exercise.id, e))
+      .returning()
+      .get()
+  );
 
-//   await Promise.all(promises);
-// }
+  await Promise.all(promises);
+}
 
-// export async function removeExerciseFromWorkout(workoutExerciseId: number) {
-//   const { userId } = auth();
-//   if (!userId) return;
+export async function removeExerciseFromTemplate(templateExerciseId: number) {
+  const { userId } = auth();
+  if (!userId) return;
 
-//   await db.delete(sets).where(eq(sets.workoutExerciseId, workoutExerciseId));
+  await db
+    .delete(template_exercise)
+    .where(eq(template_exercise.id, templateExerciseId));
+}
 
-//   await db
-//     .delete(workout_exercise)
-//     .where(eq(workout_exercise.id, workoutExerciseId));
-// }
+export async function addToDoToExercise(
+  values: ToDoInput,
+  templateExerciseId: number
+) {
+  const { userId } = auth();
+  if (!userId) notFound();
 
-// export async function addCommentToExercise(
-//   values: CommentInput,
-//   workoutExerciseId: number
-// ) {
-//   const { userId } = auth();
-//   if (!userId) notFound();
+  return await db
+    .update(template_exercise)
+    .set({ toDo: values.toDo })
+    .where(eq(template_exercise.id, templateExerciseId));
+}
 
-//   return await db
-//     .update(workout_exercise)
-//     .set({ comment: values.comment })
-//     .where(eq(workout_exercise.id, workoutExerciseId));
-// }
+export async function swapTemplateExercise(
+  templateExerciseId: number,
+  exerciseId: number
+) {
+  const { userId } = auth();
+  if (!userId) notFound();
 
-// export async function swapExercise(
-//   workoutExerciseId: number,
-//   exerciseId: number
-// ) {
-//   const { userId } = auth();
-//   if (!userId) notFound();
-
-//   return await db
-//     .update(workout_exercise)
-//     .set({ exerciseId })
-//     .where(eq(workout_exercise.id, workoutExerciseId));
-// }
+  return await db
+    .update(template_exercise)
+    .set({ exerciseId })
+    .where(eq(template_exercise.id, templateExerciseId));
+}

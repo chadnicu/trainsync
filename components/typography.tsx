@@ -126,7 +126,7 @@ const variants = {
   "inline-code":
     "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold",
   blockquote: "mt-6 border-l-2 pl-6 italic",
-  a: "hover:underline underline-offset-2 focus:underline active:brightness-75 duration-200 flex items-center justify-start gap-1",
+  a: "hover:underline underline-offset-2 focus:underline active:brightness-75 duration-200 flex items-center justify-start gap-1 text-gradient",
 };
 
 export const typography = (element: keyof typeof variants) => variants[element];
