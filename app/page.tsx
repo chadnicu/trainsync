@@ -31,8 +31,8 @@ export default function Home() {
           Learn more
         </Link>
       </div>
-      <div className="flex flex-col text-center sm:flex-row items-end gap-2 justify-center mt-20 mb-6 px-2">
-        <H3>What&apos;s in TrainSync?</H3>
+      <div className="flex flex-col text-center sm:flex-row sm:items-end sm:gap-2 justify-center mt-20 mb-6 px-2">
+        <H3 className="-mb-4 sm:mb-0">What&apos;s in TrainSync?</H3>
         <P className="text-muted-foreground">
           Everything you need to flawlessy track your lifts in the gym.
         </P>
