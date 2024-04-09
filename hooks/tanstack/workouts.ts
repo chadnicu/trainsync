@@ -5,12 +5,20 @@ import {
   updateWorkout,
   getWorkouts,
   getWorkoutById,
+  createWorkoutFromTemplate,
 } from "@/server/workouts";
-import { AddWorkoutInput, EditWorkoutInput, Workout } from "@/types";
+import {
+  AddWorkoutInput,
+  EditWorkoutInput,
+  TemplateToWorkoutInput,
+  Workout,
+} from "@/types";
 import { getIdFromSlug, mapUndefinedKeysToNull } from "@/lib/utils";
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import { queryKeys } from "@/hooks/tanstack";
 import { useParams } from "next/navigation";
+import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
+import { useTemplate, useTemplates } from "./templates";
 
 const queryKey = queryKeys.workouts;
 
@@ -40,6 +48,43 @@ export function useCreateWorkout() {
       console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey }),
+  });
+}
+
+export function useCreateWorkoutFromTemplate() {
+  const queryClient = useQueryClient();
+  const setOpen = useContext(ToggleDialogFunction);
+  const { data: templates } = useTemplates();
+  return useMutation({
+    mutationFn: async (values: TemplateToWorkoutInput) =>
+      await createWorkoutFromTemplate(values),
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData(queryKey);
+      const optimisticTemplate = templates.find(
+        (e) => e.id === values.templateId
+      );
+      if (!optimisticTemplate) return { previous };
+      queryClient.setQueryData(queryKey, (old: Workout[]) => [
+        {
+          title: optimisticTemplate.title,
+          description: optimisticTemplate.description,
+          date: values.date.toDateString(),
+          id: 0,
+        },
+        ...old,
+      ]);
+      return { previous };
+    },
+    onError: (err, newElement, context) => {
+      queryClient.setQueryData(queryKey, context?.previous);
+      console.log("Error creating workout from template. ", newElement);
+      console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+      setOpen(false);
+    },
   });
 }
 

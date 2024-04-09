@@ -11,12 +11,17 @@ import {
   useWorkouts,
   WorkoutContext,
   useCreateWorkout,
+  useCreateWorkoutFromTemplate,
 } from "@/hooks/tanstack/workouts";
 import { queryKeys } from "@/hooks/tanstack";
+import ImportFromTemplateForm from "./_components/import-template-form";
+import LoadingWorkouts from "./loading";
 
 export default function Workouts() {
   const { data, isLoading, isFetching, isSuccess, isError } = useWorkouts();
   const { mutate: createWorkout, isPending } = useCreateWorkout();
+  const { mutate: createFromTemplate, isPending: fromTemplatePending } =
+    useCreateWorkoutFromTemplate();
 
   const queryClient = useQueryClient();
   const Error = () => (
@@ -47,19 +52,30 @@ export default function Workouts() {
     <section className="space-y-10">
       <H1 className="text-center">WORKOUTS</H1>
       {isError && <Error />}
-      <ResponsiveFormDialog
-        trigger={
-          <Button className="block ml-auto sm:float-right">Create</Button>
-        }
-        title="Create workout"
-        description="Description field isn't mandatory."
-      >
-        <CreateWorkoutForm
-          mutate={createWorkout}
-          isSubmitting={isPending}
-          submitButtonText="Create"
-        />
-      </ResponsiveFormDialog>
+      <div className="flex justify-center gap-2">
+        <ResponsiveFormDialog
+          trigger={<Button>Create new</Button>}
+          title="Create workout"
+          description="Description field isn't mandatory."
+        >
+          <CreateWorkoutForm
+            mutate={createWorkout}
+            isSubmitting={isPending}
+            submitButtonText="Create"
+          />
+        </ResponsiveFormDialog>
+        <ResponsiveFormDialog
+          trigger={<Button>Import from template</Button>}
+          title="Import from template"
+          description="Copies title, description and exercises from a chosen template."
+        >
+          <ImportFromTemplateForm
+            mutate={createFromTemplate}
+            isSubmitting={fromTemplatePending}
+            submitButtonText="Import"
+          />
+        </ResponsiveFormDialog>
+      </div>
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
         {(isFetching || isLoading) && !data.length && <Skeletons />}
         {isSuccess && <Workouts />}

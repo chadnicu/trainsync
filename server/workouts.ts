@@ -1,8 +1,17 @@
 "use server";
 
-import { workout } from "@/lib/schema";
+import {
+  template,
+  template_exercise,
+  workout,
+  workout_exercise,
+} from "@/lib/schema";
 import { db } from "@/lib/turso";
-import { AddWorkoutInput, EditWorkoutInput } from "@/types";
+import {
+  AddWorkoutInput,
+  EditWorkoutInput,
+  TemplateToWorkoutInput,
+} from "@/types";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
@@ -27,6 +36,55 @@ export async function createWorkout(values: AddWorkoutInput) {
   await db
     .insert(workout)
     .values({ ...values, date: values.date.toString(), userId });
+}
+
+export async function createWorkoutFromTemplate(
+  values: TemplateToWorkoutInput
+) {
+  const { userId } = auth();
+  if (!userId) return;
+
+  console.log("dbiil");
+
+  const { title, description } = (await db
+    .select()
+    .from(template)
+    .where(eq(template.id, values.templateId))
+    .limit(1)
+    .get())!;
+
+  const { id: workoutId } = await db
+    .insert(workout)
+    .values({
+      title,
+      description,
+      userId,
+      date: values.date.toString(),
+    })
+    .returning()
+    .get();
+
+  await db
+    .select()
+    .from(template_exercise)
+    .where(eq(template_exercise.templateId, values.templateId))
+    .all()
+    .then(async (data) => {
+      for (let i = 0; i < data.length; ) {
+        await db
+          .insert(workout_exercise)
+          .values({
+            workoutId,
+            exerciseId: data[i].exerciseId,
+            toDo: data[i]?.toDo,
+            order: i + 1,
+          })
+          .returning()
+          .get()
+          .then(() => i++);
+      }
+    });
+  console.log("dbiil");
 }
 
 export async function updateWorkout(

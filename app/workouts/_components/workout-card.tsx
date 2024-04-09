@@ -75,7 +75,7 @@ export default function WorkoutCard() {
 
   const DescriptionPopover = () => (
     <Popover>
-      <PopoverTrigger className="absolute top-6 right-6 gap-1 flex justify-center items-center rounded-md">
+      <PopoverTrigger className="absolute top-6 right-6 gap-1 flex justify-center items-center rounded-md text-foreground">
         <ChevronDownIcon className="hover:scale-125 hover:bg-secondary duration-300 rounded-full" />
       </PopoverTrigger>
       <PopoverContent className="mr-4">{description}</PopoverContent>
@@ -103,7 +103,7 @@ export default function WorkoutCard() {
               {title} <ExternalLinkIcon className="text-foreground" />
             </Link>
           )}
-          {description && <DescriptionPopover />}
+          {!!(description && !isOptimistic) && <DescriptionPopover />}
         </CardTitle>
         <CardDescription>
           {formattedDate}

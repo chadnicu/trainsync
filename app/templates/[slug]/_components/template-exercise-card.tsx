@@ -1,13 +1,7 @@
 import DeleteDialog from "@/components/delete-dialog";
 import LoadingSpinner from "@/components/loading-spinner";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
-import {
-  Blockquote,
-  H4,
-  InlineCode,
-  P,
-  typography,
-} from "@/components/typography";
+import { Blockquote, typography } from "@/components/typography";
 import { AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,17 +12,19 @@ import {
   useSwapExerciseInTemplate,
   useTemplateExercises,
 } from "@/hooks/tanstack/template-exercise";
-import { cn } from "@/lib/utils";
+import { cn, getYouTubeEmbedURL } from "@/lib/utils";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useContext } from "react";
 import ToDoForm from "./todo-form";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
-import { useTemplate } from "@/hooks/tanstack/templates";
+import LazyYoutube from "@/components/lazy-youtube";
 
 export default function TemplateExerciseCard() {
-  const { id, title, toDo } = useContext(TemplateExerciseContext);
+  const { id, title, instructions, url, toDo, index } = useContext(
+    TemplateExerciseContext
+  );
   const {
-    data: { inTemplate, other },
+    data: { other },
   } = useTemplateExercises();
 
   const { mutate: removeExercise } = useRemoveExerciseFromTemplate();
@@ -36,6 +32,8 @@ export default function TemplateExerciseCard() {
   const { mutate: swapExercise } = useSwapExerciseInTemplate();
 
   const isOptimistic = id === 0;
+
+  const embedUrl = getYouTubeEmbedURL(url);
 
   return (
     <Card
@@ -51,7 +49,12 @@ export default function TemplateExerciseCard() {
           )}
         >
           {isOptimistic && <LoadingSpinner className="h-5 w-5" />}
-          <span className={cn(typography("h3"))}>{title}</span>
+          <span className={cn(typography("h3"), "flex items-center ")}>
+            <span className="text-muted-foreground font-semibold mr-1">
+              {index}.
+            </span>
+            {title}
+          </span>
           <DeleteDialog
             action={removeExercise}
             customTrigger={
@@ -71,6 +74,21 @@ export default function TemplateExerciseCard() {
       <CardContent className="grid gap-7">
         <Blockquote className="m-0 text-muted-foreground">{toDo}</Blockquote>
         <div className="space-x-3">
+          <ResponsiveFormDialog
+            trigger={
+              <Button variant={"outline"} disabled={isOptimistic}>
+                {toDo ? "Edit" : "Add to-do"}
+              </Button>
+            }
+            title={`Add to-do`}
+            description={`Add to-do for ${title} in this template`}
+          >
+            <ToDoForm
+              mutate={addToDo}
+              submitButtonText="Add"
+              isSubmitting={toDoPending}
+            />
+          </ResponsiveFormDialog>
           <ResponsiveComboBox
             trigger={
               <Button variant="outline" disabled={isOptimistic}>
@@ -88,18 +106,26 @@ export default function TemplateExerciseCard() {
           />
           <ResponsiveFormDialog
             trigger={
-              <Button variant={"outline"} disabled={isOptimistic}>
-                {toDo ? "Edit" : "Add"} to-do
+              <Button variant={"outline"} className="float-right">
+                See more
               </Button>
             }
-            title={`Add to-do`}
-            description={`Add to-do for ${title} in this template`}
+            title={`${title} Demo Video`}
+            description={instructions}
           >
-            <ToDoForm
-              mutate={addToDo}
-              submitButtonText="Add"
-              isSubmitting={toDoPending}
-            />
+            {embedUrl && (
+              <LazyYoutube>
+                <iframe
+                  src={embedUrl}
+                  width="290"
+                  height="162.9"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="rounded-md mb-14 sm:mb-0 sm:w-[380px] sm:h-[213px] mx-auto"
+                />
+              </LazyYoutube>
+            )}
           </ResponsiveFormDialog>
         </div>
       </CardContent>

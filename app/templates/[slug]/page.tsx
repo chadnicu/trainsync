@@ -29,13 +29,15 @@ export default function Template({ params: { slug } }: Params) {
 
   if ((isFetching || isLoading) && !template?.title) return <LoadingTemplate />;
 
-  const TemplateExercises = () => {
-    return inTemplate.map((e) => (
-      <TemplateExerciseContext.Provider key={e.id} value={e}>
+  const TemplateExercises = () =>
+    inTemplate.map((e, i) => (
+      <TemplateExerciseContext.Provider
+        key={e.id}
+        value={{ ...e, index: i + 1 }}
+      >
         <TemplateExerciseCard />
       </TemplateExerciseContext.Provider>
     ));
-  };
 
   return (
     <section className="sm:container text-center space-y-4">

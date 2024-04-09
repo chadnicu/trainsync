@@ -9,7 +9,10 @@ export default function LoadingWorkouts() {
   return (
     <section className="space-y-10">
       <H1 className="text-center">WORKOUTS</H1>
-      <Skeleton className="block ml-auto sm:float-right h-[36px] w-[76px]" />
+      <div className="flex justify-center gap-2">
+        <Skeleton className="h-[36px] w-[107px]" />
+        <Skeleton className="h-[36px] w-[173px]" />
+      </div>
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
         <Skeletons />
       </div>

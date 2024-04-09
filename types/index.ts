@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { exerciseSchema } from "@/lib/validators/exercise";
 import { getExercises } from "@/server/exercises";
-import { addWorkoutSchema, editWorkoutSchema } from "@/lib/validators/workout";
+import {
+  addWorkoutSchema,
+  editWorkoutSchema,
+  templateToWorkoutSchema,
+} from "@/lib/validators/workout";
 import { getWorkouts } from "@/server/workouts";
 import { setSchema } from "@/lib/validators/set";
 import { exerciseCommentSchema } from "@/lib/validators/workout-exercise";
@@ -37,3 +41,5 @@ export type TemplateExercises = Awaited<
   ReturnType<typeof getExercisesByTemplateId>
 >;
 export type TemplateExercise = TemplateExercises["inTemplate"][0];
+
+export type TemplateToWorkoutInput = z.infer<typeof templateToWorkoutSchema>;

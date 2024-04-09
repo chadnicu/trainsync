@@ -29,3 +29,12 @@ export const editWorkoutSchema = z.object({
   comment: z.string().min(0).max(255).optional(),
   clearTime: z.boolean().default(false).optional(),
 });
+
+export const templateToWorkoutSchema = z.object({
+  date: z.date({
+    required_error: "Date of workout is required.",
+  }),
+  templateId: z.coerce
+    .number()
+    .positive({ message: "Please select a template." }),
+});

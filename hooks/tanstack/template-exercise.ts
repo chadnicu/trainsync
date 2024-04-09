@@ -180,7 +180,9 @@ export function useSwapExerciseInTemplate() {
   });
 }
 
-export const TemplateExerciseContext = createContext<TemplateExercise>({
+export const TemplateExerciseContext = createContext<
+  TemplateExercise & { index: number }
+>({
   id: 0,
   title: "Loading..",
   instructions: "Template card..",
@@ -189,4 +191,5 @@ export const TemplateExerciseContext = createContext<TemplateExercise>({
   exerciseId: 0,
   template_id: 0,
   order: -1,
+  index: 0,
 });
