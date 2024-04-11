@@ -1,3 +1,5 @@
+"use client";
+
 import DeleteDialog from "@/components/delete-dialog";
 import LoadingSpinner from "@/components/loading-spinner";
 import ResponsiveFormDialog from "@/components/responsive-form-dialog";
@@ -18,14 +20,12 @@ import { useContext } from "react";
 import ToDoForm from "./todo-form";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
 import LazyYoutube from "@/components/lazy-youtube";
+import { TemplateExercise } from "@/types";
 
 export default function TemplateExerciseCard() {
-  const { id, title, instructions, url, toDo, index } = useContext(
+  const { id, title, instructions, url, toDo, index, other } = useContext(
     TemplateExerciseContext
   );
-  const {
-    data: { other },
-  } = useTemplateExercises();
 
   const { mutate: removeExercise } = useRemoveExerciseFromTemplate();
   const { mutate: addToDo, isPending: toDoPending } = useAddToDoToExercise();
@@ -73,7 +73,7 @@ export default function TemplateExerciseCard() {
       </CardHeader>
       <CardContent className="grid gap-7">
         <Blockquote className="m-0 text-muted-foreground">{toDo}</Blockquote>
-        <div className="space-x-3">
+        <div className="space-x-[5px] sm:space-x-3">
           <ResponsiveFormDialog
             trigger={
               <Button variant={"outline"} disabled={isOptimistic}>

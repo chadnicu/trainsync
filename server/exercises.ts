@@ -1,10 +1,16 @@
 "use server";
 
-import { exercise } from "@/lib/schema";
+import {
+  exercise,
+  sets,
+  template_exercise,
+  workout,
+  workout_exercise,
+} from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { ExerciseInput } from "@/types";
 import { auth } from "@clerk/nextjs";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 export async function getExercises() {
@@ -43,6 +49,32 @@ export async function updateExercise(
 export async function deleteExercise(exerciseId: number) {
   const { userId } = auth();
   if (!userId) return;
+
+  const { id: setId } = sets;
+
+  const setIdsToDelete = await db
+    .select({ setId })
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .where(
+      and(eq(workout_exercise.exerciseId, exerciseId), eq(sets.userId, userId))
+    )
+    .all()
+    .then((data) => data.map(({ setId }) => setId));
+
+  await db.delete(sets).where(inArray(sets.id, setIdsToDelete));
+
+  await Promise.all([
+    db
+      .delete(workout_exercise)
+      .where(eq(workout_exercise.exerciseId, exerciseId)),
+    db
+      .delete(template_exercise)
+      .where(eq(template_exercise.exerciseId, exerciseId)),
+  ]);
 
   await db
     .delete(exercise)

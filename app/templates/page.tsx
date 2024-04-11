@@ -13,7 +13,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import TemplateCard from "./_components/template-card";
 import TemplateForm from "./_components/template-form";
 import TemplateSkeleton from "./_components/template-skeleton";
-import LoadingTemplates from "./loading";
 
 export default function Templates() {
   const {

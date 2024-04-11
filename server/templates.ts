@@ -1,6 +1,6 @@
 "use server";
 
-import { template } from "@/lib/schema";
+import { template, template_exercise } from "@/lib/schema";
 import { db } from "@/lib/turso";
 import { TemplateInput } from "@/types";
 import { auth } from "@clerk/nextjs";
@@ -43,6 +43,11 @@ export async function updateTemplate(
 export async function deleteTemplate(templateId: number) {
   const { userId } = auth();
   if (!userId) return;
+
+  await db
+    .delete(template_exercise)
+    .where(eq(template_exercise.templateId, templateId));
+  // nu merge innerJoin la delete sa verific userId
 
   await db
     .delete(template)

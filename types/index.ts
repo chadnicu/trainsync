@@ -41,5 +41,6 @@ export type TemplateExercises = Awaited<
   ReturnType<typeof getExercisesByTemplateId>
 >;
 export type TemplateExercise = TemplateExercises["inTemplate"][0];
+export type TemplateOtherExercises = TemplateExercises["other"];
 
 export type TemplateToWorkoutInput = z.infer<typeof templateToWorkoutSchema>;

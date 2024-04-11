@@ -33,7 +33,12 @@ export default function Template({ params: { slug } }: Params) {
     inTemplate.map((e, i) => (
       <TemplateExerciseContext.Provider
         key={e.id}
-        value={{ ...e, index: i + 1 }}
+        value={{
+          ...e,
+          index: i + 1,
+          // have to pass other down cuz if i access by hook the component keeps refreshing
+          other,
+        }}
       >
         <TemplateExerciseCard />
       </TemplateExerciseContext.Provider>

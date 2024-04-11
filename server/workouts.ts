@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  sets,
   template,
   template_exercise,
   workout,
@@ -13,7 +14,7 @@ import {
   TemplateToWorkoutInput,
 } from "@/types";
 import { auth } from "@clerk/nextjs";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 export async function getWorkouts() {
@@ -108,6 +109,27 @@ export async function updateWorkout(
 export async function deleteWorkout(workoutId: number) {
   const { userId } = auth();
   if (!userId) return;
+
+  const { id: setId } = sets;
+
+  const setIdsToDelete = await db
+    .select({ setId })
+    .from(sets)
+    .innerJoin(
+      workout_exercise,
+      eq(workout_exercise.id, sets.workoutExerciseId)
+    )
+    .where(
+      and(eq(workout_exercise.workoutId, workoutId), eq(sets.userId, userId))
+    )
+    .all()
+    .then((data) => data.map(({ setId }) => setId));
+
+  await db.delete(sets).where(inArray(sets.id, setIdsToDelete));
+
+  await db
+    .delete(workout_exercise)
+    .where(eq(workout_exercise.workoutId, workoutId));
 
   await db
     .delete(workout)

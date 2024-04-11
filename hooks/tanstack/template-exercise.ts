@@ -2,7 +2,12 @@ import { getIdFromSlug } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { createContext, useContext } from "react";
-import { TemplateExercise, TemplateExercises, ToDoInput } from "@/types";
+import {
+  TemplateExercise,
+  TemplateExercises,
+  TemplateOtherExercises,
+  ToDoInput,
+} from "@/types";
 import { ToggleDialogFunction } from "@/components/responsive-form-dialog";
 import { queryKeys } from "@/hooks/tanstack";
 import {
@@ -181,7 +186,7 @@ export function useSwapExerciseInTemplate() {
 }
 
 export const TemplateExerciseContext = createContext<
-  TemplateExercise & { index: number }
+  TemplateExercise & { index: number; other: TemplateOtherExercises }
 >({
   id: 0,
   title: "Loading..",
@@ -192,4 +197,5 @@ export const TemplateExerciseContext = createContext<
   template_id: 0,
   order: -1,
   index: 0,
+  other: [],
 });
