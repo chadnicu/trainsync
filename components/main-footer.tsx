@@ -2,6 +2,7 @@ import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { P } from "@/components/typography";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function MainFooter() {
   const className = cn(
@@ -12,7 +13,7 @@ export default function MainFooter() {
   return (
     <footer className="py-2 px-4 text-sm sm:text-center border-t">
       <P className="-space-y">
-        Made by
+        Made with ❤️ by
         <Link
           href="https://x.com/chadnicu"
           className={className}

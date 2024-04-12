@@ -19,7 +19,7 @@ export function H2({ className, children, ...props }: ComponentProps<"h2">) {
   return (
     <h2
       className={cn(
-        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tighter first:mt-0",
+        "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tighter first:mt-0 text-gradient",
         className
       )}
       {...props}
@@ -119,7 +119,7 @@ export function A({ className, children, ...props }: ComponentProps<"a">) {
 // might find a fix in the future
 const variants = {
   h1: "scroll-m-20 text-5xl font-extrabold tracking-tighter lg:text-6xl text-gradient",
-  h2: "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tighter first:mt-0",
+  h2: "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tighter first:mt-0 text-gradient",
   h3: "scroll-m-20 text-2xl font-bold tracking-tighter text-gradient",
   h4: "scroll-m-20 text-xl font-semibold tracking-tighter",
   p: "leading-7 [&:not(:first-child)]:mt-6",
