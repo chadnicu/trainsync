@@ -1,13 +1,17 @@
 import { H1 } from "@/components/typography";
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "TrainSync • FAQ",
+  description: "FAQ page of the free web-based workout tracker",
+};
 
 export const dynamic = "force-static";
 

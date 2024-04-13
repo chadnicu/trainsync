@@ -15,7 +15,7 @@ import {
 } from "@/hooks/tanstack/workouts";
 import { queryKeys } from "@/hooks/tanstack";
 import ImportFromTemplateForm from "./_components/import-template-form";
-import LoadingWorkouts from "./loading";
+import { Metadata } from "next";
 
 export default function Workouts() {
   const { data, isLoading, isFetching, isSuccess, isError } = useWorkouts();

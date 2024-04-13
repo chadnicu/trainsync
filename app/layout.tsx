@@ -10,8 +10,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Change this later",
-  description: "This too",
+  title: "TrainSync",
+  description: "Homepage of the free web-based workout tracker",
+  // fill this up
+  openGraph: {
+    type: "website",
+  },
 };
 
 export default function RootLayout({

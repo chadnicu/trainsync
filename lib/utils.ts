@@ -92,3 +92,9 @@ export function groupSetsByDate(sets: Set[]): Record<string, Set[]> {
 
   return groupedSets;
 }
+
+export function capitalizeWords(str: string) {
+  return str.replace(/(?:^|\s)\S/g, function (a) {
+    return a.toUpperCase();
+  });
+}
