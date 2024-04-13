@@ -9,11 +9,11 @@ type Props = {
 export function generateMetadata({ params }: Props): Metadata {
   const slug = params.slug.split("-");
   const name = capitalizeWords(slug.toSpliced(slug.length - 1).join(" "));
-  const id = getIdFromSlug(params.slug);
+  // const id = getIdFromSlug(params.slug);
 
   return {
     title: `${name}`,
-    description: `Exercise page of ${name} with id ${id}`,
+    description: `Exercise page of ${name} with id ${1}`,
   };
 }
 
