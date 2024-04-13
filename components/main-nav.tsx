@@ -3,8 +3,7 @@
 import { ThemeToggler } from "@/components/theme-toggler";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import MobileNavMenu from "./mobile-nav-menu";
 import ClerkUserButton from "./clerk-user-button";
@@ -14,12 +13,23 @@ const paths = [
   { title: "Exercises", href: "/exercises" },
   { title: "Workouts", href: "/workouts" },
   { title: "Templates", href: "/templates" },
-  { title: "About", href: "/about" },
+  { title: "FAQ", href: "/faq" },
 ];
 
 export default function MainNavbar() {
   const AppLinks = () => (
-    <ul className="grid text-xl sm:text-base sm:flex">
+    <ul className="grid text-xl sm:text-base sm:flex sm:items-center">
+      {/* might want logo instead of "home" on desktop */}
+      {/* <li>
+        <Link
+          href={"/"}
+          className={cn(
+            "text-gradient font-bold tracking-tighter text-xl pl-2 pr-1"
+          )}
+        >
+          TrainSync
+        </Link>
+      </li> */}
       {paths.map(({ title, href }, i) => (
         <li key={i}>
           <Link
@@ -61,7 +71,6 @@ export default function MainNavbar() {
         </MobileNavMenu>
       </div>
       <div className="flex">
-        {/* <Socials /> */}
         <ThemeToggler />
         <AuthButton />
       </div>

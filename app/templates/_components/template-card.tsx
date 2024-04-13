@@ -49,10 +49,11 @@ export default function TemplateCard() {
               href={slugify(pathname, title, id)}
               className={cn(
                 typography("a"),
-                "hover:text-foreground break-words max-w-sm"
+                "hover:text-foreground break-words max-w-sm inline"
               )}
             >
-              {title} <ExternalLinkIcon className="text-foreground" />
+              {title}{" "}
+              <ExternalLinkIcon className="inline mb-[3px] text-foreground" />
             </Link>
           )}
         </CardTitle>

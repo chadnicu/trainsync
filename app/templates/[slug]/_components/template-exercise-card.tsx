@@ -49,7 +49,7 @@ export default function TemplateExerciseCard() {
           )}
         >
           {isOptimistic && <LoadingSpinner className="h-5 w-5" />}
-          <span className={cn(typography("h3"), "flex items-center ")}>
+          <span className={cn(typography("h3"), "flex items-start ")}>
             <span className="text-muted-foreground font-semibold mr-1">
               {index}.
             </span>
@@ -106,7 +106,11 @@ export default function TemplateExerciseCard() {
           />
           <ResponsiveFormDialog
             trigger={
-              <Button variant={"outline"} className="float-right">
+              <Button
+                variant={"outline"}
+                className="float-right"
+                disabled={isOptimistic}
+              >
                 See more
               </Button>
             }

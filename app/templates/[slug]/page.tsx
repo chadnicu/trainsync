@@ -2,7 +2,7 @@
 
 import { H1, P } from "@/components/typography";
 import { useTemplate } from "@/hooks/tanstack/templates";
-import LoadingTemplate from "./loading-to-do";
+import LoadingTemplate from "./loading";
 import {
   TemplateExerciseContext,
   useAddExerciseToTemplate,
@@ -44,13 +44,17 @@ export default function Template({ params: { slug } }: Params) {
       </TemplateExerciseContext.Provider>
     ));
 
+  if ((isFetching || isLoading) && !template?.title) return <LoadingTemplate />;
+
   return (
     <section className="sm:container text-center space-y-4">
       {isSuccess && (
         <>
-          <H1 className="py-1">{template.title}</H1>
+          <H1>{template.title}</H1>
           {template.description && (
-            <P className="max-w-lg mx-auto">{template.description}</P>
+            <P className="max-w-lg mx-auto text-muted-foreground pb-2">
+              {template.description}
+            </P>
           )}
         </>
       )}

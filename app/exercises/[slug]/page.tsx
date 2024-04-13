@@ -17,6 +17,7 @@ import SetsChartSkeleton from "./_components/sets-chart-skeleton";
 import { useExercise } from "@/hooks/tanstack/exercises";
 import { queryKeys } from "@/hooks/tanstack";
 import { useSets } from "@/hooks/tanstack/sets";
+import LoadingExercise from "./loading";
 
 type Params = {
   params: { slug: string };
@@ -64,13 +65,17 @@ export default function Exercise({ params: { slug } }: Params) {
       <SetCard key={date} sets={setsForDate} />
     ));
 
+  if ((isFetching || isLoading) && !exercise?.title) return <LoadingExercise />;
+
   return (
     <section className="sm:container text-center space-y-4">
       <div className="space-y-2">
         <H1>{exercise?.title ?? "Loading.."}</H1>
-        <P className="max-w-lg mx-auto break-words">
-          {exercise?.instructions ?? `Exercise with id ${exerciseId}`}
-        </P>
+        {exercise?.instructions && (
+          <P className="max-w-lg mx-auto break-words text-muted-foreground pb-2">
+            {exercise.instructions}
+          </P>
+        )}
       </div>
       {isError && <Error />}
       <div className="xl:flex xl:px-20 space-y-4 xl:space-y-0">
