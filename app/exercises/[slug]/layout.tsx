@@ -18,5 +18,5 @@ export function generateMetadata({ params }: Props): Metadata {
 }
 
 export default function TemplatesLayout({ children }: { children: ReactNode }) {
-  return children;
+  return <>{children}</>;
 }

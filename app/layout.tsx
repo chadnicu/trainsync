@@ -13,9 +13,6 @@ export const metadata: Metadata = {
   title: "TrainSync",
   description: "Homepage of the free web-based workout tracker",
   // fill this up
-  openGraph: {
-    type: "website",
-  },
 };
 
 export default function RootLayout({
