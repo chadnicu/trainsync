@@ -13,21 +13,27 @@ import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { Button } from "@/components/ui/button";
 import EditTemplateExercises from "./_components/edit-template-exercises";
 import { ResponsiveComboBox } from "@/components/responsive-combobox";
+import NotFound from "@/app/not-found";
+import { getIdFromSlug } from "@/lib/utils";
 
 type Params = {
   params: { slug: string };
 };
 
 export default function Template({ params: { slug } }: Params) {
-  const { data: template, isSuccess, isFetching, isLoading } = useTemplate();
+  const {
+    data: template,
+    isSuccess,
+    isFetching,
+    isLoading,
+    isError,
+  } = useTemplate();
   const {
     data: { inTemplate, other },
   } = useTemplateExercises();
 
   const { mutate: addExerciseToTemplate, isPending: isAdding } =
     useAddExerciseToTemplate();
-
-  if ((isFetching || isLoading) && !template?.title) return <LoadingTemplate />;
 
   const TemplateExercises = () =>
     inTemplate.map((e, i) => (
@@ -44,6 +50,8 @@ export default function Template({ params: { slug } }: Params) {
       </TemplateExerciseContext.Provider>
     ));
 
+  const templateId = getIdFromSlug(slug);
+  if (isNaN(templateId) || template === null || isError) return <NotFound />;
   if ((isFetching || isLoading) && !template?.title) return <LoadingTemplate />;
 
   return (

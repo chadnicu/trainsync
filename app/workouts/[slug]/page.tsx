@@ -27,13 +27,20 @@ import WorkoutCommentForm from "./_components/workout-comment-form";
 import dayjs from "@/lib/day-js";
 import { useSets } from "@/hooks/tanstack/sets";
 import LoadingWorkout from "./loading";
+import NotFound from "@/app/not-found";
 
 type Params = {
   params: { slug: string };
 };
 
 export default function Workout({ params: { slug } }: Params) {
-  const { data: workout, isLoading, isFetching, isSuccess } = useWorkout();
+  const {
+    data: workout,
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+  } = useWorkout();
   const {
     data: { inWorkout, other },
   } = useWorkoutExercises();
@@ -60,6 +67,8 @@ export default function Workout({ params: { slug } }: Params) {
   const dayJsDate = dayjs(workout?.date);
   const formattedDate = dayJsDate.format("DD-MM-YYYY");
 
+  const workoutId = getIdFromSlug(slug);
+  if (isNaN(workoutId) || workout === null || isError) return <NotFound />;
   if ((isFetching || isLoading) && !workout?.title) return <LoadingWorkout />;
 
   return (

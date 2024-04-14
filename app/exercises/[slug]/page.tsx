@@ -18,6 +18,7 @@ import { useExercise } from "@/hooks/tanstack/exercises";
 import { queryKeys } from "@/hooks/tanstack";
 import { useSets } from "@/hooks/tanstack/sets";
 import LoadingExercise from "./loading";
+import NotFound from "@/app/not-found";
 
 type Params = {
   params: { slug: string };
@@ -65,6 +66,7 @@ export default function Exercise({ params: { slug } }: Params) {
       <SetCard key={date} sets={setsForDate} />
     ));
 
+  if (isNaN(exerciseId) || exercise === null || isError) return <NotFound />;
   if ((isFetching || isLoading) && !exercise?.title) return <LoadingExercise />;
 
   return (

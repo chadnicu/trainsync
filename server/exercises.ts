@@ -85,11 +85,13 @@ export async function getExerciseById(exerciseId: number) {
   const { userId } = auth();
   if (!userId) notFound();
 
-  return (
-    await db
-      .select()
-      .from(exercise)
-      .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)))
-      .limit(1)
-  )[0];
+  const data = await db
+    .select()
+    .from(exercise)
+    .where(and(eq(exercise.id, exerciseId), eq(exercise.userId, userId)))
+    .limit(1);
+
+  if (data.length && data[0]) return data[0];
+
+  return null;
 }

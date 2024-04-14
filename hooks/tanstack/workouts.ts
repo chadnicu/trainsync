@@ -152,7 +152,8 @@ export function useUpdateDynamicWorkout() {
   const workoutId = getIdFromSlug(params.slug);
   const queryClient = useQueryClient();
   const { data } = useWorkout();
-  const { id, title, date } = data ?? { id: 0, title: "", date: "" }; // this shouldnt happen
+  const { id, title, date } = data ?? { id: 0, title: "", date: "" };
+
   const defaultValues = {
     id,
     title,

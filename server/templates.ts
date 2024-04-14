@@ -58,11 +58,13 @@ export async function getTemplateById(templateId: number) {
   const { userId } = auth();
   if (!userId) notFound();
 
-  return (
-    await db
-      .select()
-      .from(template)
-      .where(and(eq(template.id, templateId), eq(template.userId, userId)))
-      .limit(1)
-  )[0];
+  const data = await db
+    .select()
+    .from(template)
+    .where(and(eq(template.id, templateId), eq(template.userId, userId)))
+    .limit(1);
+
+  if (data.length && data[0]) return data[0];
+
+  return null;
 }

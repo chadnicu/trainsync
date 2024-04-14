@@ -15,7 +15,7 @@ import {
 } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { and, desc, eq, inArray } from "drizzle-orm";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function getWorkouts() {
   const { userId } = auth();
@@ -140,11 +140,14 @@ export async function getWorkoutById(workoutId: number) {
   const { userId } = auth();
   if (!userId) notFound();
 
-  return (
-    await db
-      .select()
-      .from(workout)
-      .where(and(eq(workout.id, workoutId), eq(workout.userId, userId)))
-      .limit(1)
-  )[0];
+  const data = await db
+    .select()
+    .from(workout)
+    .where(and(eq(workout.id, workoutId), eq(workout.userId, userId)))
+    .limit(1);
+
+  if (data.length && data[0]) return data[0];
+
+  return null;
+  // notFound();
 }

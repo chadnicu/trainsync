@@ -1,7 +1,7 @@
 import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
-  publicRoutes: ["/", "/opengraph-image", "/twitter-image"],
+  publicRoutes: ["/", "/faq", "/opengraph-image", "/twitter-image"],
 });
 
 export const config = {
