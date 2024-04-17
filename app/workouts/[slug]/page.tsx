@@ -147,8 +147,11 @@ export default function Workout({ params: { slug } }: Params) {
 
         <ExercisesPagination length={inWorkout.length} />
         {exerciseIndex > 0 && inWorkout[exerciseIndex - 1] ? (
-          <WorkoutExerciseContext.Provider value={inWorkout[exerciseIndex - 1]}>
+          <WorkoutExerciseContext.Provider
+            value={inWorkout[(isAdding ? inWorkout.length : exerciseIndex) - 1]}
+          >
             <WorkoutExerciseCard />
+            {/* <WorkoutExerciseSkeleton /> */}
           </WorkoutExerciseContext.Provider>
         ) : (
           <>

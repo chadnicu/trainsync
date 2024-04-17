@@ -40,7 +40,7 @@ export default function WorkoutExerciseSkeleton() {
       <CardContent className="space-y-6">
         <Skeleton className="rounded-md h-[44vw] w-full sm:w-full sm:h-[260px] mx-auto" />
         <div className="space-y-3">
-          {new Array(3).fill(0).map((_, i) => (
+          {new Array(2).fill(0).map((_, i) => (
             <div
               key={i}
               className="h-8 w-[100px] mx-auto flex justify-between items-center"
@@ -51,16 +51,16 @@ export default function WorkoutExerciseSkeleton() {
             </div>
           ))}
         </div>
-        <div className="flex justify-center">
-          <button className="text-left opacity-75" disabled>
-            <CommentAlert>Loading..</CommentAlert>
-          </button>
-        </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" disabled>
-          Swap
-        </Button>
+        <div className="space-x-3">
+          <Button variant="outline" disabled>
+            Swap
+          </Button>
+          <Button variant="outline" disabled>
+            Comment
+          </Button>
+        </div>
         <Button disabled>Add set</Button>
       </CardFooter>
     </Card>
