@@ -65,7 +65,7 @@ export async function deleteExercise(exerciseId: number) {
     .all()
     .then((data) => data.map(({ setId }) => setId));
 
-  await db.delete(sets).where(inArray(sets.id, setIdsToDelete));
+  await db.delete(sets).where(inArray(sets.id, [...setIdsToDelete, -1]));
 
   await Promise.all([
     db

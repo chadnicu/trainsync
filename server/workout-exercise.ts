@@ -48,7 +48,10 @@ export async function getExercisesByWorkoutId(workoutId: number) {
     .select()
     .from(exercise)
     .where(
-      and(eq(exercise.userId, userId), notInArray(exercise.id, exerciseIds))
+      and(
+        eq(exercise.userId, userId),
+        notInArray(exercise.id, [...exerciseIds, -1])
+      )
     )
     .all();
 

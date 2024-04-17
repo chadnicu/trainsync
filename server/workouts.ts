@@ -125,7 +125,7 @@ export async function deleteWorkout(workoutId: number) {
     .all()
     .then((data) => data.map(({ setId }) => setId));
 
-  await db.delete(sets).where(inArray(sets.id, setIdsToDelete));
+  await db.delete(sets).where(inArray(sets.id, [...setIdsToDelete, -1]));
 
   await db
     .delete(workout_exercise)
