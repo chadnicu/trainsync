@@ -38,3 +38,13 @@ export const templateToWorkoutSchema = z.object({
     .number()
     .positive({ message: "Please select a template." }),
 });
+
+export const editDurationSchema = z.object({
+  started: z
+    .string()
+    .optional(),
+  finished: z
+    .string()
+    .optional(),
+  clearTime: z.boolean().default(false).optional(),
+});

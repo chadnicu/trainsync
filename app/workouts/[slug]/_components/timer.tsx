@@ -1,3 +1,4 @@
+import ResponsiveFormDialog from "@/components/responsive-form-dialog";
 import { H4 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -5,6 +6,8 @@ import {
   WorkoutContext,
 } from "@/hooks/tanstack/workouts";
 import { useContext, useEffect, useState } from "react";
+import UpdateWorkoutForm from "../../_components/update-workout-form";
+import UpdateDurationForm from "./update-duration-form";
 
 function getTimePassed(started: string | null) {
   if (!started) return "";
@@ -67,7 +70,7 @@ export default function Timer() {
     return () => clearInterval(interval);
   }, [started, finished]);
 
-  const { mutate: updateWorkout } = useUpdateDynamicWorkout();
+  const { mutate: updateWorkout, isPending } = useUpdateDynamicWorkout();
 
   const defaultValues = {
     id,
@@ -82,10 +85,31 @@ export default function Timer() {
     return `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
   };
 
+  const EditDurationComponent = () => {
+    return (
+      <ResponsiveFormDialog
+        trigger={<Button variant={"ghost"}>Edit</Button>}
+        title="Edit workout duration"
+        description="Make changes to your workout duration here. Click edit when you're done."
+      >
+        <UpdateDurationForm
+          mutate={(values) => updateWorkout({ ...values })}
+          //  updateWorkout({
+          //                         started: workout.started ?? undefined,
+          //                         finished: workout.finished ?? undefined,
+          //                         comment,
+          //                       })
+          submitButtonText="Edit"
+          isSubmitting={isPending}
+        />
+      </ResponsiveFormDialog>
+    );
+  };
+
   const DurationAndTimes = () =>
     !!(started && finished) && (
       <div className="flex items-center justify-between w-full relative">
-        <Button
+        {/* <Button
           variant={"ghost"}
           onClick={() => {
             // setDiff("0:0:0");
@@ -97,7 +121,8 @@ export default function Timer() {
           }}
         >
           Continue
-        </Button>
+        </Button> */}
+        <EditDurationComponent />
         <H4 className="absolute inset-0 m-auto w-fit h-fit grid place-items-center">
           {getWorkoutDuration(started, finished)}
           <p className="text-xs font-normal">

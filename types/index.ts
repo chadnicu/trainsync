@@ -3,6 +3,7 @@ import { exerciseSchema } from "@/lib/validators/exercise";
 import { getExercises } from "@/server/exercises";
 import {
   addWorkoutSchema,
+  editDurationSchema,
   editWorkoutSchema,
   templateToWorkoutSchema,
 } from "@/lib/validators/workout";
@@ -21,6 +22,7 @@ export type Exercise = Awaited<ReturnType<typeof getExercises>>[0];
 
 export type AddWorkoutInput = z.infer<typeof addWorkoutSchema>;
 export type EditWorkoutInput = z.infer<typeof editWorkoutSchema>;
+export type EditDurationInput = z.infer<typeof editDurationSchema>;
 export type Workout = Awaited<ReturnType<typeof getWorkouts>>[0];
 
 export type SetInput = z.infer<typeof setSchema>;
