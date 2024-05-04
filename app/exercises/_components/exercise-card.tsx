@@ -82,7 +82,7 @@ export default function ExerciseCard() {
           </LazyYoutube>
         </CardContent>
       )}
-      <CardFooter className="flex justify-between">
+      <CardFooter className={cn("flex justify-between", { hidden: id < 0 })}>
         <ResponsiveFormDialog
           trigger={
             <Button variant={"outline"} disabled={isOptimistic}>

@@ -16,6 +16,8 @@ import {
 import { queryKeys } from "@/hooks/tanstack";
 import ImportFromTemplateForm from "./_components/import-template-form";
 import { Metadata } from "next";
+import EmptyArray from "../../components/empty-array";
+import { usePathname } from "next/navigation";
 
 export default function Workouts() {
   const { data, isLoading, isFetching, isSuccess, isError } = useWorkouts();
@@ -48,6 +50,8 @@ export default function Workouts() {
       </WorkoutContext.Provider>
     ));
 
+  const pathname = usePathname();
+
   return (
     <section className="space-y-10">
       <H1 className="text-center">WORKOUTS</H1>
@@ -76,6 +80,12 @@ export default function Workouts() {
           />
         </ResponsiveFormDialog>
       </div>
+      {!!(!(isFetching || isLoading) && data.length === 0) && (
+        <P className="text-center text-muted-foreground">
+          Looks like you have no {pathname.split("/")[1]}. Click create new or
+          import from a template!
+        </P>
+      )}
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
         {(isFetching || isLoading) && !data.length && <Skeletons />}
         {isSuccess && <Workouts />}

@@ -13,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import TemplateCard from "./_components/template-card";
 import TemplateForm from "./_components/template-form";
 import TemplateSkeleton from "./_components/template-skeleton";
+import EmptyArray from "@/components/empty-array";
 
 export default function Templates() {
   const {
@@ -67,6 +68,9 @@ export default function Templates() {
           submitButtonText="Create"
         />
       </ResponsiveFormDialog>
+      {!!(!(isFetching || isLoading) && templates.length === 0) && (
+        <EmptyArray />
+      )}
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
         {(isFetching || isLoading) && !templates.length && <Skeletons />}
         {isSuccess && <Templates />}
