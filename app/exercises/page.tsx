@@ -15,11 +15,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import LoadingSpinner from "@/components/loading-spinner";
 import { queryKeys } from "@/hooks/tanstack";
 
-import publicExercises from "@/lib/exercises/exercises.json";
-import { SelectExercises, Value } from "./_components/exercise-select";
-import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
 import EmptyArray from "@/components/empty-array";
 
 const queryKey = queryKeys.exercises;
@@ -54,27 +49,7 @@ export default function Exercises() {
       </ExerciseContext.Provider>
     ));
 
-  // const PublicExercises = () =>
-  //   publicExercises.exercises.map((e, index) => {
-  //     const id = e.name.split("").join("-").toLocaleLowerCase();
-  //     return (
-  //       <ExerciseContext.Provider
-  //         value={{
-  //           id: (index + 1) * -1,
-  //           title: e.name,
-  //           instructions: e.instructions.join(" "),
-  //           url: null,
-  //         }}
-  //         key={id}
-  //       >
-  //         <ExerciseCard />
-  //       </ExerciseContext.Provider>
-  //     );
-  //   });
-
   // const [display, setDisplay] = useState<Value>("all");
-
-  // const { userId } = useAuth();
 
   return (
     <section className="space-y-10">
@@ -98,10 +73,6 @@ export default function Exercises() {
       <div className="grid lg:grid-cols-2 xl:grid-cols-3 place-items-center gap-y-5">
         {!!((isFetching || isLoading) && !data.length) && <Skeletons />}
         {isSuccess && <Exercises />}
-        {/* {!!(isSuccess && (display === "own" || display === "all")) && (
-          <Exercises />
-        )} */}
-        {/* {!!(display === "default" || display === "all") && <PublicExercises />} */}
       </div>
     </section>
   );
