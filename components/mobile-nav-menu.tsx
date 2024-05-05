@@ -21,6 +21,7 @@ import { GitHubLogoIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import Image from "next/image";
 
 export const ToggleMobileMenu = createContext<
   Dispatch<SetStateAction<boolean>>
@@ -74,9 +75,18 @@ export default function MobileNavMenu({ children }: { children?: ReactNode }) {
         className="flex flex-col space-around sm:hidden"
       >
         <SheetHeader className="text-left mb-2">
-          <SheetTitle className="tracking-tighter text-2xl">
-            TrainSync
-          </SheetTitle>
+          <Link href="/">
+            <SheetTitle className="tracking-tighter text-2xl flex gap-2 text-gradient">
+              <Image
+                src={"./trainsync-light.svg"}
+                width={20}
+                height={20}
+                alt="TrainSync Logo"
+                className="invert dark:invert-0 brightness-[0.8]"
+              />
+              TrainSync
+            </SheetTitle>
+          </Link>
           {/* <SheetDescription></SheetDescription> */}
         </SheetHeader>
         <ToggleMobileMenu.Provider value={setOpen}>
