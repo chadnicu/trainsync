@@ -1,4 +1,4 @@
-import { H1, H4, P, typography } from "@/components/typography";
+import { H1 } from "@/components/typography";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 
