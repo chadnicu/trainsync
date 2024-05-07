@@ -4,7 +4,7 @@ import { ImageResponse } from "next/og";
 
 export async function GET() {
   const fontData = await fetch(
-    new URL("../../../public/fonts/Geist-Bold.ttf", import.meta.url)
+    new URL("https://trainsync.online/fonts/Geist-Bold.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
