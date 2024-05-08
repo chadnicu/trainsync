@@ -70,7 +70,7 @@ export default async function OpenGraphImage() {
             letterSpacing: "-4",
             color: "transparent",
             backgroundClip: "text",
-            boxShadow: "0 0 400px #fafafa",
+            boxShadow: "0 0 300px #fafafa",
           }}
         >
           TrainSync
