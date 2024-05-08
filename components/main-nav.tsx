@@ -60,11 +60,11 @@ export default function MainNavbar() {
           )}
         >
           <Image
-            src={"./trainsync-light.svg"}
+            src={"./dumbbell-icon.svg"}
             width={20}
             height={20}
             alt="TrainSync Logo"
-            className="invert dark:invert-0 brightness-[0.8]"
+            className="dark:invert opacity-[0.8]"
           />
           TrainSync
         </Link>

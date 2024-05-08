@@ -78,11 +78,11 @@ export default function MobileNavMenu({ children }: { children?: ReactNode }) {
           <Link href="/">
             <SheetTitle className="tracking-tighter text-2xl flex gap-2 text-gradient">
               <Image
-                src={"./trainsync-light.svg"}
+                src={"./dumbbell-icon.svg"}
                 width={20}
                 height={20}
                 alt="TrainSync Logo"
-                className="invert dark:invert-0 brightness-[0.8]"
+                className="dark:invert opacity-[0.8]"
               />
               TrainSync
             </SheetTitle>

@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export default async function TwitterImage() {
   const fontData = await fetch(
-    new URL("http://localhost:3000/fonts/Geist-Bold.ttf")
+    new URL("https://trainsync.online/fonts/Geist-Bold.ttf")
   ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
