@@ -1,9 +1,9 @@
 import { ImageResponse } from "next/og";
 
 export default async function OpenGraphImage() {
-  // const fontData = await fetch(
-  //   new URL("https://trainsync.online/fonts/Geist-Bold.ttf")
-  // ).then((res) => res.arrayBuffer());
+  const fontData = await fetch(
+    new URL("https://trainsync.online/fonts/Geist-Bold.ttf")
+  ).then((res) => res.arrayBuffer());
   return new ImageResponse(
     (
       <div
@@ -16,7 +16,7 @@ export default async function OpenGraphImage() {
           letterSpacing: "-.02em",
           fontWeight: 700,
           background: "#09090B",
-          // fontFamily: '"Geist"',
+          fontFamily: '"Geist"',
         }}
       >
         <div
@@ -82,13 +82,13 @@ export default async function OpenGraphImage() {
     {
       width: 1200,
       height: 630,
-      // fonts: [
-      //   {
-      //     name: "Geist",
-      //     data: fontData,
-      //     style: "normal",
-      //   },
-      // ],
+      fonts: [
+        {
+          name: "Geist",
+          data: fontData,
+          style: "normal",
+        },
+      ],
     }
   );
 }
