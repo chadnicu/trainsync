@@ -3,11 +3,17 @@ import { authMiddleware } from "@clerk/nextjs";
 export default authMiddleware({
   publicRoutes: [
     "/",
-    "/faq",
     "/opengraph-image",
     "/twitter-image",
-    "/api",
-    "/api/og",
+    "/faq",
+    "/faq/opengraph-image",
+    "/faq/twitter-image",
+    "/exercises/opengraph-image",
+    "/exercises/twitter-image",
+    "/workouts/opengraph-image",
+    "/workouts/twitter-image",
+    "/templates/opengraph-image",
+    "/templates/twitter-image",
   ],
 });
 
