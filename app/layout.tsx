@@ -12,6 +12,8 @@ import { Toaster } from "@/components/ui/toaster";
 export const metadata: Metadata = {
   title: "TrainSync - The web based workout tracker",
   description: "Homepage of the free web-based workout tracker",
+  // metadataBase: new URL("http://localhost:3000"),
+  // metadataBase: new URL("localhost:3000"),
   // fill this up
 };
 
