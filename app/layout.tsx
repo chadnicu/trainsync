@@ -10,9 +10,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "TrainSync - The web based workout tracker",
+  title: "TrainSync - The Web Based Workout Tracker",
   description:
-    "TrainSync is your ultimate companion for achieving your lifting goals efficiently and effectively. Seamlessly blending functionality with simplicity, TrainSync is a robust web-based workout tracker designed to streamline your lifting journey.",
+    "TrainSync is a the simple, functional and completely free workout tracker for the web, designed to help you achieve your lifting goals more efficiently.",
 };
 
 export default function RootLayout({
