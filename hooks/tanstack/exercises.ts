@@ -28,10 +28,10 @@ export function useCreateExercise() {
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey });
       const previous = queryClient.getQueryData(queryKey);
-      queryClient.setQueryData(queryKey, (old: Exercise[]) => [
-        { ...values, id: 0 },
-        ...old,
-      ]);
+      queryClient.setQueryData(queryKey, (old: Exercise[]) => {
+        old = old ?? [];
+        return [{ ...values, id: 0 }, ...old];
+      });
       return { previous };
     },
     onError: (err, newElement, context) => {
@@ -39,7 +39,9 @@ export function useCreateExercise() {
       console.log("Error optimistic ", newElement);
       console.log(`${err.name}: ${err.message}. ${err.cause}: ${err.stack}.`);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 }
 

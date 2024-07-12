@@ -48,7 +48,7 @@ export default function FAQ() {
               </Link>{" "}
               or open a{" "}
               <Link
-                href={"https://github.com/chadnicu/trainsync"}
+                href={"https://github.com/chadnicu"}
                 target="_blank"
                 className="brightness-125 hover:text-foreground hover:underline duration-300"
               >
