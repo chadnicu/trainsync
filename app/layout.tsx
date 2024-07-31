@@ -72,6 +72,8 @@ export const metadata: Metadata = {
     creatorId: "1132731405539188736",
     images: ["https://trainsync.online/opengraph-image"], // Must be an absolute URL
   },
+
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

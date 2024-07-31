@@ -1,0 +1,18 @@
+{
+  "name": "TrainSync",
+  "short_name": "TS",
+  "description": "Workout Tracking App",
+  "start_url": "/",
+  "theme_color": "#2196f3",
+  "background_color": "#2196f3",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": ".",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
