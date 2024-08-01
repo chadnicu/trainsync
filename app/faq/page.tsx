@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "TrainSync • FAQ",
@@ -55,6 +56,36 @@ export default function FAQ() {
                 GitHub
               </Link>{" "}
               issue and I&apos;ll try to sort it out.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value={`item-${QnAs.length + 2}`}>
+            <AccordionTrigger className="text-left">
+              How do I install the app?
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground">
+              <p className="mb-2">
+                Click the three-dot-icon if you&apos;re using Chrome or the
+                share icon if you&apos;re using Safari.
+              </p>
+              <div className="flex">
+                <Image
+                  src={"/safari-share-button.png"}
+                  height={150}
+                  width={150}
+                  alt="safari share button"
+                  className="w-72"
+                />
+                <Image
+                  src={"/chrome-three-dots.png"}
+                  height={180}
+                  width={180}
+                  alt="chrome three dots"
+                />
+              </div>
+              <p className="my-2">
+                From there just select &quot;Add to home screen&quot; and then
+                &quot;Install&quot;.
+              </p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
