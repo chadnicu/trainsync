@@ -1,6 +1,6 @@
 {
-  "name": "TrainSync",
-  "short_name": "TS",
+  "name": "TrainSync - Workout Tracker",
+  "short_name": "TrainSync",
   "description": "Workout Tracking App",
   "start_url": "/",
   "theme_color": "#09090B",
