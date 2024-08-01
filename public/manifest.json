@@ -3,17 +3,16 @@
   "short_name": "TS",
   "description": "Workout Tracking App",
   "start_url": "/",
-  "theme_color": "#2196f3",
-  "background_color": "#2196f3",
+  "theme_color": "#09090B",
+  "background_color": "#09090B",
   "display": "standalone",
   "orientation": "portrait",
   "scope": ".",
-
   "icons": [
     {
-      "src": "./dumbbell-icon.svg",
+      "src": "./dumbbell-icon-inverted.png",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/png"
     }
   ]
 }
